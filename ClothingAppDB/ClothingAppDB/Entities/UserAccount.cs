@@ -9,4 +9,9 @@ public class UserAccount
     //public Role Role { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
+    
+    public virtual Address Address { get; set; }
+    
+    public virtual ICollection<CustomerOrder> CustomerOrders { get; set; }
+    public virtual ICollection<Review> Reviews { get; set; }
 }
