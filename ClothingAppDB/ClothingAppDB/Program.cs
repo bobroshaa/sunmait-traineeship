@@ -1,3 +1,13 @@
-﻿// See https://aka.ms/new-console-template for more information
-
-Console.WriteLine("Hello, World!");
+﻿namespace ClothingAppDB
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            using (var context = new Context())
+            {
+                
+            }
+        }
+    }
+}
