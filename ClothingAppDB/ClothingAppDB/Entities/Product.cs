@@ -1,4 +1,6 @@
-﻿namespace ClothingAppDB.Entities;
+﻿using ClothingAppDB.Entities.Enums;
+
+namespace ClothingAppDB.Entities;
 
 public class Product
 {
@@ -9,7 +11,7 @@ public class Product
     public DateTime AddDate { get; set; }
     public int Quantity { get; set; }
     public string ImageURL { get; set; }
-    //public Sex Sex { get; set; }
+    public Sex Sex { get; set; }
     
     public int CategoryID { get; set; }
     public virtual Category Category { get; set; }
