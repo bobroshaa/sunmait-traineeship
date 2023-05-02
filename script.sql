@@ -4,7 +4,6 @@ SET search_path = clothing_store;
 CREATE TYPE country AS ENUM ('Belarus', 'USA', 'France', 'Poland');
 CREATE TYPE role AS ENUM ('Admin', 'Customer');
 CREATE TYPE status AS ENUM ('In review', 'In delivery', 'Completed');
-CREATE TYPE sex AS ENUM ('Male', 'Female', 'Unisex');
 
 CREATE TABLE IF NOT EXISTS section (
   id SERIAL,
@@ -46,20 +45,15 @@ CREATE TABLE IF NOT EXISTS product (
   name varchar(100) NOT NULL,
   description varchar(500) NOT NULL,
   price numeric NOT NULL CHECK (price > 0),
-  sex sex NOT NULL,
   brand_id integer NOT NULL,
   add_date timestamp NOT NULL,
-  category_id integer NOT NULL,
-  section_id integer NOT NULL,
+  section_category_id integer NOT NULL,
   quantity integer NOT NULL CHECK (quantity >= 0),
   image varchar(500) NOT NULL,
   PRIMARY KEY (id),
-  CONSTRAINT fk_product_category_id
-    FOREIGN KEY (category_id)
-      REFERENCES category(id) ON DELETE RESTRICT ON UPDATE CASCADE,
-  CONSTRAINT fk_product_section_id
-    FOREIGN KEY (section_id)
-      REFERENCES section(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT fk_product_secion_category_id
+    FOREIGN KEY (secion_category_id)
+      REFERENCES secion_category(id) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT fk_product_brand_id
     FOREIGN KEY (brand_id)
       REFERENCES brand(id) ON DELETE RESTRICT ON UPDATE CASCADE
