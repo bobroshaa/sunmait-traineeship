@@ -697,11 +697,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\bobro\\OneDrive\\Документы\\GitHub\\sunmait-traineeship\\ClothingAppDB\\ClothingAppDB\\ClothingAppDB.csproj",
+      "projectUniqueName": "C:\\Users\\bobro\\OneDrive\\Документы\\GitHub\\sunmait-traineeship\\ClothingAppDB\\ClothingAppDB.csproj",
       "projectName": "ClothingAppDB",
-      "projectPath": "C:\\Users\\bobro\\OneDrive\\Документы\\GitHub\\sunmait-traineeship\\ClothingAppDB\\ClothingAppDB\\ClothingAppDB.csproj",
+      "projectPath": "C:\\Users\\bobro\\OneDrive\\Документы\\GitHub\\sunmait-traineeship\\ClothingAppDB\\ClothingAppDB.csproj",
       "packagesPath": "C:\\Users\\bobro\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\bobro\\OneDrive\\Документы\\GitHub\\sunmait-traineeship\\ClothingAppDB\\ClothingAppDB\\obj\\",
+      "outputPath": "C:\\Users\\bobro\\OneDrive\\Документы\\GitHub\\sunmait-traineeship\\ClothingAppDB\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\bobro\\AppData\\Roaming\\NuGet\\NuGet.Config"

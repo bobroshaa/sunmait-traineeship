@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "LymjlmgqN9JGPE982HKURVKWj0ztva/K7+57/dg45hHUnRT+NVE9WAjcKS0KaHDUHCx4SjIw7FGw54xVCOGvHw==",
+  "dgSpecHash": "9o76kyQbifY3RNA90di7lYPHwsJNaUb4Il5Qvv7uTwOfMcimogI4IvJjCG46OZnHW9I+uT2qgBWrO95uYW3EAA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\bobro\\OneDrive\\Документы\\GitHub\\sunmait-traineeship\\ClothingAppDB\\ClothingAppDB\\ClothingAppDB.csproj",
+  "projectFilePath": "C:\\Users\\bobro\\OneDrive\\Документы\\GitHub\\sunmait-traineeship\\ClothingAppDB\\ClothingAppDB.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\bobro\\.nuget\\packages\\microsoft.entityframeworkcore\\8.0.0-preview.3.23174.2\\microsoft.entityframeworkcore.8.0.0-preview.3.23174.2.nupkg.sha512",
     "C:\\Users\\bobro\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\8.0.0-preview.3.23174.2\\microsoft.entityframeworkcore.abstractions.8.0.0-preview.3.23174.2.nupkg.sha512",
