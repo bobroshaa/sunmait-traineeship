@@ -65,15 +65,23 @@ $$;
 CREATE OR REPLACE FUNCTION get_completed_orders_of_product(product_id integer) RETURNS TABLE (
         id integer,
         user_id integer,
+        user_first_name varchar,
+        user_last_name varchar,
+        product_name varchar,
         current_status status,
         order_date timestamp
     ) LANGUAGE plpgsql AS $$ BEGIN RETURN query
 SELECT co.id,
     co.user_id,
+    u.first_name,
+    u.last_name,
+    p.name,
     co.current_status,
     co.order_date
-FROM order_product AS op
-    LEFT JOIN customer_order AS co ON op.product_id = $1
+FROM customer_order AS co
+    LEFT JOIN order_product AS op ON op.product_id = $1
+    LEFT JOIN user_account AS u ON co.user_id = u.id
+    LEFT JOIN product AS p ON op.product_id = p.id
 WHERE co.current_status = 'Completed'
 ORDER BY co.order_date ASC;
 END;
