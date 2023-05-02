@@ -19,4 +19,4 @@ CREATE TRIGGER order_status_changes
     AFTER INSERT OR UPDATE
     ON customer_order
     FOR EACH ROW
-    EXECUTE PROCEDURE log_order_status_on_update();
+    EXECUTE PROCEDURE log_order_status_changes();

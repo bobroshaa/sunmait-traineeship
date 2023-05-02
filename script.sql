@@ -51,9 +51,9 @@ CREATE TABLE IF NOT EXISTS product (
   quantity integer NOT NULL CHECK (quantity >= 0),
   image varchar(500) NOT NULL,
   PRIMARY KEY (id),
-  CONSTRAINT fk_product_secion_category_id
-    FOREIGN KEY (secion_category_id)
-      REFERENCES secion_category(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT fk_product_section_category_id
+    FOREIGN KEY (section_category_id)
+      REFERENCES section_category(id) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT fk_product_brand_id
     FOREIGN KEY (brand_id)
       REFERENCES brand(id) ON DELETE RESTRICT ON UPDATE CASCADE

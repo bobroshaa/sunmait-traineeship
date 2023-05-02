@@ -47,11 +47,18 @@ CREATE OR REPLACE FUNCTION get_products_of_section(section_id integer, category_
         quantity integer,
         image varchar
     ) LANGUAGE plpgsql AS $$ BEGIN RETURN query
-SELECT *
+SELECT p.id,
+    p.name,
+    p.description,
+    p.price,
+    p.brand_id,
+    p.add_date,
+    p.quantity,
+    p.image
 FROM section_category AS sc
-    INNER JOIN product AS p ON sc.id = p.secion_category_id
-WHERE sc.section_id = section_id
-    AND sc.category_id = category_id;
+    INNER JOIN product AS p ON sc.id = p.section_category_id
+WHERE sc.section_id = $1
+    AND sc.category_id = $2;
 END;
 $$;
 -- Get all completed orders with a given product. Order from newest to latest.
@@ -66,13 +73,13 @@ SELECT co.id,
     co.current_status,
     co.order_date
 FROM order_product AS op
-    LEFT JOIN customer_order AS co ON op.product_id = product_id
+    LEFT JOIN customer_order AS co ON op.product_id = $1
 WHERE co.current_status = 'Completed'
 ORDER BY co.order_date ASC;
 END;
 $$;
 -- Get all reviews for a given product. Implement this as a view table which contains rating, comment and info of a person who left a comment.
-CREATE VIEW firtst_product AS
+CREATE VIEW first_product AS
 SELECT r.rating,
     r.review,
     u.phone,
