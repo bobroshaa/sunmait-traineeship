@@ -22,11 +22,11 @@ CREATE OR REPLACE FUNCTION get_brands() RETURNS TABLE (
     ) LANGUAGE plpgsql AS $$ BEGIN RETURN query
 SELECT brand.id,
     brand.name,
-    count(product.id)
+    count(product.id) AS products_count
 FROM brand
     LEFT JOIN product ON brand.id = product.brand_id
 GROUP BY brand.id
-ORDER BY count(product.id) DESC;
+ORDER BY products_count DESC;
 END;
 $$;
 -- Get all products for a given category and section.
