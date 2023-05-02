@@ -5,13 +5,20 @@ CREATE OR REPLACE FUNCTION get_products_of_brand(brand_id int) RETURNS TABLE (
         description varchar,
         price numeric,
         add_date timestamp,
-        secion_category_id integer,
+        section_category_id integer,
         quantity integer,
         image varchar
     ) LANGUAGE plpgsql AS $$ BEGIN RETURN query
-SELECT *
-FROM product
-WHERE product.brand_id = brand_id;
+SELECT p.id,
+    p.name,
+    p.description,
+    p.price,
+    p.add_date,
+    p.section_category_id,
+    p.quantity,
+    p.image
+FROM product AS p
+WHERE p.brand_id = $1;
 END;
 $$;
 -- Select all brands with the number of their products
@@ -65,15 +72,7 @@ ORDER BY co.order_date ASC;
 END;
 $$;
 -- Get all reviews for a given product. Implement this as a view table which contains rating, comment and info of a person who left a comment.
-CREATE OR REPLACE FUNCTION get_reviews_of_product(product_id integer) RETURNS TABLE (
-        rating integer,
-        comment varchar,
-        phone varchar,
-        email varchar,
-        role role,
-        first_name varchar,
-        last_name varchar
-    ) LANGUAGE plpgsql AS $$ BEGIN RETURN query
+CREATE VIEW firtst_product AS
 SELECT r.rating,
     r.review,
     u.phone,
@@ -83,6 +82,4 @@ SELECT r.rating,
     u.last_name
 FROM review AS r
     LEFT JOIN user_account AS u ON user_id = u.id
-WHERE r.product_id = product_id;
-END;
-$$;
+WHERE r.product_id = 1;
