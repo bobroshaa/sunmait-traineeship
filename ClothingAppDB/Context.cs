@@ -49,6 +49,7 @@ public class Context : DbContext
         modelBuilder.Entity<SectionCategory>().Property(sc => sc.CategoryID).IsRequired();
         modelBuilder.Entity<SectionCategory>().Property(sc => sc.SectionID).IsRequired();
 
+
         // Table Brand
         modelBuilder.Entity<Brand>().HasKey(b => b.ID);
         modelBuilder.Entity<Brand>().Property(b => b.Name).IsRequired().HasMaxLength(50);
@@ -75,6 +76,12 @@ public class Context : DbContext
         modelBuilder.Entity<Product>().Property(p => p.SectionCategoryID).IsRequired().HasMaxLength(100);
         modelBuilder.Entity<Product>().Property(p => p.Quantity).IsRequired();
         modelBuilder.Entity<Product>().Property(p => p.ImageURL).IsRequired().HasMaxLength(500);
+        modelBuilder.Entity<Product>()
+            .ToTable(p => p.HasCheckConstraint("Price", "\"Price\" > 0")
+                .HasName("CK_Product_Price"));
+        modelBuilder.Entity<Product>()
+            .ToTable(p => p.HasCheckConstraint("Quantity", "\"Quantity\" >= 0")
+                .HasName("CK_Product_Quantity"));
 
         // Table UserAccount
         modelBuilder.Entity<UserAccount>().HasKey(u => u.ID);
@@ -119,6 +126,9 @@ public class Context : DbContext
         modelBuilder.Entity<Review>().Property(r => r.Comment).IsRequired().HasMaxLength(500);
         modelBuilder.Entity<Review>().Property(r => r.Rating).IsRequired();
         modelBuilder.Entity<Review>().Property(r => r.AddDate).IsRequired();
+        modelBuilder.Entity<Review>()
+            .ToTable(r => r.HasCheckConstraint("Rating", "\"Rating\" >= 0 AND \"Rating\" <= 5")
+                .HasName("CK_Review_Rating"));
 
         // Table CustomerOrder
         modelBuilder.Entity<CustomerOrder>().HasKey(co => co.ID);
@@ -145,8 +155,14 @@ public class Context : DbContext
             .OnDelete(DeleteBehavior.Restrict);
         modelBuilder.Entity<OrderProduct>().Property(op => op.ProductID).IsRequired();
         modelBuilder.Entity<OrderProduct>().Property(op => op.OrderID).IsRequired();
-        modelBuilder.Entity<OrderProduct>().Property(op => op.Qauntity).IsRequired();
+        modelBuilder.Entity<OrderProduct>().Property(op => op.Quantity).IsRequired();
         modelBuilder.Entity<OrderProduct>().Property(op => op.Price).IsRequired();
+        modelBuilder.Entity<OrderProduct>()
+            .ToTable(op => op.HasCheckConstraint("Quantity", "\"Quantity\" > 0")
+                .HasName("CK_OrderProduct_Quantity"));
+        modelBuilder.Entity<OrderProduct>()
+            .ToTable(op => op.HasCheckConstraint("Price", "\"Price\" > 0")
+                .HasName("CK_OrderProduct_Price"));
         
         // Table OrderHistory
         modelBuilder.Entity<OrderHistory>().HasKey(oh => oh.ID);
