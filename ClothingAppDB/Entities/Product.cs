@@ -11,14 +11,9 @@ public class Product
     public DateTime AddDate { get; set; }
     public int Quantity { get; set; }
     public string ImageURL { get; set; }
-    public Sex Sex { get; set; }
     
-    public int CategoryID { get; set; }
-    public virtual Category Category { get; set; }
-    
-    public int SectionID { get; set; }
-    public virtual Section Section { get; set; }
-    
+    public int SectionCategoryID { get; set; }
+    public virtual SectionCategory SectionCategory { get; set; }
     public int BrandID { get; set; }
     public virtual Brand Brand { get; set; }
     

@@ -6,5 +6,4 @@ public class Section
     public string Name { get; set; } 
     
     public virtual ICollection<SectionCategory> SectionCategories { get; set; }
-    public virtual ICollection<Product> Products { get; set; }
 }
