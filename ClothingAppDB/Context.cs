@@ -23,6 +23,7 @@ public class Context : DbContext
         // Table Section
         modelBuilder.Entity<Section>().HasKey(s => s.ID);
         modelBuilder.Entity<Section>().Property(s => s.Name).IsRequired().HasMaxLength(50);
+        modelBuilder.Entity<Section>().HasIndex(s => s.Name).IsUnique();
 
         // Table Category
         modelBuilder.Entity<Category>().HasKey(c => c.ID);
@@ -48,10 +49,10 @@ public class Context : DbContext
         modelBuilder.Entity<SectionCategory>().Property(sc => sc.CategoryID).IsRequired();
         modelBuilder.Entity<SectionCategory>().Property(sc => sc.SectionID).IsRequired();
 
-
         // Table Brand
         modelBuilder.Entity<Brand>().HasKey(b => b.ID);
         modelBuilder.Entity<Brand>().Property(b => b.Name).IsRequired().HasMaxLength(50);
+        modelBuilder.Entity<Brand>().HasIndex(b => b.Name).IsUnique();
 
         // Table Product
         modelBuilder.Entity<Product>().HasKey(p => p.ID);
@@ -74,25 +75,26 @@ public class Context : DbContext
         modelBuilder.Entity<Product>().Property(p => p.SectionCategoryID).IsRequired().HasMaxLength(100);
         modelBuilder.Entity<Product>().Property(p => p.Quantity).IsRequired();
         modelBuilder.Entity<Product>().Property(p => p.ImageURL).IsRequired().HasMaxLength(500);
-        
 
         // Table UserAccount
         modelBuilder.Entity<UserAccount>().HasKey(u => u.ID);
-        modelBuilder.Entity<UserAccount>().Property(u=> u.Phone).HasMaxLength(20);
-        modelBuilder.Entity<UserAccount>().Property(u=> u.Email).IsRequired().HasMaxLength(100);
-        modelBuilder.Entity<UserAccount>().Property(u=> u.Password).IsRequired().HasMaxLength(64);
-        modelBuilder.Entity<UserAccount>().Property(u=> u.Role).IsRequired();
+        modelBuilder.Entity<UserAccount>().Property(u => u.Phone).HasMaxLength(20);
+        modelBuilder.Entity<UserAccount>().Property(u => u.Email).IsRequired().HasMaxLength(100);
+        modelBuilder.Entity<UserAccount>().Property(u => u.Password).IsRequired().HasMaxLength(64);
+        modelBuilder.Entity<UserAccount>().Property(u => u.Role).IsRequired();
         modelBuilder.Entity<UserAccount>().Property(u => u.FirstName).HasMaxLength(50);
         modelBuilder.Entity<UserAccount>().Property(u => u.LastName).HasMaxLength(50);
-        
+        modelBuilder.Entity<UserAccount>().HasIndex(u => u.Phone).IsUnique();
+        modelBuilder.Entity<UserAccount>().HasIndex(u => u.Email).IsUnique();
+
         // Table Address
         modelBuilder.Entity<Address>().HasKey(a => a.UserID);
         modelBuilder.Entity<Address>()
             .HasOne(a => a.User)
             .WithOne(u => u.Address)
             .OnDelete(DeleteBehavior.Cascade);
-        
-        modelBuilder.Entity<Address>().Property(a=> a.Country).IsRequired();
+
+        modelBuilder.Entity<Address>().Property(a => a.Country).IsRequired();
         modelBuilder.Entity<Address>().Property(a => a.District).IsRequired().HasMaxLength(50);
         modelBuilder.Entity<Address>().Property(a => a.City).IsRequired().HasMaxLength(50);
         modelBuilder.Entity<Address>().Property(a => a.Postcode).IsRequired().HasMaxLength(10);
@@ -145,7 +147,7 @@ public class Context : DbContext
         modelBuilder.Entity<OrderProduct>().Property(op => op.OrderID).IsRequired();
         modelBuilder.Entity<OrderProduct>().Property(op => op.Qauntity).IsRequired();
         modelBuilder.Entity<OrderProduct>().Property(op => op.Price).IsRequired();
-
+        
         // Table OrderHistory
         modelBuilder.Entity<OrderHistory>().HasKey(oh => oh.ID);
         modelBuilder.Entity<OrderHistory>()
