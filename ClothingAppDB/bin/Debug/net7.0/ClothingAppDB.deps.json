@@ -9,10 +9,19 @@
       "ClothingAppDB/1.0.0": {
         "dependencies": {
           "Microsoft.EntityFrameworkCore": "8.0.0-preview.3.23174.2",
+          "Microsoft.EntityFrameworkCore.Design": "8.0.0-preview.3.23174.2",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "8.0.0-preview.3"
         },
         "runtime": {
           "ClothingAppDB.dll": {}
+        }
+      },
+      "Humanizer.Core/2.14.1": {
+        "runtime": {
+          "lib/net6.0/Humanizer.dll": {
+            "assemblyVersion": "2.14.0.0",
+            "fileVersion": "2.14.1.48190"
+          }
         }
       },
       "Microsoft.EntityFrameworkCore/8.0.0-preview.3.23174.2": {
@@ -39,6 +48,20 @@
         }
       },
       "Microsoft.EntityFrameworkCore.Analyzers/8.0.0-preview.3.23174.2": {},
+      "Microsoft.EntityFrameworkCore.Design/8.0.0-preview.3.23174.2": {
+        "dependencies": {
+          "Humanizer.Core": "2.14.1",
+          "Microsoft.EntityFrameworkCore.Relational": "8.0.0-preview.3.23174.2",
+          "Microsoft.Extensions.DependencyModel": "8.0.0-preview.3.23174.8",
+          "Mono.TextTemplating": "2.2.1"
+        },
+        "runtime": {
+          "lib/net6.0/Microsoft.EntityFrameworkCore.Design.dll": {
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.0.23.17402"
+          }
+        }
+      },
       "Microsoft.EntityFrameworkCore.Relational/8.0.0-preview.3.23174.2": {
         "dependencies": {
           "Microsoft.EntityFrameworkCore": "8.0.0-preview.3.23174.2",
@@ -107,6 +130,18 @@
           }
         }
       },
+      "Microsoft.Extensions.DependencyModel/8.0.0-preview.3.23174.8": {
+        "dependencies": {
+          "System.Text.Encodings.Web": "8.0.0-preview.3.23174.8",
+          "System.Text.Json": "8.0.0-preview.3.23174.8"
+        },
+        "runtime": {
+          "lib/net7.0/Microsoft.Extensions.DependencyModel.dll": {
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.0.23.17408"
+          }
+        }
+      },
       "Microsoft.Extensions.Logging/8.0.0-preview.3.23174.8": {
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection": "8.0.0-preview.3.23174.8",
@@ -149,6 +184,17 @@
           }
         }
       },
+      "Mono.TextTemplating/2.2.1": {
+        "dependencies": {
+          "System.CodeDom": "4.4.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Mono.TextTemplating.dll": {
+            "assemblyVersion": "2.2.0.0",
+            "fileVersion": "2.2.1.1"
+          }
+        }
+      },
       "Npgsql/8.0.0-preview.3": {
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "8.0.0-preview.3.23174.8"
@@ -173,6 +219,41 @@
             "fileVersion": "8.0.0.0"
           }
         }
+      },
+      "System.CodeDom/4.4.0": {
+        "runtime": {
+          "lib/netstandard2.0/System.CodeDom.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "4.6.25519.3"
+          }
+        }
+      },
+      "System.Text.Encodings.Web/8.0.0-preview.3.23174.8": {
+        "runtime": {
+          "lib/net7.0/System.Text.Encodings.Web.dll": {
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.0.23.17408"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/browser/lib/net7.0/System.Text.Encodings.Web.dll": {
+            "rid": "browser",
+            "assetType": "runtime",
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.0.23.17408"
+          }
+        }
+      },
+      "System.Text.Json/8.0.0-preview.3.23174.8": {
+        "dependencies": {
+          "System.Text.Encodings.Web": "8.0.0-preview.3.23174.8"
+        },
+        "runtime": {
+          "lib/net7.0/System.Text.Json.dll": {
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.0.23.17408"
+          }
+        }
       }
     }
   },
@@ -181,6 +262,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "Humanizer.Core/2.14.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-lQKvtaTDOXnoVJ20ibTuSIOf2i0uO0MPbDhd1jm238I+U/2ZnRENj0cktKZhtchBMtCUSRQ5v4xBCUbKNmyVMw==",
+      "path": "humanizer.core/2.14.1",
+      "hashPath": "humanizer.core.2.14.1.nupkg.sha512"
     },
     "Microsoft.EntityFrameworkCore/8.0.0-preview.3.23174.2": {
       "type": "package",
@@ -202,6 +290,13 @@
       "sha512": "sha512-qCFEj1m3Vr6PESwPBhwxEipUcPCSzx+ImhLfuWph3YElAjXNbM+p0JqbbdZrCQCB2NB2RKbeJ5uAj/WGEbbD9Q==",
       "path": "microsoft.entityframeworkcore.analyzers/8.0.0-preview.3.23174.2",
       "hashPath": "microsoft.entityframeworkcore.analyzers.8.0.0-preview.3.23174.2.nupkg.sha512"
+    },
+    "Microsoft.EntityFrameworkCore.Design/8.0.0-preview.3.23174.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-tn5nNCa4tLKe9hU3dy95wSMyCuCP2y2aAFr0ma9c2aCbu0/auYbns/hPJHPfk1OfpretAxyoVPhojN/ffIdJxg==",
+      "path": "microsoft.entityframeworkcore.design/8.0.0-preview.3.23174.2",
+      "hashPath": "microsoft.entityframeworkcore.design.8.0.0-preview.3.23174.2.nupkg.sha512"
     },
     "Microsoft.EntityFrameworkCore.Relational/8.0.0-preview.3.23174.2": {
       "type": "package",
@@ -245,6 +340,13 @@
       "path": "microsoft.extensions.dependencyinjection.abstractions/8.0.0-preview.3.23174.8",
       "hashPath": "microsoft.extensions.dependencyinjection.abstractions.8.0.0-preview.3.23174.8.nupkg.sha512"
     },
+    "Microsoft.Extensions.DependencyModel/8.0.0-preview.3.23174.8": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-d16qEECd7sefrxPu//9Bz2rtgVHbjaHUSMcNxQJi99F6E3DIrqcJM5eKr/aFzyy3KnOMKwHKJof047/AXFWouw==",
+      "path": "microsoft.extensions.dependencymodel/8.0.0-preview.3.23174.8",
+      "hashPath": "microsoft.extensions.dependencymodel.8.0.0-preview.3.23174.8.nupkg.sha512"
+    },
     "Microsoft.Extensions.Logging/8.0.0-preview.3.23174.8": {
       "type": "package",
       "serviceable": true,
@@ -273,6 +375,13 @@
       "path": "microsoft.extensions.primitives/8.0.0-preview.3.23174.8",
       "hashPath": "microsoft.extensions.primitives.8.0.0-preview.3.23174.8.nupkg.sha512"
     },
+    "Mono.TextTemplating/2.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-KZYeKBET/2Z0gY1WlTAK7+RHTl7GSbtvTLDXEZZojUdAPqpQNDL6tHv7VUpqfX5VEOh+uRGKaZXkuD253nEOBQ==",
+      "path": "mono.texttemplating/2.2.1",
+      "hashPath": "mono.texttemplating.2.2.1.nupkg.sha512"
+    },
     "Npgsql/8.0.0-preview.3": {
       "type": "package",
       "serviceable": true,
@@ -286,6 +395,27 @@
       "sha512": "sha512-uISpux//aDPWdHq0YHFLUaB0t8RTPmSgeQebHUUipMHk/zzmc/bGY/yaW+dOAWsiF6XMRdAXEf7SCAUYplqavA==",
       "path": "npgsql.entityframeworkcore.postgresql/8.0.0-preview.3",
       "hashPath": "npgsql.entityframeworkcore.postgresql.8.0.0-preview.3.nupkg.sha512"
+    },
+    "System.CodeDom/4.4.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-2sCCb7doXEwtYAbqzbF/8UAeDRMNmPaQbU2q50Psg1J9KzumyVVCgKQY8s53WIPTufNT0DpSe9QRvVjOzfDWBA==",
+      "path": "system.codedom/4.4.0",
+      "hashPath": "system.codedom.4.4.0.nupkg.sha512"
+    },
+    "System.Text.Encodings.Web/8.0.0-preview.3.23174.8": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-jk5t0QRo9K1LsGf9TUNjcm/cF72ChLUsP3QkFVmXSLkeD6/5krpTMjWdinUl5sHHn2odsUlLg1H6fcgP4EkYTA==",
+      "path": "system.text.encodings.web/8.0.0-preview.3.23174.8",
+      "hashPath": "system.text.encodings.web.8.0.0-preview.3.23174.8.nupkg.sha512"
+    },
+    "System.Text.Json/8.0.0-preview.3.23174.8": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-iewL8pmcI3vSRYgT9edcCFlqCep65bTZaPK+sqvnrEoQr0upLY4BIFjp4F/rhHMIWeYFUC/AZDRAeAxI0q2HDw==",
+      "path": "system.text.json/8.0.0-preview.3.23174.8",
+      "hashPath": "system.text.json.8.0.0-preview.3.23174.8.nupkg.sha512"
     }
   }
 }

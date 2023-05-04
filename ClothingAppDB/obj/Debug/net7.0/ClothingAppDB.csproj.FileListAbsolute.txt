@@ -58,3 +58,11 @@ C:\Users\bobro\OneDrive\Документы\GitHub\sunmait-traineeship\ClothingAp
 C:\Users\bobro\OneDrive\Документы\GitHub\sunmait-traineeship\ClothingAppDB\obj\Debug\net7.0\ClothingAppDB.pdb
 C:\Users\bobro\OneDrive\Документы\GitHub\sunmait-traineeship\ClothingAppDB\obj\Debug\net7.0\ClothingAppDB.genruntimeconfig.cache
 C:\Users\bobro\OneDrive\Документы\GitHub\sunmait-traineeship\ClothingAppDB\obj\Debug\net7.0\ref\ClothingAppDB.dll
+C:\Users\bobro\OneDrive\Документы\GitHub\sunmait-traineeship\ClothingAppDB\bin\Debug\net7.0\Humanizer.dll
+C:\Users\bobro\OneDrive\Документы\GitHub\sunmait-traineeship\ClothingAppDB\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.Design.dll
+C:\Users\bobro\OneDrive\Документы\GitHub\sunmait-traineeship\ClothingAppDB\bin\Debug\net7.0\Microsoft.Extensions.DependencyModel.dll
+C:\Users\bobro\OneDrive\Документы\GitHub\sunmait-traineeship\ClothingAppDB\bin\Debug\net7.0\Mono.TextTemplating.dll
+C:\Users\bobro\OneDrive\Документы\GitHub\sunmait-traineeship\ClothingAppDB\bin\Debug\net7.0\System.CodeDom.dll
+C:\Users\bobro\OneDrive\Документы\GitHub\sunmait-traineeship\ClothingAppDB\bin\Debug\net7.0\System.Text.Encodings.Web.dll
+C:\Users\bobro\OneDrive\Документы\GitHub\sunmait-traineeship\ClothingAppDB\bin\Debug\net7.0\System.Text.Json.dll
+C:\Users\bobro\OneDrive\Документы\GitHub\sunmait-traineeship\ClothingAppDB\bin\Debug\net7.0\runtimes\browser\lib\net7.0\System.Text.Encodings.Web.dll
