@@ -7,8 +7,6 @@ public class Context : DbContext
 {
     public Context()
     {
-        Database.EnsureDeleted();
-        Database.EnsureCreated();
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -20,12 +18,12 @@ public class Context : DbContext
     {
         modelBuilder.HasDefaultSchema("clothing_store");
 
-        // Table Section
+        // Table Sections
         modelBuilder.Entity<Section>().HasKey(s => s.ID);
         modelBuilder.Entity<Section>().Property(s => s.Name).IsRequired().HasMaxLength(50);
         modelBuilder.Entity<Section>().HasIndex(s => s.Name).IsUnique();
 
-        // Table Category
+        // Table Categories
         modelBuilder.Entity<Category>().HasKey(c => c.ID);
         modelBuilder.Entity<Category>()
             .HasOne(c => c.ParentCategory)
@@ -34,7 +32,7 @@ public class Context : DbContext
             .OnDelete(DeleteBehavior.Restrict);
         modelBuilder.Entity<Category>().Property(c => c.Name).IsRequired().HasMaxLength(50);
 
-        // Table SectionCategory
+        // Table SectionCategories
         modelBuilder.Entity<SectionCategory>().HasKey(sc => sc.ID);
         modelBuilder.Entity<SectionCategory>()
             .HasOne(sc => sc.Section)
@@ -49,13 +47,12 @@ public class Context : DbContext
         modelBuilder.Entity<SectionCategory>().Property(sc => sc.CategoryID).IsRequired();
         modelBuilder.Entity<SectionCategory>().Property(sc => sc.SectionID).IsRequired();
 
-
-        // Table Brand
+        // Table Brands
         modelBuilder.Entity<Brand>().HasKey(b => b.ID);
         modelBuilder.Entity<Brand>().Property(b => b.Name).IsRequired().HasMaxLength(50);
         modelBuilder.Entity<Brand>().HasIndex(b => b.Name).IsUnique();
 
-        // Table Product
+        // Table Products
         modelBuilder.Entity<Product>().HasKey(p => p.ID);
         modelBuilder.Entity<Product>()
             .HasOne(p => p.Brand)
@@ -69,7 +66,7 @@ public class Context : DbContext
             .OnDelete(DeleteBehavior.Restrict);
         modelBuilder.Entity<Product>().Property(p => p.Name).IsRequired().HasMaxLength(100);
         modelBuilder.Entity<Product>().Property(p => p.Description).IsRequired().HasMaxLength(100);
-        modelBuilder.Entity<Product>().Property(p => p.Price).IsRequired();
+        modelBuilder.Entity<Product>().Property(p => p.Price).IsRequired().HasColumnType("numeric");
         modelBuilder.Entity<Product>().Property(p => p.BrandID).IsRequired();
         modelBuilder.Entity<Product>().Property(p => p.AddDate).IsRequired();
         modelBuilder.Entity<Product>().Property(p => p.SectionCategoryID).IsRequired();
@@ -83,7 +80,7 @@ public class Context : DbContext
             .ToTable(p => p.HasCheckConstraint("Quantity", "\"Quantity\" >= 0")
                 .HasName("CK_Product_Quantity"));
 
-        // Table UserAccount
+        // Table UserAccounts
         modelBuilder.Entity<UserAccount>().HasKey(u => u.ID);
         modelBuilder.Entity<UserAccount>().Property(u => u.Phone).HasMaxLength(20);
         modelBuilder.Entity<UserAccount>().Property(u => u.Email).IsRequired().HasMaxLength(100);
@@ -94,7 +91,7 @@ public class Context : DbContext
         modelBuilder.Entity<UserAccount>().HasIndex(u => u.Phone).IsUnique();
         modelBuilder.Entity<UserAccount>().HasIndex(u => u.Email).IsUnique();
 
-        // Table Address
+        // Table Addresses
         modelBuilder.Entity<Address>().HasKey(a => a.UserID);
         modelBuilder.Entity<Address>()
             .HasOne(a => a.User)
@@ -108,7 +105,7 @@ public class Context : DbContext
         modelBuilder.Entity<Address>().Property(a => a.AddressLine1).IsRequired().HasMaxLength(50);
         modelBuilder.Entity<Address>().Property(a => a.AddressLine2).HasMaxLength(20);
 
-        // Table Review
+        // Table Reviews
         modelBuilder.Entity<Review>().HasKey(r => r.ID);
         modelBuilder.Entity<Review>()
             .HasOne(r => r.Product)
@@ -130,7 +127,7 @@ public class Context : DbContext
             .ToTable(r => r.HasCheckConstraint("Rating", "\"Rating\" >= 0 AND \"Rating\" <= 5")
                 .HasName("CK_Review_Rating"));
 
-        // Table CustomerOrder
+        // Table CustomerOrders
         modelBuilder.Entity<CustomerOrder>().HasKey(co => co.ID);
         modelBuilder.Entity<CustomerOrder>()
             .HasOne(co => co.User)
@@ -141,7 +138,7 @@ public class Context : DbContext
         modelBuilder.Entity<CustomerOrder>().Property(co => co.OrderDate).IsRequired();
         modelBuilder.Entity<CustomerOrder>().Property(co => co.CurrentStatus).IsRequired();
 
-        // Table OrderProduct
+        // Table OrderProducts
         modelBuilder.Entity<OrderProduct>().HasKey(op => op.ID);
         modelBuilder.Entity<OrderProduct>()
             .HasOne(op => op.Product)
@@ -156,15 +153,15 @@ public class Context : DbContext
         modelBuilder.Entity<OrderProduct>().Property(op => op.ProductID).IsRequired();
         modelBuilder.Entity<OrderProduct>().Property(op => op.OrderID).IsRequired();
         modelBuilder.Entity<OrderProduct>().Property(op => op.Quantity).IsRequired();
-        modelBuilder.Entity<OrderProduct>().Property(op => op.Price).IsRequired();
+        modelBuilder.Entity<OrderProduct>().Property(op => op.Price).IsRequired().HasColumnType("numeric");
         modelBuilder.Entity<OrderProduct>()
             .ToTable(op => op.HasCheckConstraint("Quantity", "\"Quantity\" > 0")
                 .HasName("CK_OrderProduct_Quantity"));
         modelBuilder.Entity<OrderProduct>()
             .ToTable(op => op.HasCheckConstraint("Price", "\"Price\" > 0")
                 .HasName("CK_OrderProduct_Price"));
-        
-        // Table OrderHistory
+
+        // Table OrderHistories
         modelBuilder.Entity<OrderHistory>().HasKey(oh => oh.ID);
         modelBuilder.Entity<OrderHistory>()
             .HasOne(oh => oh.CustomerOrder)
