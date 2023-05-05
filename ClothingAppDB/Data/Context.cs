@@ -1,4 +1,4 @@
-﻿using ClothingAppDB.Configurations;
+﻿using System.Reflection;
 using ClothingAppDB.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,18 +18,7 @@ public class Context : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("clothing_store");
-        modelBuilder.ApplyConfiguration(new SectionConfiguration());
-        modelBuilder.ApplyConfiguration(new CategoryConfiguration());
-        modelBuilder.ApplyConfiguration(new SectionCategoryConfiguration());
-        modelBuilder.ApplyConfiguration(new BrandConfiguration());
-        modelBuilder.ApplyConfiguration(new ProductConfiguration());
-        modelBuilder.ApplyConfiguration(new UserAccountConfiguration());
-        modelBuilder.ApplyConfiguration(new AddressConfiguration());
-        modelBuilder.ApplyConfiguration(new ReviewConfiguration());
-        modelBuilder.ApplyConfiguration(new UserAccountConfiguration());
-        modelBuilder.ApplyConfiguration(new CustomerOrderConfiguration());
-        modelBuilder.ApplyConfiguration(new OrderProductConfiguration());
-        modelBuilder.ApplyConfiguration(new OrderHistoryConfiguration());
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 
     public DbSet<Section> Sections { get; set; }
