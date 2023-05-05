@@ -24,10 +24,10 @@ public class OrderProductConfiguration : IEntityTypeConfiguration<OrderProduct>
         builder.Property(op => op.Quantity).IsRequired();
         builder.Property(op => op.Price).IsRequired().HasColumnType("numeric");
         builder
-            .ToTable(op => op.HasCheckConstraint("Quantity", "\"Quantity\" > 0")
-                .HasName("CK_OrderProduct_Quantity"));
+            .ToTable(op => op.HasCheckConstraint("quantity", "quantity > 0")
+                .HasName("CK_order_product_quantity"));
         builder
-            .ToTable(op => op.HasCheckConstraint("Price", "\"Price\" > 0")
-                .HasName("CK_OrderProduct_Price"));
+            .ToTable(op => op.HasCheckConstraint("price", "price > 0")
+                .HasName("CK_order_product_price"));
     }
 }

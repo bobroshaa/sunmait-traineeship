@@ -29,10 +29,10 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.Property(p => p.Quantity).IsRequired();
         builder.Property(p => p.ImageURL).IsRequired().HasMaxLength(500);
         builder
-            .ToTable(p => p.HasCheckConstraint("Price", "\"Price\" > 0")
-                .HasName("CK_Product_Price"));
+            .ToTable(p => p.HasCheckConstraint("price", "price > 0")
+                .HasName("CK_product_price"));
         builder
-            .ToTable(p => p.HasCheckConstraint("Quantity", "\"Quantity\" >= 0")
-                .HasName("CK_Product_Quantity"));
+            .ToTable(p => p.HasCheckConstraint("quantity", "Quantity >= 0")
+                .HasName("CK_product_quantity"));
     }
 }
