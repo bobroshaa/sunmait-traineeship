@@ -15,5 +15,6 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
             .HasForeignKey(c => c.ParentCategoryID)
             .OnDelete(DeleteBehavior.Restrict);
         builder.Property(c => c.Name).IsRequired().HasMaxLength(50);
+        builder.Property(c => c.ParentCategoryID).IsRequired(false);
     }
 }

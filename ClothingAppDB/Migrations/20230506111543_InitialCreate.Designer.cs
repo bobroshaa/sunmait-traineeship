@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ClothingAppDB.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20230504095231_InitialCreate")]
+    [Migration("20230506111543_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -29,166 +29,203 @@ namespace ClothingAppDB.Migrations
             modelBuilder.Entity("ClothingAppDB.Entities.Address", b =>
                 {
                     b.Property<int>("UserID")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("user_id");
 
                     b.Property<string>("AddressLine1")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("address_line1");
 
                     b.Property<string>("AddressLine2")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("address_line2");
 
                     b.Property<string>("City")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("city");
 
                     b.Property<int>("Country")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("country");
 
                     b.Property<string>("District")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("district");
 
                     b.Property<string>("Postcode")
                         .IsRequired()
                         .HasMaxLength(10)
-                        .HasColumnType("character varying(10)");
+                        .HasColumnType("character varying(10)")
+                        .HasColumnName("postcode");
 
-                    b.HasKey("UserID");
+                    b.HasKey("UserID")
+                        .HasName("pk_addresses");
 
-                    b.ToTable("Addresses", "clothing_store");
+                    b.ToTable("addresses", "clothing_store");
                 });
 
             modelBuilder.Entity("ClothingAppDB.Entities.Brand", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("name");
 
-                    b.HasKey("ID");
+                    b.HasKey("ID")
+                        .HasName("pk_brands");
 
                     b.HasIndex("Name")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_brands_name");
 
-                    b.ToTable("Brands", "clothing_store");
+                    b.ToTable("brands", "clothing_store");
                 });
 
             modelBuilder.Entity("ClothingAppDB.Entities.Category", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("name");
 
-                    b.Property<int>("ParentCategoryID")
-                        .HasColumnType("integer");
+                    b.Property<int?>("ParentCategoryID")
+                        .HasColumnType("integer")
+                        .HasColumnName("parent_category_id");
 
-                    b.HasKey("ID");
+                    b.HasKey("ID")
+                        .HasName("pk_categories");
 
-                    b.HasIndex("ParentCategoryID");
+                    b.HasIndex("ParentCategoryID")
+                        .HasDatabaseName("ix_categories_parent_category_id");
 
-                    b.ToTable("Categories", "clothing_store");
+                    b.ToTable("categories", "clothing_store");
                 });
 
             modelBuilder.Entity("ClothingAppDB.Entities.CustomerOrder", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<int>("CurrentStatus")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("current_status");
 
                     b.Property<DateTime>("OrderDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("order_date");
 
                     b.Property<int>("UserID")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("user_id");
 
-                    b.HasKey("ID");
+                    b.HasKey("ID")
+                        .HasName("pk_customer_orders");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("UserID")
+                        .HasDatabaseName("ix_customer_orders_user_id");
 
-                    b.ToTable("CustomerOrders", "clothing_store");
+                    b.ToTable("customer_orders", "clothing_store");
                 });
 
             modelBuilder.Entity("ClothingAppDB.Entities.OrderHistory", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("date");
 
                     b.Property<int>("OrderID")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("order_id");
 
                     b.Property<int>("Status")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("status");
 
-                    b.HasKey("ID");
+                    b.HasKey("ID")
+                        .HasName("pk_order_histories");
 
-                    b.HasIndex("OrderID");
+                    b.HasIndex("OrderID")
+                        .HasDatabaseName("ix_order_histories_order_id");
 
-                    b.ToTable("OrderHistories", "clothing_store");
+                    b.ToTable("order_histories", "clothing_store");
                 });
 
             modelBuilder.Entity("ClothingAppDB.Entities.OrderProduct", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<int>("OrderID")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("order_id");
 
                     b.Property<double>("Price")
-                        .HasColumnType("double precision");
+                        .HasColumnType("numeric")
+                        .HasColumnName("price");
 
                     b.Property<int>("ProductID")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("product_id");
 
                     b.Property<int>("Quantity")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("quantity");
 
-                    b.HasKey("ID");
+                    b.HasKey("ID")
+                        .HasName("pk_order_products");
 
-                    b.HasIndex("OrderID");
+                    b.HasIndex("OrderID")
+                        .HasDatabaseName("ix_order_products_order_id");
 
-                    b.HasIndex("ProductID");
+                    b.HasIndex("ProductID")
+                        .HasDatabaseName("ix_order_products_product_id");
 
-                    b.ToTable("OrderProducts", "clothing_store", t =>
+                    b.ToTable("order_products", "clothing_store", t =>
                         {
-                            t.HasCheckConstraint("Price", "\"Price\" > 0")
-                                .HasName("CK_OrderProduct_Price");
+                            t.HasCheckConstraint("price", "price > 0")
+                                .HasName("CK_order_product_price");
 
-                            t.HasCheckConstraint("Quantity", "\"Quantity\" > 0")
-                                .HasName("CK_OrderProduct_Quantity");
+                            t.HasCheckConstraint("quantity", "quantity > 0")
+                                .HasName("CK_order_product_quantity");
                         });
                 });
 
@@ -196,59 +233,73 @@ namespace ClothingAppDB.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<DateTime>("AddDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("add_date");
 
                     b.Property<int>("BrandID")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("brand_id");
 
                     b.Property<int?>("CategoryID")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("category_id");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("description");
 
                     b.Property<string>("ImageURL")
                         .IsRequired()
                         .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("image_url");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("name");
 
                     b.Property<double>("Price")
-                        .HasColumnType("double precision");
+                        .HasColumnType("numeric")
+                        .HasColumnName("price");
 
                     b.Property<int>("Quantity")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("quantity");
 
                     b.Property<int>("SectionCategoryID")
                         .HasMaxLength(100)
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("section_category_id");
 
-                    b.HasKey("ID");
+                    b.HasKey("ID")
+                        .HasName("pk_products");
 
-                    b.HasIndex("BrandID");
+                    b.HasIndex("BrandID")
+                        .HasDatabaseName("ix_products_brand_id");
 
-                    b.HasIndex("CategoryID");
+                    b.HasIndex("CategoryID")
+                        .HasDatabaseName("ix_products_category_id");
 
-                    b.HasIndex("SectionCategoryID");
+                    b.HasIndex("SectionCategoryID")
+                        .HasDatabaseName("ix_products_section_category_id");
 
-                    b.ToTable("Products", "clothing_store", t =>
+                    b.ToTable("products", "clothing_store", t =>
                         {
-                            t.HasCheckConstraint("Price", "\"Price\" > 0")
-                                .HasName("CK_Product_Price");
+                            t.HasCheckConstraint("price", "price > 0")
+                                .HasName("CK_product_price");
 
-                            t.HasCheckConstraint("Quantity", "\"Quantity\" >= 0")
-                                .HasName("CK_Product_Quantity");
+                            t.HasCheckConstraint("quantity", "Quantity >= 0")
+                                .HasName("CK_product_quantity");
                         });
                 });
 
@@ -256,42 +307,52 @@ namespace ClothingAppDB.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<DateTime>("AddDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("add_date");
 
                     b.Property<string>("Comment")
                         .IsRequired()
                         .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("comment");
 
                     b.Property<int>("ProductID")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("product_id");
 
                     b.Property<int>("Rating")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("rating");
 
                     b.Property<string>("ReviewTitle")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("review_title");
 
                     b.Property<int>("UserID")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("user_id");
 
-                    b.HasKey("ID");
+                    b.HasKey("ID")
+                        .HasName("pk_reviews");
 
-                    b.HasIndex("ProductID");
+                    b.HasIndex("ProductID")
+                        .HasDatabaseName("ix_reviews_product_id");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("UserID")
+                        .HasDatabaseName("ix_reviews_user_id");
 
-                    b.ToTable("Reviews", "clothing_store", t =>
+                    b.ToTable("reviews", "clothing_store", t =>
                         {
-                            t.HasCheckConstraint("Rating", "\"Rating\" >= 0 AND \"Rating\" <= 5")
-                                .HasName("CK_Review_Rating");
+                            t.HasCheckConstraint("rating", "rating >= 0 AND rating <= 5")
+                                .HasName("CK_review_rating");
                         });
                 });
 
@@ -299,91 +360,110 @@ namespace ClothingAppDB.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("name");
 
-                    b.HasKey("ID");
+                    b.HasKey("ID")
+                        .HasName("pk_sections");
 
                     b.HasIndex("Name")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_sections_name");
 
-                    b.ToTable("Sections", "clothing_store");
+                    b.ToTable("sections", "clothing_store");
                 });
 
             modelBuilder.Entity("ClothingAppDB.Entities.SectionCategory", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<int>("CategoryID")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("category_id");
 
                     b.Property<int>("SectionID")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("section_id");
 
-                    b.HasKey("ID");
+                    b.HasKey("ID")
+                        .HasName("pk_section_categories");
 
-                    b.HasIndex("CategoryID");
+                    b.HasIndex("CategoryID")
+                        .HasDatabaseName("ix_section_categories_category_id");
 
-                    b.HasIndex("SectionID");
+                    b.HasIndex("SectionID")
+                        .HasDatabaseName("ix_section_categories_section_id");
 
-                    b.ToTable("SectionCategories", "clothing_store");
+                    b.ToTable("section_categories", "clothing_store");
                 });
 
             modelBuilder.Entity("ClothingAppDB.Entities.UserAccount", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("email");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("first_name");
 
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("last_name");
 
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasMaxLength(64)
-                        .HasColumnType("character varying(64)");
+                        .HasColumnType("character varying(64)")
+                        .HasColumnName("password");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("phone");
 
                     b.Property<int>("Role")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("role");
 
-                    b.HasKey("ID");
+                    b.HasKey("ID")
+                        .HasName("pk_users");
 
                     b.HasIndex("Email")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_users_email");
 
                     b.HasIndex("Phone")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_users_phone");
 
-                    b.ToTable("Users", "clothing_store");
+                    b.ToTable("users", "clothing_store");
                 });
 
             modelBuilder.Entity("ClothingAppDB.Entities.Address", b =>
@@ -392,7 +472,8 @@ namespace ClothingAppDB.Migrations
                         .WithOne("Address")
                         .HasForeignKey("ClothingAppDB.Entities.Address", "UserID")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_addresses_users_user_id");
 
                     b.Navigation("User");
                 });
@@ -403,7 +484,7 @@ namespace ClothingAppDB.Migrations
                         .WithMany("Categories")
                         .HasForeignKey("ParentCategoryID")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasConstraintName("fk_categories_categories_parent_category_id");
 
                     b.Navigation("ParentCategory");
                 });
@@ -414,7 +495,8 @@ namespace ClothingAppDB.Migrations
                         .WithMany("CustomerOrders")
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_customer_orders_users_user_id");
 
                     b.Navigation("User");
                 });
@@ -425,7 +507,8 @@ namespace ClothingAppDB.Migrations
                         .WithMany("OrderHistories")
                         .HasForeignKey("OrderID")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_order_histories_customer_orders_customer_order_id");
 
                     b.Navigation("CustomerOrder");
                 });
@@ -436,13 +519,15 @@ namespace ClothingAppDB.Migrations
                         .WithMany("OrderProducts")
                         .HasForeignKey("OrderID")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_order_products_customer_orders_order_id");
 
                     b.HasOne("ClothingAppDB.Entities.Product", "Product")
                         .WithMany("OrderProducts")
                         .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_order_products_products_product_id");
 
                     b.Navigation("Order");
 
@@ -455,17 +540,20 @@ namespace ClothingAppDB.Migrations
                         .WithMany("Products")
                         .HasForeignKey("BrandID")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_products_brands_brand_id");
 
                     b.HasOne("ClothingAppDB.Entities.Category", null)
                         .WithMany("Products")
-                        .HasForeignKey("CategoryID");
+                        .HasForeignKey("CategoryID")
+                        .HasConstraintName("fk_products_categories_category_id");
 
                     b.HasOne("ClothingAppDB.Entities.SectionCategory", "SectionCategory")
                         .WithMany("Products")
                         .HasForeignKey("SectionCategoryID")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_products_section_categories_section_category_id");
 
                     b.Navigation("Brand");
 
@@ -478,13 +566,15 @@ namespace ClothingAppDB.Migrations
                         .WithMany("Reviews")
                         .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_reviews_products_product_id");
 
                     b.HasOne("ClothingAppDB.Entities.UserAccount", "User")
                         .WithMany("Reviews")
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_reviews_users_user_id");
 
                     b.Navigation("Product");
 
@@ -497,13 +587,15 @@ namespace ClothingAppDB.Migrations
                         .WithMany("SectionCategories")
                         .HasForeignKey("CategoryID")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_section_categories_categories_category_id");
 
                     b.HasOne("ClothingAppDB.Entities.Section", "Section")
                         .WithMany("SectionCategories")
                         .HasForeignKey("SectionID")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_section_categories_sections_section_id");
 
                     b.Navigation("Category");
 

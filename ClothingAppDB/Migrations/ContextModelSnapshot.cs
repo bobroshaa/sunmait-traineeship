@@ -109,7 +109,7 @@ namespace ClothingAppDB.Migrations
                         .HasColumnType("character varying(50)")
                         .HasColumnName("name");
 
-                    b.Property<int>("ParentCategoryID")
+                    b.Property<int?>("ParentCategoryID")
                         .HasColumnType("integer")
                         .HasColumnName("parent_category_id");
 
@@ -249,8 +249,8 @@ namespace ClothingAppDB.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
                         .HasColumnName("description");
 
                     b.Property<string>("ImageURL")
@@ -441,7 +441,6 @@ namespace ClothingAppDB.Migrations
                         .HasColumnName("password");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)")
                         .HasColumnName("phone");
@@ -482,7 +481,6 @@ namespace ClothingAppDB.Migrations
                         .WithMany("Categories")
                         .HasForeignKey("ParentCategoryID")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
                         .HasConstraintName("fk_categories_categories_parent_category_id");
 
                     b.Navigation("ParentCategory");
