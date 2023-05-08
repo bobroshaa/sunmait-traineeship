@@ -13,6 +13,7 @@ public class Context : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder
+            .UseLazyLoadingProxies()
             .UseNpgsql(@"host=localhost;port=5432;database=db;username=postgres;password=345510")
             .UseSnakeCaseNamingConvention();
     }
