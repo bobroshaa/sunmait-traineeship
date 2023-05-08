@@ -1,4 +1,5 @@
-﻿using ClothingAppDB.Entities.Enums;
+﻿using ClothingAppDB.Entities;
+using ClothingAppDB.Entities.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClothingAppDB
@@ -33,7 +34,7 @@ namespace ClothingAppDB
                     .Where(r => r.ProductID == 1)
                     .Include(r => r.User);
 
-                Console.WriteLine("Eager Loading:\n");              
+                Console.WriteLine("Eager Loading:\n");
                 foreach (var product in allProductsOfBrand)
                 {
                     Console.WriteLine(
@@ -78,7 +79,7 @@ namespace ClothingAppDB
                     .Where(op => op.Order.CurrentStatus == Status.Completed && op.ProductID == 1);
                 var allReviewOfProduct1 = context.Reviews
                     .Where(r => r.ProductID == 1);
-                
+
                 Console.WriteLine("Lazy Loading:\n");
                 foreach (var product in allProductsOfBrand1)
                 {
@@ -108,6 +109,16 @@ namespace ClothingAppDB
                     Console.WriteLine(
                         $"rating: {review.Rating},\ncomment: {review.Comment},\nphone: {review.User.Phone},\nemail: {review.User.Email},\nrole:{review.User.Role},\nfirst_name: {review.User.FirstName},\nlast_name: {review.User.LastName}\n");
                 }
+            }
+
+            var updatedBrand = new Brand() { ID = 4, Name = "Bershka" };
+
+            using (var context = new Context())
+            {
+                context.Entry(updatedBrand).State = EntityState.Modified;
+                context.SaveChanges();
+                
+                Console.WriteLine(context.Brands.Single(p => p.ID == 4).Name);
             }
         }
     }
