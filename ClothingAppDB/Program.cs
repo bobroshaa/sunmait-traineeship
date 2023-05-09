@@ -14,21 +14,21 @@ namespace ClothingAppDB
                 var allProductsOfBrand = context.Products.Where(p => p.BrandID == 1);
 
                 var brandsWithNumberProducts = context.Brands
-                    .Include(b => b.Products).GroupBy(b => b.Name)
-                    .Select(group => new { BrandName = group.Key, Count = group.Count() })
-                    .OrderByDescending(group => group.Count);
+                    .GroupJoin(
+                        context.Products,
+                        b => b.ID,
+                        p => p.BrandID,
+                        (b, p) => new { BrandID = b.ID, Count = b.Products.Count() }
+                    ).OrderByDescending(group => group.Count);
+                var sectionCategoryProducts = context.Products
+                    .Include(p => p.SectionCategory)
+                    .Where(p => p.SectionCategory.CategoryID == 2 && p.SectionCategory.SectionID == 1);
 
-                var sectionCategoryProducts = context.SectionCategories
-                    .Where(sc => sc.CategoryID == 2 && sc.SectionID == 1)
-                    .Include(sc => sc.Products)
-                    .Single();
-
-                var completedOrdersOfProduct = context.CustomerOrders
-                    .Where(co => co.CurrentStatus == Status.Completed)
-                    .Include(co => co.OrderProducts
-                        .Where(op => op.ProductID == 1))
-                    .ThenInclude(op => op.Product)
-                    .Include(co => co.User);
+                var completedOrdersOfProduct = context.OrderProducts
+                    .Include(op => op.Order)
+                    .ThenInclude(o => o.User)
+                    .Include(op => op.Product)
+                    .Where(op => op.Order.CurrentStatus == Status.Completed && op.ProductID == 1);
 
                 var allReviewOfProduct = context.Reviews
                     .Where(r => r.ProductID == 1)
@@ -43,22 +43,19 @@ namespace ClothingAppDB
 
                 foreach (var brand in brandsWithNumberProducts)
                 {
-                    Console.WriteLine($"brand_name: {brand.BrandName}, products_count: {brand.Count}\n");
+                    Console.WriteLine($"brand_name: {brand.BrandID}, products_count: {brand.Count}\n");
                 }
 
-                foreach (var product in sectionCategoryProducts.Products)
+                foreach (var product in sectionCategoryProducts)
                 {
                     Console.WriteLine(
                         $"id: {product.ID},\nname: {product.Name},\ndescription: {product.Description},\nprice: {product.Price},\nadd_date:{product.AddDate},\nsection_category_id: {product.SectionCategoryID},\nquantity: {product.Quantity},\nimage: {product.ImageURL}\n");
                 }
 
-                foreach (var order in completedOrdersOfProduct)
+                foreach (var op in completedOrdersOfProduct)
                 {
-                    foreach (var prod in order.OrderProducts)
-                    {
-                        Console.WriteLine(
-                            $"order_id: {order.ID},\nuser_id: {order.User.ID},\nfirst_name: {order.User.FirstName},\nlast_name: {order.User.LastName},\nproduct_name:{prod.Product.Name},\ncurrent_status: {order.CurrentStatus},\norder_date: {order.OrderDate}\n");
-                    }
+                    Console.WriteLine(
+                        $"order_id: {op.Order.ID},\nuser_id: {op.Order.User.ID},\nfirst_name: {op.Order.User.FirstName},\nlast_name: {op.Order.User.LastName},\nproduct_name:{op.Product.Name},\ncurrent_status: {op.Order.CurrentStatus},\norder_date: {op.Order.OrderDate}\n");
                 }
 
                 foreach (var review in allReviewOfProduct)
@@ -70,9 +67,12 @@ namespace ClothingAppDB
                 // Lazy loading
                 var allProductsOfBrand1 = context.Products.Where(p => p.BrandID == 1);
                 var brandsWithNumberProducts1 = context.Brands
-                    .GroupBy(b => b.Name)
-                    .Select(group => new { BrandName = group.Key, Count = group.Count() })
-                    .OrderByDescending(group => group.Count);
+                    .GroupJoin(
+                        context.Products,
+                        b => b.ID,
+                        p => p.BrandID,
+                        (b, p) => new { BrandID = b.ID, Count = b.Products.Count() }
+                    );
                 var sectionCategoryProducts1 = context.SectionCategories
                     .Single(sc => sc.CategoryID == 2 && sc.SectionID == 1);
                 var completedOrdersOfProduct1 = context.OrderProducts
@@ -80,7 +80,7 @@ namespace ClothingAppDB
                 var allReviewOfProduct1 = context.Reviews
                     .Where(r => r.ProductID == 1);
 
-                Console.WriteLine("Lazy Loading:\n");
+                Console.WriteLine("------------------------------------\nLazy Loading:\n");
                 foreach (var product in allProductsOfBrand1)
                 {
                     Console.WriteLine(
@@ -89,7 +89,7 @@ namespace ClothingAppDB
 
                 foreach (var brand in brandsWithNumberProducts1)
                 {
-                    Console.WriteLine($"brand_name: {brand.BrandName}, products_count: {brand.Count}\n");
+                    Console.WriteLine($"brand_name: {brand.BrandID}, products_count: {brand.Count}\n");
                 }
 
                 foreach (var product in sectionCategoryProducts1.Products)
@@ -117,7 +117,7 @@ namespace ClothingAppDB
             {
                 context.Entry(updatedBrand).State = EntityState.Modified;
                 context.SaveChanges();
-                
+
                 Console.WriteLine(context.Brands.Single(p => p.ID == 4).Name);
             }
         }

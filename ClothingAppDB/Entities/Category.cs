@@ -9,6 +9,5 @@ public class Category
     public virtual Category ParentCategory { get; set; }
     
     public virtual ICollection<SectionCategory> SectionCategories { get; set; }
-    public virtual ICollection<Product> Products { get; set; }
     public virtual ICollection<Category> Categories { get; set; }
 }

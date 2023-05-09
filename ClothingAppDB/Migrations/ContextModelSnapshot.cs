@@ -19,6 +19,9 @@ namespace ClothingAppDB.Migrations
             modelBuilder
                 .HasDefaultSchema("clothing_store")
                 .HasAnnotation("ProductVersion", "8.0.0-preview.3.23174.2")
+                .HasAnnotation("Proxies:ChangeTracking", false)
+                .HasAnnotation("Proxies:CheckEquality", false)
+                .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -243,10 +246,6 @@ namespace ClothingAppDB.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("brand_id");
 
-                    b.Property<int?>("CategoryID")
-                        .HasColumnType("integer")
-                        .HasColumnName("category_id");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(500)
@@ -283,9 +282,6 @@ namespace ClothingAppDB.Migrations
 
                     b.HasIndex("BrandID")
                         .HasDatabaseName("ix_products_brand_id");
-
-                    b.HasIndex("CategoryID")
-                        .HasDatabaseName("ix_products_category_id");
 
                     b.HasIndex("SectionCategoryID")
                         .HasDatabaseName("ix_products_section_category_id");
@@ -540,11 +536,6 @@ namespace ClothingAppDB.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_products_brands_brand_id");
 
-                    b.HasOne("ClothingAppDB.Entities.Category", null)
-                        .WithMany("Products")
-                        .HasForeignKey("CategoryID")
-                        .HasConstraintName("fk_products_categories_category_id");
-
                     b.HasOne("ClothingAppDB.Entities.SectionCategory", "SectionCategory")
                         .WithMany("Products")
                         .HasForeignKey("SectionCategoryID")
@@ -607,8 +598,6 @@ namespace ClothingAppDB.Migrations
             modelBuilder.Entity("ClothingAppDB.Entities.Category", b =>
                 {
                     b.Navigation("Categories");
-
-                    b.Navigation("Products");
 
                     b.Navigation("SectionCategories");
                 });

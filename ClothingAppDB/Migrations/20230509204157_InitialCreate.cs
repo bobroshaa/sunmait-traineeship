@@ -175,8 +175,7 @@ namespace ClothingAppDB.Migrations
                     quantity = table.Column<int>(type: "integer", nullable: false),
                     image_url = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
                     section_category_id = table.Column<int>(type: "integer", maxLength: 100, nullable: false),
-                    brand_id = table.Column<int>(type: "integer", nullable: false),
-                    category_id = table.Column<int>(type: "integer", nullable: true)
+                    brand_id = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -190,12 +189,6 @@ namespace ClothingAppDB.Migrations
                         principalTable: "brands",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "fk_products_categories_category_id",
-                        column: x => x.category_id,
-                        principalSchema: "clothing_store",
-                        principalTable: "categories",
-                        principalColumn: "id");
                     table.ForeignKey(
                         name: "fk_products_section_categories_section_category_id",
                         column: x => x.section_category_id,
@@ -339,12 +332,6 @@ namespace ClothingAppDB.Migrations
                 column: "brand_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_products_category_id",
-                schema: "clothing_store",
-                table: "products",
-                column: "category_id");
-
-            migrationBuilder.CreateIndex(
                 name: "ix_products_section_category_id",
                 schema: "clothing_store",
                 table: "products",
@@ -394,30 +381,6 @@ namespace ClothingAppDB.Migrations
                 table: "users",
                 column: "phone",
                 unique: true);
-            
-            migrationBuilder.Sql(@"
-            CREATE OR REPLACE FUNCTION clothing_store.log_order_status_changes()
-            RETURNS TRIGGER
-            LANGUAGE PLPGSQL AS
-                $$
-            BEGIN
-            IF (TG_OP = 'UPDATE' AND NEW.current_status <> OLD.current_status) THEN
-                INSERT INTO clothing_store.order_histories(order_id, status, date) 
-            VALUES(OLD.id, NEW.current_status,  now());
-            END IF;
-            IF (TG_OP = 'INSERT') THEN
-                INSERT INTO clothing_store.order_histories(order_id, status, date) 
-            VALUES(NEW.id, NEW.current_status,  now());
-            END IF;
-            RETURN NEW;
-            END;
-                $$;
-
-            CREATE OR REPLACE TRIGGER order_status_changes
-                AFTER INSERT OR UPDATE
-                ON clothing_store.customer_orders
-                FOR EACH ROW
-            EXECUTE PROCEDURE clothing_store.log_order_status_changes();");
         }
 
         /// <inheritdoc />
@@ -466,9 +429,6 @@ namespace ClothingAppDB.Migrations
             migrationBuilder.DropTable(
                 name: "sections",
                 schema: "clothing_store");
-            
-            migrationBuilder.Sql(@"DROP TRIGGER IF EXISTS order_status_changes ON clothing_store.customer_order;
-                                   DROP FUNCTION IF EXISTS clothing_store.log_order_status_changes();");
         }
     }
 }
