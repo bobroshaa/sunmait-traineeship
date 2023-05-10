@@ -8,9 +8,9 @@ namespace ClothingAppDB
     {
         static void Main(string[] args)
         {
+            #region Task1EagerLoading
             using (var context = new Context())
             {
-                // Eager Loading
                 var allProductsOfBrand = context.Products.Where(p => p.BrandID == 1);
 
                 var brandsWithNumberProducts = context.Brands
@@ -64,8 +64,9 @@ namespace ClothingAppDB
                         $"rating: {review.Rating},\ncomment: {review.Comment},\nphone: {review.User.Phone},\nemail: {review.User.Email},\nrole:{review.User.Role},\nfirst_name: {review.User.FirstName},\nlast_name: {review.User.LastName}\n");
                 }
             }
+            #endregion
 
-
+            #region Task2LazyLoading
             using (var context = new Context())
             {
                 // Lazy loading
@@ -114,7 +115,9 @@ namespace ClothingAppDB
                         $"rating: {review.Rating},\ncomment: {review.Comment},\nphone: {review.User.Phone},\nemail: {review.User.Email},\nrole:{review.User.Role},\nfirst_name: {review.User.FirstName},\nlast_name: {review.User.LastName}\n");
                 }
             }
+            #endregion
 
+            #region Task3ExplicitTracking
             var updatedBrand = new Brand() { ID = 4, Name = "Bershka" };
 
             using (var context = new Context())
@@ -124,6 +127,7 @@ namespace ClothingAppDB
 
                 Console.WriteLine(context.Brands.Single(p => p.ID == 4).Name);
             }
+            #endregion
         }
     }
 }
