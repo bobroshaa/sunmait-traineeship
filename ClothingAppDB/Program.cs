@@ -63,22 +63,26 @@ namespace ClothingAppDB
                     Console.WriteLine(
                         $"rating: {review.Rating},\ncomment: {review.Comment},\nphone: {review.User.Phone},\nemail: {review.User.Email},\nrole:{review.User.Role},\nfirst_name: {review.User.FirstName},\nlast_name: {review.User.LastName}\n");
                 }
+            }
 
+
+            using (var context = new Context())
+            {
                 // Lazy loading
-                var allProductsOfBrand1 = context.Products.Where(p => p.BrandID == 1);
+                var allProductsOfBrand1 = context.Products.Where(p => p.BrandID == 1).ToList();
                 var brandsWithNumberProducts1 = context.Brands
                     .GroupJoin(
                         context.Products,
                         b => b.ID,
                         p => p.BrandID,
                         (b, p) => new { BrandID = b.ID, Count = b.Products.Count() }
-                    );
+                    ).ToList();
                 var sectionCategoryProducts1 = context.SectionCategories
                     .Single(sc => sc.CategoryID == 2 && sc.SectionID == 1);
                 var completedOrdersOfProduct1 = context.OrderProducts
-                    .Where(op => op.Order.CurrentStatus == Status.Completed && op.ProductID == 1);
+                    .Where(op => op.Order.CurrentStatus == Status.Completed && op.ProductID == 1).ToList();
                 var allReviewOfProduct1 = context.Reviews
-                    .Where(r => r.ProductID == 1);
+                    .Where(r => r.ProductID == 1).ToList();
 
                 Console.WriteLine("------------------------------------\nLazy Loading:\n");
                 foreach (var product in allProductsOfBrand1)

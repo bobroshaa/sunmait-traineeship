@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using ClothingAppDB.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace ClothingAppDB;
 
@@ -15,7 +16,8 @@ public class Context : DbContext
         optionsBuilder
             .UseLazyLoadingProxies()
             .UseNpgsql(@"host=localhost;port=5432;database=db;username=postgres;password=345510")
-            .UseSnakeCaseNamingConvention();
+            .UseSnakeCaseNamingConvention()
+            .LogTo(Console.WriteLine, LogLevel.Information);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
