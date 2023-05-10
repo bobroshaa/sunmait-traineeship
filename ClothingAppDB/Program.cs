@@ -14,12 +14,13 @@ namespace ClothingAppDB
                 var allProductsOfBrand = context.Products.Where(p => p.BrandID == 1);
 
                 var brandsWithNumberProducts = context.Brands
-                    .GroupJoin(
-                        context.Products,
-                        b => b.ID,
-                        p => p.BrandID,
-                        (b, p) => new { BrandID = b.ID, Count = b.Products.Count() }
-                    ).OrderByDescending(group => group.Count);
+                    .Include(b=>b.Products)
+                    .GroupBy(b => b.ID)
+                    .Select(g => new {
+                        BrandID = g.Key,
+                        Count = g.Sum(b => b.Products.Count)
+                    })
+                    .OrderByDescending(group => group.Count);
                 var sectionCategoryProducts = context.Products
                     .Include(p => p.SectionCategory)
                     .Where(p => p.SectionCategory.CategoryID == 2 && p.SectionCategory.SectionID == 1);
@@ -72,12 +73,12 @@ namespace ClothingAppDB
                 // Lazy loading
                 var allProductsOfBrand1 = context.Products.Where(p => p.BrandID == 1).ToList();
                 var brandsWithNumberProducts1 = context.Brands
-                    .GroupJoin(
-                        context.Products,
-                        b => b.ID,
-                        p => p.BrandID,
-                        (b, p) => new { BrandID = b.ID, Count = b.Products.Count() }
-                    ).ToList();
+                    .GroupBy(b => b.ID)
+                    .Select(g => new {
+                        BrandID = g.Key,
+                        Count = g.Sum(b => b.Products.Count)
+                    })
+                    .OrderByDescending(group => group.Count).ToList();
                 var sectionCategoryProducts1 = context.SectionCategories
                     .Single(sc => sc.CategoryID == 2 && sc.SectionID == 1);
                 var completedOrdersOfProduct1 = context.OrderProducts
