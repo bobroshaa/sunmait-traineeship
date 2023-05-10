@@ -119,14 +119,20 @@ namespace ClothingAppDB
             #endregion
 
             #region Task3ExplicitTracking
-            var updatedBrand = new Brand() { ID = 4, Name = "Bershka" };
+
+            Product updatedProduct;
+            using (var context = new Context())
+            {
+                updatedProduct = context.Products.Single(p => p.ID == 1);
+            }
 
             using (var context = new Context())
             {
-                context.Entry(updatedBrand).State = EntityState.Modified;
+                context.Products.Attach(updatedProduct);
+                updatedProduct.Name = "Name";
                 context.SaveChanges();
 
-                Console.WriteLine(context.Brands.Single(p => p.ID == 4).Name);
+                Console.WriteLine(context.Products.Single(p => p.ID == 1).Name);
             }
             #endregion
         }
