@@ -19,6 +19,9 @@ namespace ClothingAppDB.Migrations
             modelBuilder
                 .HasDefaultSchema("clothing_store")
                 .HasAnnotation("ProductVersion", "8.0.0-preview.3.23174.2")
+                .HasAnnotation("Proxies:ChangeTracking", false)
+                .HasAnnotation("Proxies:CheckEquality", false)
+                .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -109,7 +112,7 @@ namespace ClothingAppDB.Migrations
                         .HasColumnType("character varying(50)")
                         .HasColumnName("name");
 
-                    b.Property<int>("ParentCategoryID")
+                    b.Property<int?>("ParentCategoryID")
                         .HasColumnType("integer")
                         .HasColumnName("parent_category_id");
 
@@ -243,14 +246,10 @@ namespace ClothingAppDB.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("brand_id");
 
-                    b.Property<int?>("CategoryID")
-                        .HasColumnType("integer")
-                        .HasColumnName("category_id");
-
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
                         .HasColumnName("description");
 
                     b.Property<string>("ImageURL")
@@ -283,9 +282,6 @@ namespace ClothingAppDB.Migrations
 
                     b.HasIndex("BrandID")
                         .HasDatabaseName("ix_products_brand_id");
-
-                    b.HasIndex("CategoryID")
-                        .HasDatabaseName("ix_products_category_id");
 
                     b.HasIndex("SectionCategoryID")
                         .HasDatabaseName("ix_products_section_category_id");
@@ -441,7 +437,6 @@ namespace ClothingAppDB.Migrations
                         .HasColumnName("password");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)")
                         .HasColumnName("phone");
@@ -482,7 +477,6 @@ namespace ClothingAppDB.Migrations
                         .WithMany("Categories")
                         .HasForeignKey("ParentCategoryID")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
                         .HasConstraintName("fk_categories_categories_parent_category_id");
 
                     b.Navigation("ParentCategory");
@@ -541,11 +535,6 @@ namespace ClothingAppDB.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_products_brands_brand_id");
-
-                    b.HasOne("ClothingAppDB.Entities.Category", null)
-                        .WithMany("Products")
-                        .HasForeignKey("CategoryID")
-                        .HasConstraintName("fk_products_categories_category_id");
 
                     b.HasOne("ClothingAppDB.Entities.SectionCategory", "SectionCategory")
                         .WithMany("Products")
@@ -609,8 +598,6 @@ namespace ClothingAppDB.Migrations
             modelBuilder.Entity("ClothingAppDB.Entities.Category", b =>
                 {
                     b.Navigation("Categories");
-
-                    b.Navigation("Products");
 
                     b.Navigation("SectionCategories");
                 });
