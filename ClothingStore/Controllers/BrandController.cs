@@ -1,4 +1,6 @@
-﻿using ClothingStore.Entities;
+﻿using AutoMapper;
+using ClothingStore.Entities;
+using ClothingStore.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,23 +11,25 @@ namespace ClothingStore.Controllers;
 public class BrandController : Controller
 {
     private readonly Context _dbContext;
+    private readonly IMapper _mapper;
 
-    public BrandController(Context dbContext)
+    public BrandController(Context dbContext, IMapper mapper)
     {
         _dbContext = dbContext;
+        _mapper = mapper;
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<Brand>>> GetAllBrands()
+    public async Task<ActionResult<List<BrandViewModel>>> GetAllBrands()
     {
-        var brands = await _dbContext.Brands.ToListAsync();
+        var brands = _mapper.Map<List<BrandViewModel>>(await _dbContext.Brands.ToListAsync());
         return Ok(brands);
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Brand>> GetBrand(int id)
+    public async Task<ActionResult<BrandViewModel>> GetBrand(int id)
     {
-        var brand = await _dbContext.Brands.FirstOrDefaultAsync(b => b.ID == id);
+        var brand = _mapper.Map<BrandViewModel>(await _dbContext.Brands.FindAsync(id));
         if (brand is null)
         {
             return NotFound("Sorry, this brand does not exist!");
@@ -35,29 +39,25 @@ public class BrandController : Controller
     }
 
     [HttpPost]
-    public async Task<ActionResult<List<Brand>>> AddBrand(Brand brand)
+    public async Task<ActionResult> AddBrand(BrandViewModel brandViewModel)
     {
+        var brand = _mapper.Map<BrandViewModel, Brand>(brandViewModel); 
         _dbContext.Brands.Add(brand);
         await _dbContext.SaveChangesAsync();
-        return Ok(await _dbContext.Brands.ToListAsync());
+        return Ok();
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<Brand>> UpdateBrand(int id, Brand brand)
+    public async Task<ActionResult> UpdateBrand(BrandViewModel brandViewModel)
     {
-        var oldBrand = await _dbContext.Brands.FindAsync(id);
-        if (oldBrand is null)
-        {
-            return NotFound("Sorry, this brand does not exist!");
-        }
-
-        var updatedBrand = _dbContext.Brands.Update(oldBrand);
+        var brand = _mapper.Map<BrandViewModel, Brand>(brandViewModel); 
+        _dbContext.Brands.Update(brand);
         await _dbContext.SaveChangesAsync();
-        return Ok(updatedBrand);
+        return Ok();
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult<List<Brand>>> DeleteBrand(int id)
+    public async Task<ActionResult> DeleteBrand(int id)
     {
         var brand = await _dbContext.Brands.FindAsync(id);
         if (brand is null)
@@ -67,6 +67,6 @@ public class BrandController : Controller
 
         _dbContext.Brands.Remove(brand);
         await _dbContext.SaveChangesAsync();
-        return Ok(await _dbContext.Brands.ToListAsync());
+        return Ok();
     }
 }
