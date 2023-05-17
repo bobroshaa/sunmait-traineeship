@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using ClothingStore.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace ClothingStore;
 
@@ -12,8 +13,15 @@ public class Context : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
+        IConfiguration configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json")
+            .Build();
+
+        string connectionString = configuration.GetConnectionString("ClothingStoreDatabase");
+
         optionsBuilder
-            .UseNpgsql(@"host=localhost;port=5432;database=db;username=postgres;password=345510")
+            .UseNpgsql(connectionString)
             .UseSnakeCaseNamingConvention()
             .LogTo(Console.WriteLine, LogLevel.Information);
     }

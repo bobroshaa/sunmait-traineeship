@@ -41,6 +41,10 @@ public class BrandController : Controller
     [HttpPost]
     public async Task<ActionResult> AddBrand(BrandViewModel brandViewModel)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
         var brand = _mapper.Map<BrandViewModel, Brand>(brandViewModel); 
         _dbContext.Brands.Add(brand);
         await _dbContext.SaveChangesAsync();
@@ -50,6 +54,16 @@ public class BrandController : Controller
     [HttpPut]
     public async Task<ActionResult> UpdateBrand(BrandViewModel brandViewModel)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        var oldBrand = _mapper.Map<BrandViewModel>(await _dbContext.Brands.FindAsync(brandViewModel.ID));
+        if (oldBrand is null)
+        {
+            return NotFound("Sorry, this brand does not exist!");
+        }
+        
         var brand = _mapper.Map<BrandViewModel, Brand>(brandViewModel); 
         _dbContext.Brands.Update(brand);
         await _dbContext.SaveChangesAsync();
