@@ -47,7 +47,7 @@ public class BrandController : Controller
         return Ok();
     }
 
-    [HttpPut("{id}")]
+    [HttpPut]
     public async Task<ActionResult> UpdateBrand(BrandViewModel brandViewModel)
     {
         var brand = _mapper.Map<BrandViewModel, Brand>(brandViewModel); 

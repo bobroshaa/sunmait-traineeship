@@ -8,7 +8,6 @@ public class BrandProfile : Profile
 {
     public BrandProfile()
     {
-        CreateMap<Brand, BrandViewModel>();
-        CreateMap<BrandViewModel, Brand>();
+        CreateMap<Brand, BrandViewModel>().ReverseMap();
     }
 }
