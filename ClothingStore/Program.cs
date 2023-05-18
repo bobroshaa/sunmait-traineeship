@@ -1,4 +1,5 @@
 using ClothingStore;
+using ClothingStore.Profiles;
 
 var builder = WebApplication.CreateBuilder(args);
 

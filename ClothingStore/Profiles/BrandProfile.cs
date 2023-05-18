@@ -1,13 +1,14 @@
 ﻿using AutoMapper;
 using ClothingStore.Entities;
-using ClothingStore.ViewModels;
+using ClothingStore.Models;
 
-namespace ClothingStore;
+namespace ClothingStore.Profiles;
 
 public class BrandProfile : Profile
 {
     public BrandProfile()
     {
         CreateMap<Brand, BrandViewModel>().ReverseMap();
+        CreateMap<Brand, BrandInputModel>().ReverseMap();
     }
 }

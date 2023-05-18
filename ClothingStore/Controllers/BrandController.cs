@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using ClothingStore.Entities;
-using ClothingStore.ViewModels;
+using ClothingStore.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -39,13 +39,13 @@ public class BrandController : Controller
     }
 
     [HttpPost]
-    public async Task<ActionResult> AddBrand(BrandViewModel brandViewModel)
+    public async Task<ActionResult> AddBrand(BrandInputModel brandInputModel)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
-        var brand = _mapper.Map<BrandViewModel, Brand>(brandViewModel); 
+        var brand = _mapper.Map<BrandInputModel, Brand>(brandInputModel); 
         _dbContext.Brands.Add(brand);
         await _dbContext.SaveChangesAsync();
         return Ok();
