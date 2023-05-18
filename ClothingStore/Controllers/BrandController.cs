@@ -51,8 +51,8 @@ public class BrandController : Controller
         return Ok(brand.ID);
     }
 
-    [HttpPut]
-    public async Task<ActionResult> UpdateBrand([FromQuery]int id, [FromBody]BrandInputModel brandInputModel)
+    [HttpPut("{id}")]
+    public async Task<ActionResult> UpdateBrand([FromRoute]int id, [FromBody]BrandInputModel brandInputModel)
     {
         if (!ModelState.IsValid)
         {
@@ -69,8 +69,8 @@ public class BrandController : Controller
         return Ok();
     }
 
-    [HttpDelete]
-    public async Task<ActionResult> DeleteBrand([FromQuery]int id)
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> DeleteBrand([FromRoute]int id)
     {
         var brand = await _dbContext.Brands.FirstOrDefaultAsync(b => b.ID == id & b.IsActive);
         if (brand is null)
