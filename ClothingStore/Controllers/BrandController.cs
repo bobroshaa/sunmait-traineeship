@@ -22,14 +22,14 @@ public class BrandController : Controller
     [HttpGet]
     public async Task<ActionResult<List<BrandViewModel>>> GetAllBrands()
     {
-        var brands = _mapper.Map<List<BrandViewModel>>(await _dbContext.Brands.ToListAsync());
+        var brands = _mapper.Map<List<BrandViewModel>>(await _dbContext.Brands.Where(b => b.IsActive).ToListAsync());
         return Ok(brands);
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<BrandViewModel>> GetBrand(int id)
     {
-        var brand = _mapper.Map<BrandViewModel>(await _dbContext.Brands.FindAsync(id));
+        var brand = _mapper.Map<BrandViewModel>(await _dbContext.Brands.FirstOrDefaultAsync(b => b.ID == id & b.IsActive));
         if (brand is null)
         {
             return NotFound("Sorry, this brand does not exist!");
@@ -58,7 +58,7 @@ public class BrandController : Controller
         {
             return BadRequest(ModelState);
         }
-        var oldBrand = _mapper.Map<BrandViewModel>(await _dbContext.Brands.FindAsync(brandViewModel.ID));
+        var oldBrand = _mapper.Map<BrandViewModel>(await _dbContext.Brands.FirstOrDefaultAsync(b => b.ID == brandViewModel.ID & b.IsActive));
         if (oldBrand is null)
         {
             return NotFound("Sorry, this brand does not exist!");
@@ -73,13 +73,13 @@ public class BrandController : Controller
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteBrand(int id)
     {
-        var brand = await _dbContext.Brands.FindAsync(id);
+        var brand = await _dbContext.Brands.FirstOrDefaultAsync(b => b.ID == id & b.IsActive);
         if (brand is null)
         {
             return NotFound("Sorry, this brand does not exist!");
         }
 
-        _dbContext.Brands.Remove(brand);
+        brand.IsActive = false;
         await _dbContext.SaveChangesAsync();
         return Ok();
     }
