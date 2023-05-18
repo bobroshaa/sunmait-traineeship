@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ClothingStore.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/brands")]
 [ApiController]
 public class BrandController : Controller
 {
@@ -27,7 +27,7 @@ public class BrandController : Controller
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<BrandViewModel>> GetBrand(int id)
+    public async Task<ActionResult<BrandViewModel>> GetBrand([FromRoute]int id)
     {
         var brand = _mapper.Map<BrandViewModel>(await _dbContext.Brands.FirstOrDefaultAsync(b => b.ID == id & b.IsActive));
         if (brand is null)
@@ -39,7 +39,7 @@ public class BrandController : Controller
     }
 
     [HttpPost]
-    public async Task<ActionResult<int>> AddBrand(BrandInputModel brandInputModel)
+    public async Task<ActionResult<int>> AddBrand([FromBody]BrandInputModel brandInputModel)
     {
         if (!ModelState.IsValid)
         {
@@ -52,25 +52,25 @@ public class BrandController : Controller
     }
 
     [HttpPut]
-    public async Task<ActionResult> UpdateBrand(BrandViewModel brandViewModel)
+    public async Task<ActionResult> UpdateBrand([FromQuery]int id, [FromBody]BrandInputModel brandInputModel)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
-        var brand = await _dbContext.Brands.FirstOrDefaultAsync(b => b.ID == brandViewModel.ID & b.IsActive);
+        var brand = await _dbContext.Brands.FirstOrDefaultAsync(b => b.ID == id & b.IsActive);
         if (brand is null)
         {
             return NotFound("Sorry, this brand does not exist!");
         }
         
-        brand.Name = brandViewModel.Name;
+        brand.Name = brandInputModel.Name;
         await _dbContext.SaveChangesAsync();
         return Ok();
     }
 
-    [HttpDelete("{id}")]
-    public async Task<ActionResult> DeleteBrand(int id)
+    [HttpDelete]
+    public async Task<ActionResult> DeleteBrand([FromQuery]int id)
     {
         var brand = await _dbContext.Brands.FirstOrDefaultAsync(b => b.ID == id & b.IsActive);
         if (brand is null)
