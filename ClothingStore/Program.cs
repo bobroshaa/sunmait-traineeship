@@ -3,9 +3,8 @@ using ClothingStore.Profiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddControllers();
 builder.Services.AddAutoMapper(typeof(BrandProfile)); 
-builder.Services.AddControllersWithViews();
-builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<Context>();
 var app = builder.Build();
@@ -17,8 +16,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-app.UseAuthorization();
 
 app.MapControllers();
 
