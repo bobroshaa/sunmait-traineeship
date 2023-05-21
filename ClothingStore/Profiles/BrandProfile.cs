@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using ClothingStore.Entities;
 using ClothingStore.Models;
+using Domain.Entities;
 
 namespace ClothingStore.Profiles;
 

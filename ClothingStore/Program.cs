@@ -1,12 +1,19 @@
-using ClothingStore;
+using Application;
 using ClothingStore.Profiles;
+using Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
+{
+    builder.Services
+        .AddApplication()
+        .AddInfrastructure();
+    builder.Services.AddControllers();
+    builder.Services.AddAutoMapper(typeof(BrandProfile)); 
+    builder.Services.AddSwaggerGen();
+}
 
-builder.Services.AddControllers();
-builder.Services.AddAutoMapper(typeof(BrandProfile)); 
-builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<Context>();
+
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
