@@ -7,7 +7,7 @@ namespace ClothingStore.WebAPI.Controllers;
 [Route("api/brands")]
 [ApiController]
 public class BrandController : Controller
-{
+{    
     private readonly IBrandService _brandService;
 
     public BrandController(IBrandService brandService)

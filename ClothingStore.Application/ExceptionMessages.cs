@@ -2,5 +2,5 @@
 
 public static class ExceptionMessages
 {
-    public static readonly string NotFoundMessage = "Sorry, this brand does not exist!";
+    public static readonly string BrandNotFound = "Sorry, this brand does not exist!";
 }

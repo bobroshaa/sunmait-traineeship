@@ -27,7 +27,7 @@ public class BrandService : IBrandService
         var brand = await _brandRepository.GetById(id);
         if (brand is null)
         {
-            throw new Exception(ExceptionMessages.NotFoundMessage);
+            throw new Exception(ExceptionMessages.BrandNotFound);
         }
 
         return _mapper.Map<BrandViewModel>(brand);
@@ -45,7 +45,7 @@ public class BrandService : IBrandService
         var updatingBrand = await _brandRepository.GetById(id);
         if (updatingBrand is null)
         {
-            throw new Exception(ExceptionMessages.NotFoundMessage);
+            throw new Exception(ExceptionMessages.BrandNotFound);
         }
 
         await _brandRepository.Update(updatingBrand, _mapper.Map<Brand>(brandInputModel));
@@ -56,7 +56,7 @@ public class BrandService : IBrandService
         var brand = await _brandRepository.GetById(id);
         if (brand is null)
         {
-            throw new Exception(ExceptionMessages.NotFoundMessage);
+            throw new Exception(ExceptionMessages.BrandNotFound);
         }
 
         await _brandRepository.Delete(brand);
