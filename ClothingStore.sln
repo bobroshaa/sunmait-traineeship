@@ -1,12 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{4E1C3B25-9AFC-46C5-B73E-DE7EC6533038}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClothingStore.Domain", "ClothingStore.Domain\ClothingStore.Domain.csproj", "{4E1C3B25-9AFC-46C5-B73E-DE7EC6533038}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{B962865D-3C30-4DC9-9C2A-470A3AE84C55}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClothingStore.Application", "ClothingStore.Application\ClothingStore.Application.csproj", "{B962865D-3C30-4DC9-9C2A-470A3AE84C55}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{3347B19A-C91C-4949-9BA4-E068E75F104E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClothingStore.Infrastructure", "ClothingStore.Infrastructure\ClothingStore.Infrastructure.csproj", "{3347B19A-C91C-4949-9BA4-E068E75F104E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI", "WebAPI\WebAPI.csproj", "{65F114B1-ADD3-46EF-A60C-498C3AB903EA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClothingStore.WebAPI", "ClothingStore.WebAPI\ClothingStore.WebAPI.csproj", "{65F114B1-ADD3-46EF-A60C-498C3AB903EA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
