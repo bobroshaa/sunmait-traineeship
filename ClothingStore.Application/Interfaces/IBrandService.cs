@@ -1,12 +1,12 @@
-﻿using ClothingStore.Domain.Entities;
+﻿using ClothingStore.Application.Models;
 
 namespace ClothingStore.Application.Interfaces;
 
 public interface IBrandService
 {
-    public Task<IEnumerable<Brand>> GetAll();
-    public Task<Brand?> GetById(int id);
-    public Task Add(Brand brand);
-    public Task Update(int id, Brand brand);
+    public Task<List<BrandViewModel>> GetAll();
+    public Task<BrandViewModel?> GetById(int id);
+    public Task<int> Add(BrandInputModel brandInputModel);
+    public Task Update(int id, BrandInputModel brandInputModel);
     public Task Delete(int id);
 }

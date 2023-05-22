@@ -1,7 +1,5 @@
-﻿using AutoMapper;
-using ClothingStore.Application.Interfaces;
-using ClothingStore.Domain.Entities;
-using ClothingStore.WebAPI.Models;
+﻿using ClothingStore.Application.Interfaces;
+using ClothingStore.Application.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClothingStore.WebAPI.Controllers;
@@ -10,29 +8,27 @@ namespace ClothingStore.WebAPI.Controllers;
 [ApiController]
 public class BrandController : Controller
 {
-    private readonly IMapper _mapper;
     private readonly IBrandService _brandService;
 
-    public BrandController(IMapper mapper, IBrandService brandService)
+    public BrandController(IBrandService brandService)
     {
-        _mapper = mapper;
         _brandService = brandService;
     }
 
     [HttpGet]
     public async Task<ActionResult<List<BrandViewModel>>> GetAllBrands()
     {
-        var brands = _mapper.Map<List<BrandViewModel>>(await _brandService.GetAll());
+        var brands = await _brandService.GetAll();
         return Ok(brands);
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<BrandViewModel>> GetBrand([FromRoute] int id)
     {
-        BrandViewModel brand;
+        BrandViewModel? brand;
         try
         {
-            brand = _mapper.Map<BrandViewModel>(await _brandService.GetById(id));
+            brand = await _brandService.GetById(id);
         }
         catch (Exception ex)
         {
@@ -50,9 +46,7 @@ public class BrandController : Controller
             return BadRequest(ModelState);
         }
 
-        var brand = _mapper.Map<BrandInputModel, Brand>(brandInputModel);
-        await _brandService.Add(brand);
-        return Ok(brand.ID);
+        return Ok(await _brandService.Add(brandInputModel));
     }
 
     [HttpPut("{id}")]
@@ -65,7 +59,7 @@ public class BrandController : Controller
 
         try
         {
-            await _brandService.Update(id, _mapper.Map<BrandInputModel, Brand>(brandInputModel));
+            await _brandService.Update(id, brandInputModel);
         }
         catch (Exception ex)
         {
