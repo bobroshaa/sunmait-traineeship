@@ -6,7 +6,7 @@ namespace ClothingStore.Application;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddApplication(this IServiceCollection services)
+    public static IServiceCollection AddApplicationDependencies(this IServiceCollection services)
     {
         services.AddTransient<IBrandService, BrandService>();
         return services;

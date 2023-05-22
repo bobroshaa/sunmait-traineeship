@@ -5,7 +5,7 @@ using ClothingStore.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
 {
     builder.Services
-        .AddApplication()
+        .AddApplicationDependencies()
         .AddInfrastructure();
     builder.Services.AddControllers();
     builder.Services.AddAutoMapper(typeof(BrandProfile));
