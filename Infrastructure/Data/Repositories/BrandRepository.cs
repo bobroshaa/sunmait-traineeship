@@ -12,6 +12,7 @@ public class BrandRepository : IBrandRepository
     {
         _dbContext = dbContext;
     }
+
     public async Task<IEnumerable<Brand>> GetAll()
     {
         return await _dbContext.Brands.Where(b => b.IsActive).ToListAsync();
@@ -22,24 +23,21 @@ public class BrandRepository : IBrandRepository
         return await _dbContext.Brands.FirstOrDefaultAsync(b => b.ID == id & b.IsActive);
     }
 
-    public async Task<bool> Add(Brand brand)
+    public async Task Add(Brand brand)
     {
         await _dbContext.Brands.AddAsync(brand);
         await _dbContext.SaveChangesAsync();
-        return true;
     }
 
-    public async Task<bool> Update(Brand updatingBrand,Brand brand)
+    public async Task Update(Brand updatingBrand, Brand brand)
     {
         updatingBrand.Name = brand.Name;
         await _dbContext.SaveChangesAsync();
-        return true;
     }
 
-    public async Task<bool> Delete(Brand brand)
+    public async Task Delete(Brand brand)
     {
         brand.IsActive = false;
         await _dbContext.SaveChangesAsync();
-        return true;
     }
 }

@@ -27,45 +27,66 @@ public class BrandController : Controller
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<BrandViewModel>> GetBrand([FromRoute]int id)
+    public async Task<ActionResult<BrandViewModel>> GetBrand([FromRoute] int id)
     {
-        var brand = _mapper.Map<BrandViewModel>(await _brandService.GetById(id));
-        if (brand is null)
+        BrandViewModel brand;
+        try
         {
-            return NotFound("Sorry, this brand does not exist!");
+            brand = _mapper.Map<BrandViewModel>(await _brandService.GetById(id));
+        }
+        catch (Exception ex)
+        {
+            return NotFound(ex.Message);
         }
 
         return Ok(brand);
     }
 
     [HttpPost]
-    public async Task<ActionResult<int>> AddBrand([FromBody]BrandInputModel brandInputModel)
+    public async Task<ActionResult<int>> AddBrand([FromBody] BrandInputModel brandInputModel)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
-        var brand = _mapper.Map<BrandInputModel, Brand>(brandInputModel); 
-        if (!await _brandService.Add(brand))
-            return BadRequest();
+
+        var brand = _mapper.Map<BrandInputModel, Brand>(brandInputModel);
+        await _brandService.Add(brand);
         return Ok(brand.ID);
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult> UpdateBrand([FromRoute]int id, [FromBody]BrandInputModel brandInputModel)
+    public async Task<ActionResult> UpdateBrand([FromRoute] int id, [FromBody] BrandInputModel brandInputModel)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
-        await _brandService.Update(id, _mapper.Map<BrandInputModel, Brand>(brandInputModel));
+
+        try
+        {
+            await _brandService.Update(id, _mapper.Map<BrandInputModel, Brand>(brandInputModel));
+        }
+        catch (Exception ex)
+        {
+            return NotFound(ex.Message);
+        }
+
         return Ok();
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult> DeleteBrand([FromRoute]int id)
+    public async Task<ActionResult> DeleteBrand([FromRoute] int id)
     {
-        await _brandService.Delete(id);
+        try
+        {
+            await _brandService.Delete(id);
+        }
+        catch (Exception ex)
+        {
+            return NotFound(ex.Message);
+        }
+
         return Ok();
     }
 }

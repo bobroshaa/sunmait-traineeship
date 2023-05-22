@@ -17,7 +17,7 @@ public class BrandService : IBrandService
     {
         return await _brandRepository.GetAll();
     }
-    
+
     public async Task<Brand?> GetById(int id)
     {
         var brand = await _brandRepository.GetById(id);
@@ -25,33 +25,34 @@ public class BrandService : IBrandService
         {
             throw new Exception("Sorry, this brand does not exist!");
         }
+
         return brand;
     }
-    
-    public async Task<bool> Add(Brand brand)
+
+    public async Task Add(Brand brand)
     {
-        return await _brandRepository.Add(brand);
+        await _brandRepository.Add(brand);
     }
-    
-    public async Task<bool> Update(int id, Brand brand)
+
+    public async Task Update(int id, Brand brand)
     {
         var updatingBrand = await _brandRepository.GetById(id);
         if (updatingBrand is null)
         {
             throw new Exception("Sorry, this brand does not exist!");
         }
-        
-        return await _brandRepository.Update(updatingBrand, brand);
+
+        await _brandRepository.Update(updatingBrand, brand);
     }
-    
-    public async Task<bool> Delete(int id)
+
+    public async Task Delete(int id)
     {
         var brand = await _brandRepository.GetById(id);
         if (brand is null)
         {
             throw new Exception("Sorry, this brand does not exist!");
         }
-        
-        return await _brandRepository.Delete(brand);
+
+        await _brandRepository.Delete(brand);
     }
 }
