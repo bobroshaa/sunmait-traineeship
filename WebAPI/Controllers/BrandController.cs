@@ -1,10 +1,10 @@
 ﻿using Application.Interfaces;
 using AutoMapper;
-using ClothingStore.Models;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.Models;
 
-namespace ClothingStore.Controllers;
+namespace WebAPI.Controllers;
 
 [Route("api/brands")]
 [ApiController]

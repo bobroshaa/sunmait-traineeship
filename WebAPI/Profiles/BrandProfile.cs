@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using ClothingStore.Models;
 using Domain.Entities;
+using WebAPI.Models;
 
-namespace ClothingStore.Profiles;
+namespace WebAPI.Profiles;
 
 public class BrandProfile : Profile
 {
