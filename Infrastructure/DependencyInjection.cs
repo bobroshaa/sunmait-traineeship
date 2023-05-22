@@ -24,7 +24,6 @@ public static class DependencyInjection
                 .UseNpgsql(connectionString)
                 .UseSnakeCaseNamingConvention()
                 .LogTo(Console.WriteLine, LogLevel.Information);
-            ;
         });
         return services;
     }

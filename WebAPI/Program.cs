@@ -8,14 +8,11 @@ var builder = WebApplication.CreateBuilder(args);
         .AddApplication()
         .AddInfrastructure();
     builder.Services.AddControllers();
-    builder.Services.AddAutoMapper(typeof(BrandProfile)); 
+    builder.Services.AddAutoMapper(typeof(BrandProfile));
     builder.Services.AddSwaggerGen();
 }
 
-
-
 var app = builder.Build();
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -23,7 +20,5 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.MapControllers();
-
 app.Run();
