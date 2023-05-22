@@ -8,7 +8,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        services.AddScoped<IBrandService, BrandService>();
+        services.AddTransient<IBrandService, BrandService>();
 
         return services;
     }
