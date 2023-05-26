@@ -9,6 +9,7 @@ public static class DependencyInjection
     public static IServiceCollection AddApplicationDependencies(this IServiceCollection services)
     {
         services.AddTransient<IBrandService, BrandService>();
+        services.AddTransient<IProductService, ProductService>();
         return services;
     }
 }

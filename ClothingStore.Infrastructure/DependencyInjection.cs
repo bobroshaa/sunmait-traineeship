@@ -13,6 +13,7 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
         services.AddScoped<IBrandRepository, BrandRepository>();
+        services.AddScoped<IProductRepository, ProductRepository>();
 
         services.AddDbContextPool<Context>(builder =>
         {
