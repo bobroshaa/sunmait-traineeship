@@ -15,7 +15,7 @@ public class OrderItemRepository : IOrderItemRepository
 
     public async Task<OrderProduct?> GetById(int id)
     {
-        return await _dbContext.OrderProducts.FirstOrDefaultAsync(op => op.ID == id);
+        return await _dbContext.OrderProducts.FirstOrDefaultAsync(op => op.ID == id && op.IsActive);
     }
     
     public async Task Add(OrderProduct orderItem)
@@ -33,7 +33,7 @@ public class OrderItemRepository : IOrderItemRepository
     
     public async Task Delete(OrderProduct orderItem)
     {
-        // orderItem.IsActive = false;
-        // await _dbContext.SaveChangesAsync();
+        orderItem.IsActive = false;
+        await _dbContext.SaveChangesAsync();
     }
 }
