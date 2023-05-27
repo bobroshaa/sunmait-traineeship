@@ -15,18 +15,18 @@ public class OrderRepository : IOrderRepository
 
     public async Task<IEnumerable<CustomerOrder>> GetAll()
     {
-        return await _dbContext.CustomerOrders.ToListAsync();
+        return await _dbContext.CustomerOrders.Where(co => co.IsActive).ToListAsync();
     }
 
     public async Task<IEnumerable<OrderProduct>> GetAllByOrderId(int orderId)
     {
         return await _dbContext.OrderProducts
-            .Where(op => op.OrderID == orderId)
+            .Where(op => op.OrderID == orderId && op.IsActive)
             .ToListAsync();
     }
     public async Task<CustomerOrder?> GetById(int id)
     {
-        return await _dbContext.CustomerOrders.FirstOrDefaultAsync(co => co.ID == id);
+        return await _dbContext.CustomerOrders.FirstOrDefaultAsync(co => co.ID == id && co.IsActive);
     }
 
     public async Task Add(CustomerOrder order)
@@ -43,7 +43,7 @@ public class OrderRepository : IOrderRepository
 
     public async Task Delete(CustomerOrder order)
     {
-        // product.IsActive = false;
-        // await _dbContext.SaveChangesAsync();
+        order.IsActive = false;
+        await _dbContext.SaveChangesAsync();
     }
 }
