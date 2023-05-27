@@ -18,8 +18,8 @@ public class ProductController : Controller
     [HttpGet]
     public async Task<ActionResult<List<ProductViewModel>>> GetAllProducts()
     {
-        var brands = await _productService.GetAll();
-        return Ok(brands);
+        var products = await _productService.GetAll();
+        return Ok(products);
     }
 
     [HttpGet("{id}")]

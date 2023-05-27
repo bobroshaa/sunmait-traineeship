@@ -21,5 +21,7 @@ public class BrandProfile : Profile
         CreateMap<CustomerOrder, OrderViewModel>().ReverseMap();
         CreateMap<CustomerOrder, OrderInputModel>().ReverseMap();
 
+        CreateMap<OrderProduct, OrderItemViewModel>().ReverseMap();
+        CreateMap<OrderProduct, OrderItemInputModel>().ReverseMap();
     }
 }
