@@ -18,6 +18,12 @@ public class OrderRepository : IOrderRepository
         return await _dbContext.CustomerOrders.ToListAsync();
     }
 
+    public async Task<IEnumerable<OrderProduct>> GetAllByOrderId(int orderId)
+    {
+        return await _dbContext.OrderProducts
+            .Where(op => op.OrderID == orderId)
+            .ToListAsync();
+    }
     public async Task<CustomerOrder?> GetById(int id)
     {
         return await _dbContext.CustomerOrders.FirstOrDefaultAsync(co => co.ID == id);

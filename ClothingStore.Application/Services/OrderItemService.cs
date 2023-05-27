@@ -16,13 +16,7 @@ public class OrderItemService : IOrderItemService
         _mapper = mapper;
         _orderItemRepository = orderItemRepository;
     }
-
-    public async Task<List<OrderItemViewModel>> GetAllById(int id)
-    {
-        return _mapper.Map<List<OrderItemViewModel>>(await _orderItemRepository.GetAllById(id));
-    }
-
-
+    
     public async Task<OrderItemViewModel?> GetById(int id)
     {
         var orderItem = await _orderItemRepository.GetById(id);

@@ -22,6 +22,16 @@ public class OrderService : IOrderService
         return _mapper.Map<List<OrderViewModel>>(await _orderRepository.GetAll());
     }
 
+    public async Task<List<OrderItemViewModel>> GetAllByOrderId(int orderId)
+    {
+        var order = await _orderRepository.GetById(orderId);
+        if (order is null)
+        {
+            throw new Exception(ExceptionMessages.OrderNotFound);
+        }
+        return _mapper.Map<List<OrderItemViewModel>>(await _orderRepository.GetAllByOrderId(orderId));
+    }
+    
     public async Task<OrderViewModel?> GetById(int id)
     {
         var order = await _orderRepository.GetById(id);

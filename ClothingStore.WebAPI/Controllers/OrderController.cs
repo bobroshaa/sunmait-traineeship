@@ -19,8 +19,15 @@ public class OrderController : Controller
     [HttpGet]
     public async Task<ActionResult<List<OrderViewModel>>> GetAllOrders()
     {
-        var brands = await _orderService.GetAll();
-        return Ok(brands);
+        var orders = await _orderService.GetAll();
+        return Ok(orders);
+    }
+    
+    [HttpGet("{orderId}/items")]
+    public async Task<ActionResult<List<OrderViewModel>>> GetOrderItemsByOrder(int orderId)
+    {
+        var orderItems = await _orderService.GetAllByOrderId(orderId);
+        return Ok(orderItems);
     }
 
     [HttpGet("{id}")]

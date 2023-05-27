@@ -17,6 +17,7 @@ public class ProductRepository : IProductRepository
     public async Task<IEnumerable<Product>> GetAll()
     {
         return await _dbContext.Products
+            .Where(p => p.IsActive)
             .Include(p => p.Brand)
             .Include(p => p.SectionCategory.Category)
             .Include(p => p.SectionCategory.Section)
@@ -29,7 +30,7 @@ public class ProductRepository : IProductRepository
             .Include(p => p.Brand)
             .Include(p => p.SectionCategory.Category)
             .Include(p => p.SectionCategory.Section)
-            .FirstOrDefaultAsync(p => p.ID == id);
+            .FirstOrDefaultAsync(p => p.ID == id && p.IsActive);
         return product;
     }
 
@@ -54,7 +55,7 @@ public class ProductRepository : IProductRepository
 
     public async Task Delete(Product product)
     {
-        // product.IsActive = false;
-        // await _dbContext.SaveChangesAsync();
+        product.IsActive = false;
+        await _dbContext.SaveChangesAsync();
     }
 }

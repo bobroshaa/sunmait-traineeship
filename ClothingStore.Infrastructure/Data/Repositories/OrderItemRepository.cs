@@ -12,14 +12,7 @@ public class OrderItemRepository : IOrderItemRepository
     {
         _dbContext = dbContext;
     }
-    
-    public async Task<IEnumerable<OrderProduct>> GetAllById(int id)
-    {
-        return await _dbContext.OrderProducts
-            .Where(op => op.OrderID == id)
-            .ToListAsync();
-    }
-    
+
     public async Task<OrderProduct?> GetById(int id)
     {
         return await _dbContext.OrderProducts.FirstOrDefaultAsync(op => op.ID == id);
