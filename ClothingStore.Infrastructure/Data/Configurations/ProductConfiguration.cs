@@ -34,5 +34,6 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder
             .ToTable(p => p.HasCheckConstraint("quantity", "Quantity >= 0")
                 .HasName("CK_product_quantity"));
+        builder.Property(p => p.IsActive).HasDefaultValue(true);
     }
 }

@@ -9,6 +9,7 @@ public class Product
     public DateTime AddDate { get; set; }
     public int Quantity { get; set; }
     public string ImageURL { get; set; }
+    public bool IsActive { get; set; }
     
     public int SectionCategoryID { get; set; }
     public virtual SectionCategory SectionCategory { get; set; }

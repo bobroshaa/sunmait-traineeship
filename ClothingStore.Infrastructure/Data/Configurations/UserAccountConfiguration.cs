@@ -17,5 +17,6 @@ public class UserAccountConfiguration: IEntityTypeConfiguration<UserAccount>
         builder.Property(u => u.LastName).HasMaxLength(50);
         builder.HasIndex(u => u.Phone).IsUnique();
         builder.HasIndex(u => u.Email).IsUnique();
+        builder.Property(u => u.IsActive).HasDefaultValue(true);
     }
 }

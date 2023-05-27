@@ -29,5 +29,6 @@ public class OrderProductConfiguration : IEntityTypeConfiguration<OrderProduct>
         builder
             .ToTable(op => op.HasCheckConstraint("price", "price > 0")
                 .HasName("CK_order_product_price"));
+        builder.Property(op => op.IsActive).HasDefaultValue(true);
     }
 }

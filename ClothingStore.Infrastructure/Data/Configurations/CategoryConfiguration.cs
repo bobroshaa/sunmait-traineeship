@@ -16,5 +16,6 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
             .OnDelete(DeleteBehavior.Restrict);
         builder.Property(c => c.Name).IsRequired().HasMaxLength(50);
         builder.Property(c => c.ParentCategoryID).IsRequired(false);
+        builder.Property(c => c.IsActive).HasDefaultValue(true);
     }
 }

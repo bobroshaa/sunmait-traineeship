@@ -11,6 +11,7 @@ public class Address
     public string Postcode { get; set; }
     public string AddressLine1 { get; set; }
     public string AddressLine2 { get; set; }
+    public bool IsActive { get; set; }
 
     public virtual UserAccount User { get; set; }
 }
