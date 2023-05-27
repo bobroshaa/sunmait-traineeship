@@ -8,7 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
         .AddApplicationDependencies()
         .AddInfrastructure();
     builder.Services.AddControllers();
-    builder.Services.AddAutoMapper(typeof(BrandProfile));
+    builder.Services.AddAutoMapper(typeof(BrandProfile), typeof(ProductProfile), typeof(OrderProfile),
+        typeof(OrderItemProfile));
     builder.Services.AddSwaggerGen();
 }
 
