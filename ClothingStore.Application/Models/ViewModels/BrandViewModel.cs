@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ClothingStore.Application.Models;
+namespace ClothingStore.Application.Models.ViewModels;
 
 public class BrandViewModel
 {

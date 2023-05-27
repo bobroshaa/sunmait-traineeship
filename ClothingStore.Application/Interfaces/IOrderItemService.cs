@@ -1,4 +1,6 @@
 ﻿using ClothingStore.Application.Models;
+using ClothingStore.Application.Models.InputModels;
+using ClothingStore.Application.Models.ViewModels;
 
 namespace ClothingStore.Application.Interfaces;
 

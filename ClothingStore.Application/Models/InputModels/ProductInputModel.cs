@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace ClothingStore.Application.Models;
+﻿namespace ClothingStore.Application.Models.InputModels;
 
 public class ProductInputModel
 {

@@ -1,6 +1,6 @@
 ﻿using ClothingStore.Domain.Enums;
 
-namespace ClothingStore.Application.Models;
+namespace ClothingStore.Application.Models.ViewModels;
 
 public class OrderViewModel
 {

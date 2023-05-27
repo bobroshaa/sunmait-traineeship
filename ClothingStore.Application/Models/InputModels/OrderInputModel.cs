@@ -1,6 +1,6 @@
 ﻿using ClothingStore.Domain.Enums;
 
-namespace ClothingStore.Application.Models;
+namespace ClothingStore.Application.Models.InputModels;
 
 public class OrderInputModel
 {
