@@ -19,6 +19,12 @@ public class OrderItemRepository : IOrderItemRepository
             .Where(op => op.OrderID == id)
             .ToListAsync();
     }
+    
+    public async Task<OrderProduct?> GetById(int id)
+    {
+        return await _dbContext.OrderProducts.FirstOrDefaultAsync(op => op.ID == id);
+    }
+    
     public async Task Add(OrderProduct orderItem)
     {
         await _dbContext.OrderProducts.AddAsync(orderItem);

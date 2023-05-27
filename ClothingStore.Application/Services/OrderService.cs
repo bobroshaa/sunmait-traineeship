@@ -27,7 +27,7 @@ public class OrderService : IOrderService
         var order = await _orderRepository.GetById(id);
         if (order is null)
         {
-            throw new Exception(ExceptionMessages.BrandNotFound);
+            throw new Exception(ExceptionMessages.OrderNotFound);
         }
 
         return _mapper.Map<OrderViewModel>(order);
@@ -46,7 +46,7 @@ public class OrderService : IOrderService
         var updatingOrder = await _orderRepository.GetById(id);
         if (updatingOrder is null)
         {
-            throw new Exception(ExceptionMessages.BrandNotFound);
+            throw new Exception(ExceptionMessages.OrderNotFound);
         }
 
         await _orderRepository.Update(updatingOrder, _mapper.Map<CustomerOrder>(orderInputModel));
@@ -57,7 +57,7 @@ public class OrderService : IOrderService
         var order = await _orderRepository.GetById(id);
         if (order is null)
         {
-            throw new Exception(ExceptionMessages.BrandNotFound);
+            throw new Exception(ExceptionMessages.OrderNotFound);
         }
 
         await _orderRepository.Delete(order);
