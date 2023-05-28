@@ -58,4 +58,25 @@ public class ProductRepository : IProductRepository
         product.IsActive = false;
         await _dbContext.SaveChangesAsync();
     }
+
+    public async Task<IEnumerable<Product>> GetProductsBySectionAndCategory(int categoryId, int sectionId)
+    {
+        return await _dbContext.Products
+            .Include(p => p.Brand)
+            .Include(p => p.SectionCategory.Category)
+            .Include(p => p.SectionCategory.Section)
+            .Where(p => p.IsActive && p.SectionCategory.CategoryID == categoryId &&
+                        p.SectionCategory.SectionID == sectionId)
+            .ToListAsync();
+    }
+    
+    public async Task<IEnumerable<Product>> GetProductsByBrand(int brandId)
+    {
+        return await _dbContext.Products
+            .Include(p => p.Brand)
+            .Include(p => p.SectionCategory.Category)
+            .Include(p => p.SectionCategory.Section)
+            .Where(p => p.IsActive && p.BrandID == brandId)
+            .ToListAsync();
+    }
 }

@@ -10,4 +10,7 @@ public interface IProductRepository
     Task Add(Product product);
     Task Update(Product updatingProduct, Product product);
     Task Delete(Product product);
+    Task<IEnumerable<Product>> GetProductsBySectionAndCategory(int sectionId, int categoryId);
+    Task<IEnumerable<Product>> GetProductsByBrand(int brandId);
+    
 }

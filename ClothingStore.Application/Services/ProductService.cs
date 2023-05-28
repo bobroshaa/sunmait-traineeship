@@ -64,4 +64,16 @@ public class ProductService : IProductService
 
         await _productRepository.Delete(product);
     }
+
+    public async Task<List<ProductViewModel>> GetProductsBySectionAndCategory(int categoryId, int sectionId)
+    {
+        return _mapper.Map<List<ProductViewModel>>(
+            await _productRepository.GetProductsBySectionAndCategory(categoryId, sectionId));
+    }
+
+    public async Task<List<ProductViewModel>> GetProductsByBrand(int brandId)
+    {
+        return _mapper.Map<List<ProductViewModel>>(
+            await _productRepository.GetProductsByBrand(brandId));
+    }
 }

@@ -85,4 +85,19 @@ public class ProductController : Controller
 
         return Ok();
     }
+
+    [HttpGet("section-category/{sectionId}/{categoryId}")]
+    public async Task<ActionResult<List<ProductViewModel>>> GetProductsBySectionAndCategory([FromRoute]int sectionId,
+        [FromRoute]int categoryId)
+    {
+        var products = await _productService.GetProductsBySectionAndCategory(sectionId, categoryId);
+        return Ok(products);
+    }
+
+    [HttpGet("brand/{brandId}")]
+    public async Task<ActionResult<List<ProductViewModel>>> GetProductsByBrand([FromRoute]int brandId)
+    {
+        var products = await _productService.GetProductsByBrand(brandId);
+        return Ok(products);
+    }
 }
