@@ -1,6 +1,5 @@
 ﻿using ClothingStore.Domain.Entities;
 using ClothingStore.Domain.Interfaces;
-using ClothingStore.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClothingStore.Infrastructure.Data.Repositories;

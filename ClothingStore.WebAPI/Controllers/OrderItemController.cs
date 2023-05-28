@@ -1,5 +1,4 @@
 ﻿using ClothingStore.Application.Interfaces;
-using ClothingStore.Application.Models;
 using ClothingStore.Application.Models.InputModels;
 using ClothingStore.Application.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;

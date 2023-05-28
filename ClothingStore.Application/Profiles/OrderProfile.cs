@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using ClothingStore.Application.Models;
 using ClothingStore.Application.Models.InputModels;
 using ClothingStore.Application.Models.ViewModels;
 using ClothingStore.Domain.Entities;

@@ -1,5 +1,4 @@
 using ClothingStore.Domain.Entities;
-using ClothingStore.Domain.Models;
 
 namespace ClothingStore.Domain.Interfaces;
 
