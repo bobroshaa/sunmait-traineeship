@@ -1,4 +1,5 @@
 ﻿using ClothingStore.Domain.Entities;
+using ClothingStore.Domain.Enums;
 using ClothingStore.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -35,9 +36,9 @@ public class OrderRepository : IOrderRepository
         await _dbContext.SaveChangesAsync();
     }
     
-    public async Task Update(CustomerOrder updatingOrder, CustomerOrder order)
+    public async Task Update(CustomerOrder updatingOrder, Status orderStatus)
     {
-        updatingOrder.CurrentStatus = order.CurrentStatus;
+        updatingOrder.CurrentStatus = orderStatus;
         await _dbContext.SaveChangesAsync();
     }
 

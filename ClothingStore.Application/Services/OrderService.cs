@@ -3,6 +3,7 @@ using ClothingStore.Application.Interfaces;
 using ClothingStore.Application.Models.InputModels;
 using ClothingStore.Application.Models.ViewModels;
 using ClothingStore.Domain.Entities;
+using ClothingStore.Domain.Enums;
 using ClothingStore.Domain.Interfaces;
 
 namespace ClothingStore.Application.Services;
@@ -61,7 +62,7 @@ public class OrderService : IOrderService
         return order.ID;
     }
 
-    public async Task Update(int id, OrderInputModel orderInputModel)
+    public async Task Update(int id, Status orderStatus)
     {
         var updatingOrder = await _orderRepository.GetById(id);
         if (updatingOrder is null)
@@ -69,7 +70,7 @@ public class OrderService : IOrderService
             throw new Exception(ExceptionMessages.OrderNotFound);
         }
 
-        await _orderRepository.Update(updatingOrder, _mapper.Map<CustomerOrder>(orderInputModel));
+        await _orderRepository.Update(updatingOrder, orderStatus);
     }
 
     public async Task Delete(int id)

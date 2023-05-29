@@ -1,6 +1,7 @@
 ﻿using ClothingStore.Application.Interfaces;
 using ClothingStore.Application.Models.InputModels;
 using ClothingStore.Application.Models.ViewModels;
+using ClothingStore.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClothingStore.WebAPI.Controllers;
@@ -78,7 +79,7 @@ public class OrderController : Controller
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpPut("{id}")]
-    public async Task<ActionResult> UpdateOrder([FromRoute] int id, [FromBody] OrderInputModel orderInputModel)
+    public async Task<ActionResult> UpdateOrderStatus([FromRoute] int id, [FromBody] Status orderStatus)
     {
         if (!ModelState.IsValid)
         {
@@ -87,7 +88,7 @@ public class OrderController : Controller
 
         try
         {
-            await _orderService.Update(id, orderInputModel);
+            await _orderService.Update(id, orderStatus);
         }
         catch (Exception ex)
         {
