@@ -1,5 +1,6 @@
 ﻿using ClothingStore.Domain.Entities;
 using ClothingStore.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace ClothingStore.Infrastructure.Data.Repositories;
 
@@ -11,6 +12,12 @@ public class SectionRepository : ISectionRepository
     {
         _dbContext = dbContext;
     }
+    
+    public async Task<Section?> GetById(int id)
+    {
+        return await _dbContext.Sections.FirstOrDefaultAsync(s => s.ID == id);
+    }
+
 
     public async Task Add(Section section)
     {
