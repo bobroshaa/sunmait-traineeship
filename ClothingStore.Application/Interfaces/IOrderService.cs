@@ -11,6 +11,6 @@ public interface IOrderService
     Task<int> Add(OrderInputModel order);
     Task Update(int id, OrderInputModel order);
     Task Delete(int id);
-    Task AddOrderItemInOrder(int orderId, OrderItemInputModel orderItemInputModel);
+    Task<int> AddOrderItemInOrder(int orderId, OrderItemInputModel orderItemInputModel);
     Task DeleteOrderItemFromOrder(int orderItemId);
 }

@@ -49,6 +49,7 @@ public class OrderService : IOrderService
 
     public async Task<int> Add(OrderInputModel orderInputModel)
     {
+        // TODO: add checking of user existing
         var order = _mapper.Map<CustomerOrder>(orderInputModel);
         order.OrderDate = DateTime.UtcNow;
         await _orderRepository.Add(order);
@@ -82,8 +83,13 @@ public class OrderService : IOrderService
         await _orderRepository.Delete(order);
     }
 
-    public async Task AddOrderItemInOrder(int orderId, OrderItemInputModel orderItemInputModel)
+    public async Task<int> AddOrderItemInOrder(int orderId, OrderItemInputModel orderItemInputModel)
     {
+        var order = await _orderRepository.GetById(orderId);
+        if (order is null)
+        {
+            throw new Exception(ExceptionMessages.OrderNotFound);
+        }
         var product = await _productRepository.GetById(orderItemInputModel.ProductID);
         if (product is null)
         {
@@ -98,6 +104,7 @@ public class OrderService : IOrderService
         var mappedItem = _mapper.Map<OrderProduct>(orderItemInputModel);
         mappedItem.OrderID = orderId;
         await _orderRepository.AddOrderItem(mappedItem, product);
+        return mappedItem.ID;
     }
 
     public async Task DeleteOrderItemFromOrder(int orderItemId)
