@@ -5,7 +5,7 @@ namespace ClothingStore.Application.Interfaces;
 
 public interface IOrderService
 {
-    Task<List<OrderItemViewModel>> GetAllByOrderId(int orderId);
+    Task<List<OrderItemViewModel>> GetOrderItemsByOrderId(int orderId);
     Task<IEnumerable<OrderViewModel>> GetAll();
     Task<OrderViewModel?> GetById(int id);
     Task<int> Add(OrderInputModel order);

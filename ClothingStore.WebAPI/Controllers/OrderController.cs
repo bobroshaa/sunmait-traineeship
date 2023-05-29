@@ -32,7 +32,7 @@ public class OrderController : Controller
         List<OrderItemViewModel> orderItems;
         try
         {
-            orderItems = await _orderService.GetAllByOrderId(orderId);
+            orderItems = await _orderService.GetOrderItemsByOrderId(orderId);
         }
         catch (Exception ex)
         {

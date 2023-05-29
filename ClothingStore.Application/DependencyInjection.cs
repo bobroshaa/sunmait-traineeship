@@ -11,7 +11,6 @@ public static class DependencyInjection
         services.AddTransient<IBrandService, BrandService>();
         services.AddTransient<IProductService, ProductService>();
         services.AddTransient<IOrderService, OrderService>();
-        services.AddTransient<IOrderItemService, OrderItemService>();
         services.AddTransient<ICategoryService, CategoryService>();
 
         return services;
