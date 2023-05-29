@@ -23,7 +23,7 @@ public class CategoryService : ICategoryService
         var category = await _categoryRepository.GetById(id);
         if (category is null)
         {
-            throw new Exception(ExceptionMessages.BrandNotFound);
+            throw new Exception(ExceptionMessages.CategoryNotFound);
         }
 
         return _mapper.Map<CategoryViewModel>(category);
@@ -41,7 +41,7 @@ public class CategoryService : ICategoryService
         var updatingCategory = await _categoryRepository.GetById(id);
         if (updatingCategory is null)
         {
-            throw new Exception(ExceptionMessages.BrandNotFound);
+            throw new Exception(ExceptionMessages.CategoryNotFound);
         }
 
         await _categoryRepository.Update(updatingCategory, _mapper.Map<Category>(categoryInputModel));
@@ -52,7 +52,7 @@ public class CategoryService : ICategoryService
         var category = await _categoryRepository.GetById(id);
         if (category is null)
         {
-            throw new Exception(ExceptionMessages.BrandNotFound);
+            throw new Exception(ExceptionMessages.CategoryNotFound);
         }
 
         await _categoryRepository.Delete(category);

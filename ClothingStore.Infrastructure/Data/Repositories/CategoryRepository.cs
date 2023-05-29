@@ -27,6 +27,7 @@ public class CategoryRepository : ICategoryRepository
     public async Task Update(Category updatingCategory, Category category)
     {
         updatingCategory.Name = category.Name;
+        updatingCategory.ParentCategoryID = category.ParentCategoryID;
         await _dbContext.SaveChangesAsync();
     }
 
