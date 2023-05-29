@@ -10,12 +10,14 @@ namespace ClothingStore.Application.Services;
 public class CategoryService : ICategoryService
 {
     private readonly ICategoryRepository _categoryRepository;
+    private readonly ISectionRepository _sectionRepository;
     private readonly IMapper _mapper;
 
-    public CategoryService(IMapper mapper, ICategoryRepository categoryRepository)
+    public CategoryService(IMapper mapper, ICategoryRepository categoryRepository, ISectionRepository sectionRepository)
     {
         _mapper = mapper;
         _categoryRepository = categoryRepository;
+        _sectionRepository = sectionRepository;
     }
 
     public async Task<CategoryViewModel?> GetById(int id)
@@ -56,5 +58,23 @@ public class CategoryService : ICategoryService
         }
 
         await _categoryRepository.Delete(category);
+    }
+
+    public async Task LinkCategoryToSection(int sectionId, int categoryId)
+    {
+        var section = await _sectionRepository.GetById(sectionId);
+        if (section is null)
+        {
+            throw new Exception(ExceptionMessages.SectionNotFound);
+        }
+
+        var category = await _categoryRepository.GetById(categoryId);
+        if (category is null)
+        {
+            throw new Exception(ExceptionMessages.CategoryNotFound);
+        }
+
+        await _categoryRepository.LinkCategoryToSection(new SectionCategory
+            { SectionID = sectionId, CategoryID = categoryId });
     }
 }

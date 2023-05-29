@@ -33,7 +33,7 @@ public class CategoryController : Controller
 
         return Ok(category);
     }
-    
+
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPost]
@@ -47,7 +47,7 @@ public class CategoryController : Controller
         var id = await _categoryService.Add(categoryInputModel);
         return CreatedAtAction(nameof(GetCategory), new { id }, id);
     }
-    
+
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -79,6 +79,28 @@ public class CategoryController : Controller
         try
         {
             await _categoryService.Delete(id);
+        }
+        catch (Exception ex)
+        {
+            return NotFound(ex.Message);
+        }
+
+        return Ok();
+    }
+
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [HttpPost("link-to-section")]
+    public async Task<ActionResult<int>> LinkCategoryToSection([FromQuery] int sectionId, [FromQuery] int categoryId)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        try
+        {
+            await _categoryService.LinkCategoryToSection(sectionId, categoryId);
         }
         catch (Exception ex)
         {

@@ -36,4 +36,10 @@ public class CategoryRepository : ICategoryRepository
         category.IsActive = false;
         await _dbContext.SaveChangesAsync();
     }
+
+    public async Task LinkCategoryToSection(SectionCategory sectionCategory)
+    {
+        await _dbContext.SectionCategories.AddAsync(sectionCategory);
+        await _dbContext.SaveChangesAsync();
+    }
 }

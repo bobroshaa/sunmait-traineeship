@@ -8,5 +8,6 @@ public interface ICategoryService
     public Task<CategoryViewModel?> GetById(int id);
     public Task<int> Add(CategoryInputModel categoryInputModel);
     public Task Update(int id, CategoryInputModel categoryInputModel);
+    public Task LinkCategoryToSection(int sectionId, int categoryId);
     public Task Delete(int id);
 }

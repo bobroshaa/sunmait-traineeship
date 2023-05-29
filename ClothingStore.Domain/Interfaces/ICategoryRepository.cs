@@ -8,4 +8,5 @@ public interface ICategoryRepository
     Task Add(Category category);
     Task Update(Category updatingCategory, Category category);
     Task Delete(Category category);
+    public Task LinkCategoryToSection(SectionCategory sectionCategory);
 }
