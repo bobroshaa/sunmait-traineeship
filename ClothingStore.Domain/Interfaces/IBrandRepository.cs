@@ -9,4 +9,5 @@ public interface IBrandRepository
     Task Add(Brand brand);
     Task Update(Brand updatingBrand, Brand brand);
     Task Delete(Brand brand);
+    Task<bool> NameIsUnique(string name);
 }

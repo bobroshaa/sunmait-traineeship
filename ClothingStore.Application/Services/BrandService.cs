@@ -36,6 +36,11 @@ public class BrandService : IBrandService
 
     public async Task<int> Add(BrandInputModel brandInputModel)
     {
+        if (!(await _brandRepository.NameIsUnique(brandInputModel.Name)))
+        {
+            throw new Exception(ExceptionMessages.BrandAlreadyExists);
+        }
+        
         var brand = _mapper.Map<Brand>(brandInputModel);
         await _brandRepository.Add(brand);
         return brand.ID;
@@ -47,6 +52,11 @@ public class BrandService : IBrandService
         if (updatingBrand is null)
         {
             throw new Exception(ExceptionMessages.BrandNotFound);
+        }
+
+        if (! await _brandRepository.NameIsUnique(brandInputModel.Name))
+        {
+            throw new Exception(ExceptionMessages.BrandAlreadyExists);
         }
 
         await _brandRepository.Update(updatingBrand, _mapper.Map<Brand>(brandInputModel));

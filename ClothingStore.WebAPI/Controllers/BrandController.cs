@@ -8,14 +8,14 @@ namespace ClothingStore.WebAPI.Controllers;
 [Route("api/brands")]
 [ApiController]
 public class BrandController : Controller
-{    
+{
     private readonly IBrandService _brandService;
 
     public BrandController(IBrandService brandService)
     {
         _brandService = brandService;
     }
-    
+
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<BrandViewModel>))]
     [HttpGet]
     public async Task<ActionResult<List<BrandViewModel>>> GetAllBrands()
@@ -23,7 +23,7 @@ public class BrandController : Controller
         var brands = await _brandService.GetAll();
         return Ok(brands);
     }
-    
+
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BrandViewModel))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("{id}")]
@@ -52,10 +52,19 @@ public class BrandController : Controller
             return BadRequest(ModelState);
         }
 
-        var id = await _brandService.Add(brandInputModel);
-        return CreatedAtAction(nameof(GetBrand), new { id }, id);
+        try
+        {
+            var id = await _brandService.Add(brandInputModel);
+            return CreatedAtAction(nameof(GetBrand), new { id }, id);
+
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+
     }
-    
+
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

@@ -9,4 +9,5 @@ public static class ExceptionMessages
     public static readonly string CategoryNotFound = "Sorry, this category does not exist!";
     public static readonly string ProductQuantityIsNotAvailable = "Sorry, the quantity of this product is not available!";
     public static readonly string SectionNotFound = "Sorry, this section does not exist!";
+    public static readonly string  BrandAlreadyExists = "Sorry, this brand already exists!";
 }

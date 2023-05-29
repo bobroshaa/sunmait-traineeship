@@ -40,4 +40,9 @@ public class BrandRepository : IBrandRepository
         brand.IsActive = false;
         await _dbContext.SaveChangesAsync();
     }
+
+    public async Task<bool> NameIsUnique(string name)
+    {
+        return await _dbContext.Brands.FirstOrDefaultAsync(b => b.Name == name) is null;
+    }
 }
