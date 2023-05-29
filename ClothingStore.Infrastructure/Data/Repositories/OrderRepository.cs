@@ -46,4 +46,11 @@ public class OrderRepository : IOrderRepository
         order.IsActive = false;
         await _dbContext.SaveChangesAsync();
     }
+
+    public async Task AddOrderItem(OrderProduct orderItem, Product product)
+    {
+        await _dbContext.OrderProducts.AddAsync(orderItem);
+        product.Quantity -= orderItem.Quantity;
+        await _dbContext.SaveChangesAsync();
+    }
 }

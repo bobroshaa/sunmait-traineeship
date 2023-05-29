@@ -12,7 +12,4 @@ public class OrderItemInputModel
     
     [Required(ErrorMessage = "The ProductID field is required.")]
     public int ProductID { get; set; }
-    
-    [Required(ErrorMessage = "The OrderID field is required.")]
-    public int OrderID { get; set; }
 }

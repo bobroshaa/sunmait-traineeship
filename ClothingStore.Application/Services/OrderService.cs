@@ -10,12 +10,14 @@ namespace ClothingStore.Application.Services;
 public class OrderService : IOrderService
 {
     private readonly IOrderRepository _orderRepository;
+    private readonly IProductRepository _productRepository;
     private readonly IMapper _mapper;
     
-    public OrderService(IMapper mapper, IOrderRepository orderRepository)
+    public OrderService(IMapper mapper, IOrderRepository orderRepository, IProductRepository productRepository)
     {
         _mapper = mapper;
         _orderRepository = orderRepository;
+        _productRepository = productRepository;
     }
     
     public async Task<IEnumerable<OrderViewModel>> GetAll()
@@ -49,6 +51,23 @@ public class OrderService : IOrderService
         var order = _mapper.Map<CustomerOrder>(orderInputModel);
         order.OrderDate = DateTime.UtcNow;
         await _orderRepository.Add(order);
+        foreach (var item in orderInputModel.Products)
+        {
+            var product = await _productRepository.GetById(item.ProductID);
+            if (product is null)
+            {
+                throw new Exception(ExceptionMessages.ProductNotFound);
+            }
+
+            if (item.Quantity > product.Quantity)
+            {
+                throw new Exception(ExceptionMessages.ProductQuantityIsNotAvailable);
+            }
+
+            var mappedItem = _mapper.Map<OrderProduct>(item);
+            mappedItem.OrderID = order.ID;
+            await _orderRepository.AddOrderItem(mappedItem, product);
+        }
         return order.ID;
     }
 

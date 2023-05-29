@@ -10,4 +10,7 @@ public class OrderInputModel
     
     [Required(ErrorMessage = "The UserID field is required.")]
     public int UserID {get; set;}
+
+    [Required(ErrorMessage = "At least one product is required.")]
+    public List<OrderItemInputModel> Products { get; set; }
 }

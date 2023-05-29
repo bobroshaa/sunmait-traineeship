@@ -10,4 +10,5 @@ public interface IOrderRepository
     Task Add(CustomerOrder order);
     Task Update(CustomerOrder updatingOrder, CustomerOrder order);
     Task Delete(CustomerOrder order);
+    Task AddOrderItem(OrderProduct orderItem, Product product);
 }
