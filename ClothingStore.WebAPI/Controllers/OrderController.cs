@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ClothingStore.WebAPI.Controllers;
 
-
 [Route("api/orders")]
 [ApiController]
 public class OrderController : Controller
@@ -17,20 +16,34 @@ public class OrderController : Controller
         _orderService = orderService;
     }
 
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<OrderViewModel>))]
     [HttpGet]
     public async Task<ActionResult<List<OrderViewModel>>> GetAllOrders()
     {
         var orders = await _orderService.GetAll();
         return Ok(orders);
     }
-    
+
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<OrderItemViewModel>))]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("{orderId}/items")]
-    public async Task<ActionResult<List<OrderViewModel>>> GetOrderItemsByOrder(int orderId)
+    public async Task<ActionResult<List<OrderItemViewModel>>> GetOrderItemsByOrder(int orderId)
     {
-        var orderItems = await _orderService.GetAllByOrderId(orderId);
+        List<OrderItemViewModel> orderItems;
+        try
+        {
+            orderItems = await _orderService.GetAllByOrderId(orderId);
+        }
+        catch (Exception ex)
+        {
+            return NotFound(ex.Message);
+        }
+
         return Ok(orderItems);
     }
 
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderViewModel))]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("{id}")]
     public async Task<ActionResult<OrderViewModel>> GetOrder([FromRoute] int id)
     {
@@ -47,6 +60,8 @@ public class OrderController : Controller
         return Ok(order);
     }
 
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPost]
     public async Task<ActionResult<int>> AddOrder([FromBody] OrderInputModel orderInputModel)
     {
@@ -55,9 +70,13 @@ public class OrderController : Controller
             return BadRequest(ModelState);
         }
 
-        return Ok(await _orderService.Add(orderInputModel));
+        var id = await _orderService.Add(orderInputModel);
+        return CreatedAtAction(nameof(GetOrder), new { id }, id);
     }
 
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpPut("{id}")]
     public async Task<ActionResult> UpdateOrder([FromRoute] int id, [FromBody] OrderInputModel orderInputModel)
     {
@@ -78,6 +97,8 @@ public class OrderController : Controller
         return Ok();
     }
 
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteOrder([FromRoute] int id)
     {

@@ -15,7 +15,8 @@ public class ProductController : Controller
     {
         _productService = productService;
     }
-
+    
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<ProductViewModel>))]
     [HttpGet]
     public async Task<ActionResult<List<ProductViewModel>>> GetAllProducts()
     {
@@ -23,6 +24,8 @@ public class ProductController : Controller
         return Ok(products);
     }
 
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductViewModel))]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("{id}")]
     public async Task<ActionResult<ProductViewModel>> GetProduct([FromRoute] int id)
     {
@@ -39,6 +42,8 @@ public class ProductController : Controller
         return Ok(product);
     }
 
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPost]
     public async Task<ActionResult<int>> AddProduct([FromBody] ProductInputModel productInputModel)
     {
@@ -47,9 +52,13 @@ public class ProductController : Controller
             return BadRequest(ModelState);
         }
 
-        return Ok(await _productService.Add(productInputModel));
+        var id = await _productService.Add(productInputModel);
+        return CreatedAtAction(nameof(GetProduct), new { id }, id);
     }
 
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpPut("{id}")]
     public async Task<ActionResult> UpdateProduct([FromRoute] int id, [FromBody] ProductInputModel productInputModel)
     {
@@ -69,7 +78,9 @@ public class ProductController : Controller
 
         return Ok();
     }
-
+    
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteProduct([FromRoute] int id)
     {
@@ -85,6 +96,7 @@ public class ProductController : Controller
         return Ok();
     }
 
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<ProductViewModel>))]
     [HttpGet("section-category/{sectionId}/{categoryId}")]
     public async Task<ActionResult<List<ProductViewModel>>> GetProductsBySectionAndCategory([FromRoute]int sectionId,
         [FromRoute]int categoryId)
@@ -93,6 +105,7 @@ public class ProductController : Controller
         return Ok(products);
     }
 
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<ProductViewModel>))]
     [HttpGet("brand/{brandId}")]
     public async Task<ActionResult<List<ProductViewModel>>> GetProductsByBrand([FromRoute]int brandId)
     {

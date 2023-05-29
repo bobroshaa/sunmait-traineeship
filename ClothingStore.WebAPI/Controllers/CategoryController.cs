@@ -16,6 +16,8 @@ public class CategoryController : Controller
         _categoryService = categoryService;
     }
 
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CategoryViewModel))]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("{id}")]
     public async Task<ActionResult<CategoryViewModel>> GetCategory([FromRoute] int id)
     {
@@ -31,7 +33,9 @@ public class CategoryController : Controller
 
         return Ok(category);
     }
-
+    
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPost]
     public async Task<ActionResult<int>> AddCategory([FromBody] CategoryInputModel categoryInputModel)
     {
@@ -40,9 +44,13 @@ public class CategoryController : Controller
             return BadRequest(ModelState);
         }
 
-        return Ok(await _categoryService.Add(categoryInputModel));
+        var id = await _categoryService.Add(categoryInputModel);
+        return CreatedAtAction(nameof(GetCategory), new { id }, id);
     }
-
+    
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpPut("{id}")]
     public async Task<ActionResult> UpdateCategory([FromRoute] int id, [FromBody] CategoryInputModel categoryInputModel)
     {
@@ -63,6 +71,8 @@ public class CategoryController : Controller
         return Ok();
     }
 
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteCategory([FromRoute] int id)
     {

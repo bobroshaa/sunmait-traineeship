@@ -15,14 +15,17 @@ public class BrandController : Controller
     {
         _brandService = brandService;
     }
-
+    
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<BrandViewModel>))]
     [HttpGet]
     public async Task<ActionResult<List<BrandViewModel>>> GetAllBrands()
     {
         var brands = await _brandService.GetAll();
         return Ok(brands);
     }
-
+    
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BrandViewModel))]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("{id}")]
     public async Task<ActionResult<BrandViewModel>> GetBrand([FromRoute] int id)
     {
@@ -39,6 +42,8 @@ public class BrandController : Controller
         return Ok(brand);
     }
 
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPost]
     public async Task<ActionResult<int>> AddBrand([FromBody] BrandInputModel brandInputModel)
     {
@@ -47,9 +52,13 @@ public class BrandController : Controller
             return BadRequest(ModelState);
         }
 
-        return Ok(await _brandService.Add(brandInputModel));
+        var id = await _brandService.Add(brandInputModel);
+        return CreatedAtAction(nameof(GetBrand), new { id }, id);
     }
-
+    
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpPut("{id}")]
     public async Task<ActionResult> UpdateBrand([FromRoute] int id, [FromBody] BrandInputModel brandInputModel)
     {
@@ -70,6 +79,8 @@ public class BrandController : Controller
         return Ok();
     }
 
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteBrand([FromRoute] int id)
     {
