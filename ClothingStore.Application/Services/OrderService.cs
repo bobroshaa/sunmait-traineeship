@@ -12,14 +12,14 @@ public class OrderService : IOrderService
     private readonly IOrderRepository _orderRepository;
     private readonly IProductRepository _productRepository;
     private readonly IMapper _mapper;
-    
+
     public OrderService(IMapper mapper, IOrderRepository orderRepository, IProductRepository productRepository)
     {
         _mapper = mapper;
         _orderRepository = orderRepository;
         _productRepository = productRepository;
     }
-    
+
     public async Task<IEnumerable<OrderViewModel>> GetAll()
     {
         return _mapper.Map<List<OrderViewModel>>(await _orderRepository.GetAll());
@@ -32,9 +32,10 @@ public class OrderService : IOrderService
         {
             throw new Exception(ExceptionMessages.OrderNotFound);
         }
+
         return _mapper.Map<List<OrderItemViewModel>>(await _orderRepository.GetAllByOrderId(orderId));
     }
-    
+
     public async Task<OrderViewModel?> GetById(int id)
     {
         var order = await _orderRepository.GetById(id);
@@ -53,21 +54,9 @@ public class OrderService : IOrderService
         await _orderRepository.Add(order);
         foreach (var item in orderInputModel.Products)
         {
-            var product = await _productRepository.GetById(item.ProductID);
-            if (product is null)
-            {
-                throw new Exception(ExceptionMessages.ProductNotFound);
-            }
-
-            if (item.Quantity > product.Quantity)
-            {
-                throw new Exception(ExceptionMessages.ProductQuantityIsNotAvailable);
-            }
-
-            var mappedItem = _mapper.Map<OrderProduct>(item);
-            mappedItem.OrderID = order.ID;
-            await _orderRepository.AddOrderItem(mappedItem, product);
+            await AddOrderItemInOrder(order.ID, item);
         }
+
         return order.ID;
     }
 
@@ -91,5 +80,35 @@ public class OrderService : IOrderService
         }
 
         await _orderRepository.Delete(order);
+    }
+
+    public async Task AddOrderItemInOrder(int orderId, OrderItemInputModel orderItemInputModel)
+    {
+        var product = await _productRepository.GetById(orderItemInputModel.ProductID);
+        if (product is null)
+        {
+            throw new Exception(ExceptionMessages.ProductNotFound);
+        }
+
+        if (orderItemInputModel.Quantity > product.Quantity)
+        {
+            throw new Exception(ExceptionMessages.ProductQuantityIsNotAvailable);
+        }
+
+        var mappedItem = _mapper.Map<OrderProduct>(orderItemInputModel);
+        mappedItem.OrderID = orderId;
+        await _orderRepository.AddOrderItem(mappedItem, product);
+    }
+
+    public async Task DeleteOrderItemFromOrder(int orderItemId)
+    {
+        var orderItem = await _orderRepository.GetOrderItemById(orderItemId);
+        if (orderItem is null)
+        {
+            throw new Exception(ExceptionMessages.OrderItemNotFound);
+        }
+
+        var product = await _productRepository.GetById(orderItem.ProductID);
+        await _orderRepository.DeleteOrderItemFromOrder(orderItem, product);
     }
 }
