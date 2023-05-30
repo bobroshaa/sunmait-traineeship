@@ -12,13 +12,16 @@ public class OrderService : IOrderService
 {
     private readonly IOrderRepository _orderRepository;
     private readonly IProductRepository _productRepository;
+    private readonly IUserRepository _userRepository;
     private readonly IMapper _mapper;
 
-    public OrderService(IMapper mapper, IOrderRepository orderRepository, IProductRepository productRepository)
+    public OrderService(IMapper mapper, IOrderRepository orderRepository, IProductRepository productRepository,
+        IUserRepository userRepository)
     {
         _mapper = mapper;
         _orderRepository = orderRepository;
         _productRepository = productRepository;
+        _userRepository = userRepository;
     }
 
     public async Task<IEnumerable<OrderViewModel>> GetAll()
@@ -50,10 +53,15 @@ public class OrderService : IOrderService
 
     public async Task<int> Add(OrderInputModel orderInputModel)
     {
-        // TODO: add checking of user existing
         var order = _mapper.Map<CustomerOrder>(orderInputModel);
         order.OrderDate = DateTime.UtcNow;
         var productsIds = orderInputModel.Products.Select(p => p.ProductID).ToList();
+        var user = await _userRepository.GetById(order.UserID);
+        if (user is null)
+        {
+            throw new Exception(ExceptionMessages.UserNotFound);
+        }
+
         var products = await _productRepository.GetProductsByIds(productsIds);
         if (products.Count < productsIds.Count)
         {
