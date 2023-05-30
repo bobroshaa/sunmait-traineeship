@@ -33,6 +33,7 @@ public class ReviewRepository : IReviewRepository
     {
         updatingReview.Comment = review.Comment;
         updatingReview.Rating = review.Rating;
+        updatingReview.ReviewTitle = review.ReviewTitle;
 
         await _dbContext.SaveChangesAsync();
     }
