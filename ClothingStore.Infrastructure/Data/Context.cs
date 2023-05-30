@@ -22,7 +22,7 @@ public class Context : DbContext
     public DbSet<Brand> Brands { get; set; }
     public DbSet<Product> Products { get; set; }
     public DbSet<UserAccount> Users { get; set; }
-    public DbSet<Address?> Addresses { get; set; }
+    public DbSet<Address> Addresses { get; set; }
     public DbSet<Review> Reviews { get; set; }
     public DbSet<CustomerOrder> CustomerOrders { get; set; }
     public DbSet<OrderProduct> OrderProducts { get; set; }
