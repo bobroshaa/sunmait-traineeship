@@ -11,5 +11,5 @@ public interface IProductRepository
     Task Delete(Product product);
     Task<IEnumerable<Product>> GetProductsBySectionAndCategory(int sectionId, int categoryId);
     Task<IEnumerable<Product>> GetProductsByBrand(int brandId);
-    
+    Task<List<Product>> GetProductsByIds(IEnumerable<int> productIds);
 }

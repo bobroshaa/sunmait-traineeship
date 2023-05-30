@@ -53,12 +53,27 @@ public class OrderService : IOrderService
         // TODO: add checking of user existing
         var order = _mapper.Map<CustomerOrder>(orderInputModel);
         order.OrderDate = DateTime.UtcNow;
-        await _orderRepository.Add(order);
-        foreach (var item in orderInputModel.Products)
+        var productsIds = orderInputModel.Products.Select(p => p.ProductID).ToList();
+        var products = await _productRepository.GetProductsByIds(productsIds);
+        if (products.Count < productsIds.Count)
         {
-            await AddOrderItemInOrder(order.ID, item);
+            throw new Exception(ExceptionMessages.ProductNotFound);
         }
 
+        if (orderInputModel.Products.Any(item => item.Quantity > products.First(p => p.ID == item.ProductID).Quantity))
+        {
+            throw new Exception(ExceptionMessages.ProductQuantityIsNotAvailable);
+        }
+
+        order.OrderProducts = new List<OrderProduct>();
+        foreach (var item in orderInputModel.Products)
+        {
+            var mappedItem = _mapper.Map<OrderProduct>(item);
+            await _orderRepository.AddOrderItem(mappedItem, products.First(p => p.ID == item.ProductID));
+        }
+
+        await _orderRepository.Add(order);
+        await _orderRepository.Save();
         return order.ID;
     }
 
@@ -70,7 +85,8 @@ public class OrderService : IOrderService
             throw new Exception(ExceptionMessages.OrderNotFound);
         }
 
-        await _orderRepository.Update(updatingOrder, orderStatus);
+        _orderRepository.Update(updatingOrder, orderStatus);
+        await _orderRepository.Save();
     }
 
     public async Task Delete(int id)
@@ -81,7 +97,8 @@ public class OrderService : IOrderService
             throw new Exception(ExceptionMessages.OrderNotFound);
         }
 
-        await _orderRepository.Delete(order);
+        _orderRepository.Delete(order);
+        await _orderRepository.Save();
     }
 
     public async Task<int> AddOrderItemInOrder(int orderId, OrderItemInputModel orderItemInputModel)
@@ -91,6 +108,7 @@ public class OrderService : IOrderService
         {
             throw new Exception(ExceptionMessages.OrderNotFound);
         }
+
         var product = await _productRepository.GetById(orderItemInputModel.ProductID);
         if (product is null)
         {
@@ -105,6 +123,7 @@ public class OrderService : IOrderService
         var mappedItem = _mapper.Map<OrderProduct>(orderItemInputModel);
         mappedItem.OrderID = orderId;
         await _orderRepository.AddOrderItem(mappedItem, product);
+        await _orderRepository.Save();
         return mappedItem.ID;
     }
 
@@ -117,6 +136,7 @@ public class OrderService : IOrderService
         }
 
         var product = await _productRepository.GetById(orderItem.ProductID);
-        await _orderRepository.DeleteOrderItemFromOrder(orderItem, product);
+        _orderRepository.DeleteOrderItemFromOrder(orderItem, product);
+        await _orderRepository.Save();
     }
 }

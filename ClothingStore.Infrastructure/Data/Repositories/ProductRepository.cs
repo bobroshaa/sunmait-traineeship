@@ -78,4 +78,11 @@ public class ProductRepository : IProductRepository
             .Where(p => p.IsActive && p.BrandID == brandId)
             .ToListAsync();
     }
+
+    public async Task<List<Product>> GetProductsByIds(IEnumerable<int> productIds)
+    {
+        return await _dbContext.Products
+            .Where(p => productIds.Contains(p.ID))
+            .ToListAsync();
+    }
 }

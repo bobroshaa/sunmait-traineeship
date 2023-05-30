@@ -33,19 +33,16 @@ public class OrderRepository : IOrderRepository
     public async Task Add(CustomerOrder order)
     {
         await _dbContext.CustomerOrders.AddAsync(order);
-        await _dbContext.SaveChangesAsync();
     }
     
-    public async Task Update(CustomerOrder updatingOrder, Status orderStatus)
+    public void Update(CustomerOrder updatingOrder, Status orderStatus)
     {
         updatingOrder.CurrentStatus = orderStatus;
-        await _dbContext.SaveChangesAsync();
     }
 
-    public async Task Delete(CustomerOrder order)
+    public void Delete(CustomerOrder order)
     {
         order.IsActive = false;
-        await _dbContext.SaveChangesAsync();
     }
 
     public async Task<OrderProduct?> GetOrderItemById(int id)
@@ -57,16 +54,19 @@ public class OrderRepository : IOrderRepository
     {
         await _dbContext.OrderProducts.AddAsync(orderItem);
         product.Quantity -= orderItem.Quantity;
-        await _dbContext.SaveChangesAsync();
     }
 
-    public async Task DeleteOrderItemFromOrder(OrderProduct orderItem, Product? product)
+    public void DeleteOrderItemFromOrder(OrderProduct orderItem, Product? product)
     {
         if (product is not null)
         {
             product.Quantity += orderItem.Quantity;
         }
         orderItem.IsActive = false;
+    }
+
+    public async Task Save()
+    {
         await _dbContext.SaveChangesAsync();
     }
 }
