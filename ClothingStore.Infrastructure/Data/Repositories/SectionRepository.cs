@@ -15,12 +15,12 @@ public class SectionRepository : ISectionRepository
 
     public async Task<List<Section>> GetAll()
     {
-        return await _dbContext.Sections.ToListAsync();
+        return await _dbContext.Sections.Where(s => s.IsActive).ToListAsync();
     }
     
     public async Task<Section?> GetById(int id)
     {
-        return await _dbContext.Sections.FirstOrDefaultAsync(s => s.ID == id);
+        return await _dbContext.Sections.FirstOrDefaultAsync(s => s.ID == id && s.IsActive);
     }
     
     public async Task Add(Section section)
@@ -37,7 +37,7 @@ public class SectionRepository : ISectionRepository
     
     public async Task Delete(Section section)
     {
-        /*section.IsActive = false;
-        await _dbContext.SaveChangesAsync();*/
+        section.IsActive = false;
+        await _dbContext.SaveChangesAsync();
     }
 }
