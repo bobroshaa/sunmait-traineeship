@@ -18,6 +18,7 @@ public static class DependencyInjection
         services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<ISectionRepository, SectionRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IReviewRepository, ReviewRepository>();
 
         services.AddDbContextPool<Context>(builder =>
         {
