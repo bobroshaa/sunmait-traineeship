@@ -13,7 +13,7 @@ public class Product
     
     public int SectionCategoryID { get; set; }
     public virtual SectionCategory SectionCategory { get; set; }
-    public int BrandID { get; set; }
+    public int? BrandID { get; set; }
     public virtual Brand Brand { get; set; }
     
     public virtual ICollection<OrderProduct> OrderProducts { get; set; }
