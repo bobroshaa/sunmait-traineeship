@@ -10,4 +10,6 @@ public interface IBrandService
     public Task<int> Add(BrandInputModel brandInputModel);
     public Task Update(int id, BrandInputModel brandInputModel);
     public Task Delete(int id);
+    Task AssignProduct(int productId, int brandId);
+    Task UnassignProduct(int productId);
 }
