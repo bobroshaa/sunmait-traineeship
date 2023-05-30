@@ -42,7 +42,7 @@ public class SectionController :Controller
         return Ok(section);
     }
     
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPost]
     public async Task<ActionResult<int>> AddSection([FromBody] SectionInputModel sectionInputModel)
@@ -53,7 +53,7 @@ public class SectionController :Controller
         }
 
         var id = await _sectionService.Add(sectionInputModel);
-        return Ok();
+        return CreatedAtAction(nameof(GetSection), new { id }, id);
     }
     
     [ProducesResponseType(StatusCodes.Status200OK)]
