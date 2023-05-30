@@ -46,7 +46,7 @@ public class UserRepository : IUserRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task AddAddress(Address address)
+    public async Task AddAddress(Address? address)
     {
         await _dbContext.Addresses.AddAsync(address);
         await _dbContext.SaveChangesAsync();
@@ -68,5 +68,10 @@ public class UserRepository : IUserRepository
     {
         user.Role = role;
         await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task<Address?> GetAddressByUserId(int userId)
+    {
+        return await _dbContext.Addresses.FirstOrDefaultAsync(a => a.UserID == userId && a.IsActive);
     }
 }

@@ -67,7 +67,39 @@ public class UserService : IUserService
 
         await _userRepository.Delete(user);
     }
-    
+
+    public async Task UpdateAddress(int userId, AddressInputModel addressInputModel)
+    {
+        var user = await _userRepository.GetById(userId);
+        if (user is null)
+        {
+            throw new Exception(ExceptionMessages.UserNotFound);
+        }
+
+        var mappedAddress = _mapper.Map<Address>(addressInputModel);
+        mappedAddress.UserID = userId;
+        var address = await _userRepository.GetAddressByUserId(userId);
+        if (address is null)
+        {
+            await _userRepository.AddAddress(mappedAddress);
+        }
+        else
+        {
+            await _userRepository.UpdateAddress(address, mappedAddress);
+        }
+    }
+
+    public async Task UpdateRole(int id, Role role)
+    {
+        var user = await _userRepository.GetById(id);
+        if (user is null)
+        {
+            throw new Exception(ExceptionMessages.UserNotFound);
+        }
+
+        await _userRepository.UpdateRole(user, role);
+    }
+
     private string GetHashSha256(string str)
     {
         var hashValue = SHA256.HashData(Encoding.UTF8.GetBytes(str));

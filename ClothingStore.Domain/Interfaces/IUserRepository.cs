@@ -10,7 +10,8 @@ public interface IUserRepository
     Task Add(UserAccount user);
     Task Update(UserAccount updatingUser, UserAccount user);
     Task Delete(UserAccount user);
-    Task AddAddress(Address address);
+    Task AddAddress(Address? address);
     Task UpdateAddress(Address updatingAddress, Address address);
     Task UpdateRole(UserAccount user, Role role);
+    Task<Address?> GetAddressByUserId(int userId);
 }
