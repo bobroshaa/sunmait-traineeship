@@ -11,7 +11,7 @@ public class UserInputModel
     [Required(ErrorMessage = "The Email field is required.")]
     public string Email { get; set; }
 
-    [StringLength(32, MinimumLength = 32, ErrorMessage = "The Password field must be equal 32 characters.")]
+    [StringLength(100, ErrorMessage = "The Password field must be equal 100 characters.")]
     [Required(ErrorMessage = "The Password is required.")]
     public string Password { get; set; }
 
