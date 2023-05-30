@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ClothingStore.Application.Interfaces;
 using ClothingStore.Application.Models.InputModels;
+using ClothingStore.Application.Models.ViewModels;
 using ClothingStore.Domain.Entities;
 using ClothingStore.Domain.Interfaces;
 
@@ -16,6 +17,23 @@ public class SectionService : ISectionService
         _mapper = mapper;
         _sectionRepository = sectionRepository;
     }
+    
+    public async Task<List<SectionViewModel>> GetAll()
+    {
+        return _mapper.Map<List<SectionViewModel>>(await _sectionRepository.GetAll());
+    }
+
+    public async Task<SectionViewModel?> GetById(int id)
+    {
+        var section = await _sectionRepository.GetById(id);
+        if (section is null)
+        {
+            throw new Exception(ExceptionMessages.SectionNotFound);
+        }
+
+        return _mapper.Map<SectionViewModel>(section);
+    }
+    
     public async Task<int> Add(SectionInputModel sectionInputModel)
     {
         var section = _mapper.Map<Section>(sectionInputModel);
@@ -32,5 +50,16 @@ public class SectionService : ISectionService
         }
 
         await _sectionRepository.Update(updatingSection, newName);
+    }
+    
+    public async Task Delete(int id)
+    {
+        var section = await _sectionRepository.GetById(id);
+        if (section is null)
+        {
+            throw new Exception(ExceptionMessages.SectionNotFound);
+        }
+
+        await _sectionRepository.Delete(section);
     }
 }
