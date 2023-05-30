@@ -1,4 +1,5 @@
 ﻿using ClothingStore.Domain.Entities;
+using ClothingStore.Domain.Enums;
 using ClothingStore.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -42,6 +43,30 @@ public class UserRepository : IUserRepository
     public async Task Delete(UserAccount user)
     {
         user.IsActive = false;
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task AddAddress(Address address)
+    {
+        await _dbContext.Addresses.AddAsync(address);
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task UpdateAddress(Address updatingAddress, Address address)
+    {
+        updatingAddress.Country = address.Country;
+        updatingAddress.District = address.District;
+        updatingAddress.City = address.City;
+        updatingAddress.Postcode = address.Postcode;
+        updatingAddress.AddressLine1 = address.AddressLine1;
+        updatingAddress.AddressLine2 = address.AddressLine2;
+        
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task UpdateRole(UserAccount user, Role role)
+    {
+        user.Role = role;
         await _dbContext.SaveChangesAsync();
     }
 }

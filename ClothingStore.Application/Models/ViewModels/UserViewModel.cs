@@ -1,5 +1,4 @@
-﻿using ClothingStore.Domain.Entities;
-using ClothingStore.Domain.Enums;
+﻿using ClothingStore.Domain.Enums;
 
 namespace ClothingStore.Application.Models.ViewModels;
 
@@ -12,5 +11,5 @@ public class UserViewModel
     public Role Role { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
-    public Address? Address { get; set; }
+    public AddressViewModel? Address { get; set; }
 }
