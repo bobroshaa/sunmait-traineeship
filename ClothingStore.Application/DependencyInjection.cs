@@ -14,6 +14,7 @@ public static class DependencyInjection
         services.AddTransient<ICategoryService, CategoryService>();
         services.AddTransient<ISectionService, SectionService>();
         services.AddTransient<IUserService, UserService>();
+        services.AddTransient<IReviewService, ReviewService>();
 
         return services;
     }
