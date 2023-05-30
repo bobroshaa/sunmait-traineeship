@@ -1,5 +1,6 @@
 ﻿using ClothingStore.Application.Interfaces;
 using ClothingStore.Application.Models.InputModels;
+using ClothingStore.Application.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClothingStore.WebAPI.Controllers;
@@ -13,6 +14,32 @@ public class SectionController :Controller
     public SectionController(ISectionService sectionService)
     {
         _sectionService = sectionService;
+    }
+    
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<SectionViewModel>))]
+    [HttpGet]
+    public async Task<ActionResult<List<SectionViewModel>>> GetAllSections()
+    {
+        var sections = await _sectionService.GetAll();
+        return Ok(sections);
+    }
+    
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SectionViewModel))]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [HttpGet("{id}")]
+    public async Task<ActionResult<SectionViewModel>> GetSection([FromRoute] int id)
+    {
+        SectionViewModel? section;
+        try
+        {
+            section = await _sectionService.GetById(id);
+        }
+        catch (Exception ex)
+        {
+            return NotFound(ex.Message);
+        }
+
+        return Ok(section);
     }
     
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -43,6 +70,23 @@ public class SectionController :Controller
         try
         {
             await _sectionService.Update(id, newName);
+        }
+        catch (Exception ex)
+        {
+            return NotFound(ex.Message);
+        }
+
+        return Ok();
+    }
+    
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> DeleteSection([FromRoute] int id)
+    {
+        try
+        {
+            await _sectionService.Delete(id);
         }
         catch (Exception ex)
         {
