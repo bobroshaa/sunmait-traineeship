@@ -9,5 +9,6 @@ public class OrderInputModel
     public int UserID {get; set;}
 
     [Required(ErrorMessage = "At least one product is required.")]
+    [MinLength(1, ErrorMessage = "At least one product is required.")]
     public List<OrderItemInputModel> Products { get; set; }
 }

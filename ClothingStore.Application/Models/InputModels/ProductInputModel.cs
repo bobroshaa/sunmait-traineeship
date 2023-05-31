@@ -13,9 +13,11 @@ public class ProductInputModel
     public string Description { get; set; }
     
     [Required(ErrorMessage = "The Price field is required.")]
+    [Range(0, 100000)]
     public double Price { get; set; }
     
     [Required(ErrorMessage = "The Quantity field is required.")]
+    [Range(0, 100000)]
     public int Quantity { get; set; }
     
     [Required(ErrorMessage = "The ImageURL field is required.")]
