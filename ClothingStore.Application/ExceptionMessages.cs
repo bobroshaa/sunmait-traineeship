@@ -13,4 +13,6 @@ public static class ExceptionMessages
     public static readonly string UserNotFound = "Sorry, this user does not exist!";
     public static readonly string ReviewNotFound = "Sorry, this review does not exist!";
     public static readonly string CategoryLinked = "This category already linked to this section!";
+    public static readonly string CategoryNotLinked = "This category isn't linked to this section!";
+
 }

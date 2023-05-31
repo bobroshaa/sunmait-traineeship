@@ -48,5 +48,9 @@ public class CategoryRepository : ICategoryRepository
     {
         return await _dbContext.SectionCategories.FirstOrDefaultAsync(sc => sc.CategoryID == categoryId && sc.SectionID == sectionId) is null;
     }
-    
+
+    public async Task<SectionCategory?> GetSectionCategoryById(int id)
+    {
+        return await _dbContext.SectionCategories.FirstOrDefaultAsync(sc => sc.ID == id);
+    }
 }

@@ -52,8 +52,15 @@ public class ProductController : Controller
             return BadRequest(ModelState);
         }
 
-        var id = await _productService.Add(productInputModel);
-        return CreatedAtAction(nameof(GetProduct), new { id }, id);
+        try
+        {
+            var id = await _productService.Add(productInputModel);
+            return CreatedAtAction(nameof(GetProduct), new { id }, id);
+        }
+        catch (Exception ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]

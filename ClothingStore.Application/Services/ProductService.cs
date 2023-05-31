@@ -15,7 +15,8 @@ public class ProductService : IProductService
     private readonly IBrandRepository _brandRepository;
     private readonly IMapper _mapper;
 
-    public ProductService(IMapper mapper, IProductRepository productRepository, ISectionRepository sectionRepository, ICategoryRepository categoryRepository, IBrandRepository brandRepository)
+    public ProductService(IMapper mapper, IProductRepository productRepository, ISectionRepository sectionRepository,
+        ICategoryRepository categoryRepository, IBrandRepository brandRepository)
     {
         _mapper = mapper;
         _productRepository = productRepository;
@@ -42,6 +43,21 @@ public class ProductService : IProductService
 
     public async Task<int> Add(ProductInputModel productInputModel)
     {
+        var sectionCategory = await _categoryRepository.GetById(productInputModel.SectionCategoryID);
+        if (sectionCategory is null)
+        {
+            throw new Exception(ExceptionMessages.CategoryNotLinked);
+        }
+
+        if (productInputModel.BrandID is not null)
+        {
+            var brand = await _brandRepository.GetById((int)productInputModel.BrandID);
+            if (brand is null)
+            {
+                throw new Exception(ExceptionMessages.BrandNotFound);
+            }
+        }
+
         var product = _mapper.Map<Product>(productInputModel);
         product.AddDate = DateTime.UtcNow;
         await _productRepository.Add(product);
@@ -54,6 +70,21 @@ public class ProductService : IProductService
         if (updatingProduct is null)
         {
             throw new Exception(ExceptionMessages.ProductNotFound);
+        }
+
+        var sectionCategory = await _categoryRepository.GetById(productInputModel.SectionCategoryID);
+        if (sectionCategory is null)
+        {
+            throw new Exception(ExceptionMessages.CategoryNotLinked);
+        }
+
+        if (productInputModel.BrandID is not null)
+        {
+            var brand = await _brandRepository.GetById((int)productInputModel.BrandID);
+            if (brand is null)
+            {
+                throw new Exception(ExceptionMessages.BrandNotFound);
+            }
         }
 
         await _productRepository.Update(updatingProduct, _mapper.Map<Product>(productInputModel));
@@ -77,13 +108,13 @@ public class ProductService : IProductService
         {
             throw new Exception(ExceptionMessages.SectionNotFound);
         }
-        
+
         var category = await _categoryRepository.GetById(categoryId);
         if (category is null)
         {
             throw new Exception(ExceptionMessages.CategoryNotFound);
         }
-        
+
         return _mapper.Map<List<ProductViewModel>>(
             await _productRepository.GetProductsBySectionAndCategory(sectionId, categoryId));
     }
@@ -95,7 +126,7 @@ public class ProductService : IProductService
         {
             throw new Exception(ExceptionMessages.BrandNotFound);
         }
-        
+
         return _mapper.Map<List<ProductViewModel>>(
             await _productRepository.GetProductsByBrand(brandId));
     }
