@@ -9,7 +9,7 @@ namespace ClothingStore.WebAPI.Controllers;
 [ApiController]
 public class ReviewController : Controller
 {
-        private readonly IReviewService _reviewService;
+    private readonly IReviewService _reviewService;
 
     public ReviewController(IReviewService reviewService)
     {
@@ -33,13 +33,20 @@ public class ReviewController : Controller
 
         return Ok(review);
     }
-    
+
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<ReviewViewModel>))]
     [HttpGet("product/{productId}")]
-    public async Task<ActionResult<List<ReviewViewModel>>> GetReviewsByProductId([FromRoute]int productId)
+    public async Task<ActionResult<List<ReviewViewModel>>> GetReviewsByProductId([FromRoute] int productId)
     {
-        var reviews = await _reviewService.GetReviewsByProductId(productId);
-        return Ok(reviews);
+        try
+        {
+            var reviews = await _reviewService.GetReviewsByProductId(productId);
+            return Ok(reviews);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [ProducesResponseType(StatusCodes.Status201Created)]

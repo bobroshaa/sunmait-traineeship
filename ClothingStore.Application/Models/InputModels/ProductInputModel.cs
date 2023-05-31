@@ -25,6 +25,5 @@ public class ProductInputModel
     [Required(ErrorMessage = "The SectionCategoryID field is required.")]
     public int SectionCategoryID { get; set; }
     
-    [Required(ErrorMessage = "The BrandID field is required.")]
-    public int BrandID { get; set; }
+    public int? BrandID { get; set; }
 }

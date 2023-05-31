@@ -11,13 +11,16 @@ public class ReviewService : IReviewService
 {
     private readonly IReviewRepository _reviewRepository;
     private readonly IProductRepository _productRepository;
+    private readonly IUserRepository _userRepository;
     private readonly IMapper _mapper;
 
-    public ReviewService(IMapper mapper, IReviewRepository reviewRepository, IProductRepository productRepository)
+    public ReviewService(IMapper mapper, IReviewRepository reviewRepository, IProductRepository productRepository,
+        IUserRepository userRepository)
     {
         _mapper = mapper;
         _reviewRepository = reviewRepository;
         _productRepository = productRepository;
+        _userRepository = userRepository;
     }
 
     public async Task<ReviewViewModel?> GetById(int id)
@@ -48,6 +51,12 @@ public class ReviewService : IReviewService
         if (product is null)
         {
             throw new Exception(ExceptionMessages.ProductNotFound);
+        }
+
+        var user = await _productRepository.GetById(reviewInputModel.UserID);
+        if (user is null)
+        {
+            throw new Exception(ExceptionMessages.UserNotFound);
         }
 
         var review = _mapper.Map<Review>(reviewInputModel);

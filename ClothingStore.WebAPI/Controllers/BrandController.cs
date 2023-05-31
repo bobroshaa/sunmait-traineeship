@@ -106,16 +106,10 @@ public class BrandController : Controller
     }
     
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpPut("assign")]
     public async Task<ActionResult> AssignProduct([FromQuery] int productId, [FromQuery] int brandId)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
         try
         {
             await _brandService.AssignProduct(productId, brandId);
@@ -129,16 +123,10 @@ public class BrandController : Controller
     }
     
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpPut("unassign")]
     public async Task<ActionResult> UnassignProduct([FromQuery] int productId)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
         try
         {
             await _brandService.UnassignProduct(productId);

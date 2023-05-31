@@ -71,8 +71,16 @@ public class OrderController : Controller
             return BadRequest(ModelState);
         }
 
-        var id = await _orderService.Add(orderInputModel);
-        return CreatedAtAction(nameof(GetOrder), new { id }, id);
+        try
+        {
+            var id = await _orderService.Add(orderInputModel);
+            return CreatedAtAction(nameof(GetOrder), new { id }, id);
+        }
+        catch (Exception ex)
+        {
+            return NotFound(ex.Message);
+        }
+
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]

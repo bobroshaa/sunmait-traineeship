@@ -45,7 +45,7 @@ public class ProductRepository : IProductRepository
         updatingProduct.Price = product.Price;
         updatingProduct.Quantity = product.Quantity;
         updatingProduct.Description = product.Description;
-        updatingProduct.Description = product.ImageURL;
+        updatingProduct.ImageURL = product.ImageURL;
         updatingProduct.SectionCategoryID = product.SectionCategoryID;
         updatingProduct.BrandID = product.BrandID;
 

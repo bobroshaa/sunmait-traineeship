@@ -5,9 +5,6 @@ namespace ClothingStore.Application.Models.InputModels;
 
 public class AddressInputModel
 {
-    [Required(ErrorMessage = "The UserID field is required.")]
-    public int UserID { get; set; }
-    
     [Required(ErrorMessage = "The Country field is required.")]
     public Country Country {get; set;}
     
