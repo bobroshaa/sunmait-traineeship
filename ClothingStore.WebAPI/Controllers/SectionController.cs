@@ -60,7 +60,7 @@ public class SectionController :Controller
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpPut("{id}")]
-    public async Task<ActionResult> UpdateSectionName([FromRoute] int id, [FromBody] string newName)
+    public async Task<ActionResult> UpdateSectionName([FromRoute] int id, [FromBody] SectionInputModel sectionInputModel)
     {
         if (!ModelState.IsValid)
         {
@@ -69,7 +69,7 @@ public class SectionController :Controller
 
         try
         {
-            await _sectionService.Update(id, newName);
+            await _sectionService.Update(id, sectionInputModel);
         }
         catch (Exception ex)
         {

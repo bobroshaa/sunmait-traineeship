@@ -8,6 +8,6 @@ public interface ISectionService
     Task<List<SectionViewModel>> GetAll();
     Task<SectionViewModel?> GetById(int id);
     public Task<int> Add(SectionInputModel sectionInputModel);
-    public Task Update(int id, string newName);
+    public Task Update(int id, SectionInputModel sectionInputModel);
     Task Delete(int id);
 }

@@ -29,9 +29,9 @@ public class SectionRepository : ISectionRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task Update(Section updatingSection, string newName)
+    public async Task Update(Section updatingSection, Section section)
     {
-        updatingSection.Name = newName;
+        updatingSection.Name = section.Name;
         await _dbContext.SaveChangesAsync();
     }
     

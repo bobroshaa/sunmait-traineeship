@@ -41,7 +41,7 @@ public class SectionService : ISectionService
         return section.ID;
     }
 
-    public async Task Update(int id, string newName)
+    public async Task Update(int id, SectionInputModel sectionInputModel)
     {
         var updatingSection = await _sectionRepository.GetById(id);
         if (updatingSection is null)
@@ -49,7 +49,7 @@ public class SectionService : ISectionService
             throw new Exception(ExceptionMessages.SectionNotFound);
         }
 
-        await _sectionRepository.Update(updatingSection, newName);
+        await _sectionRepository.Update(updatingSection, _mapper.Map<Section>(sectionInputModel));
     }
     
     public async Task Delete(int id)
