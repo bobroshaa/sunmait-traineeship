@@ -73,6 +73,11 @@ public class CategoryService : ICategoryService
         {
             throw new Exception(ExceptionMessages.CategoryNotFound);
         }
+        
+        if (!await _categoryRepository.SectionCategoryIsUnique(sectionId, categoryId))
+        {
+            throw new Exception(ExceptionMessages.CategoryLinked);
+        }
 
         await _categoryRepository.LinkCategoryToSection(new SectionCategory
             { SectionID = sectionId, CategoryID = categoryId });

@@ -1,4 +1,5 @@
-﻿using ClothingStore.Domain.Entities;
+﻿using AutoMapper.Configuration.Conventions;
+using ClothingStore.Domain.Entities;
 using ClothingStore.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -42,4 +43,10 @@ public class CategoryRepository : ICategoryRepository
         await _dbContext.SectionCategories.AddAsync(sectionCategory);
         await _dbContext.SaveChangesAsync();
     }
+    
+    public async Task<bool> SectionCategoryIsUnique(int sectionId, int categoryId)
+    {
+        return await _dbContext.SectionCategories.FirstOrDefaultAsync(sc => sc.CategoryID == categoryId && sc.SectionID == sectionId) is null;
+    }
+    
 }
