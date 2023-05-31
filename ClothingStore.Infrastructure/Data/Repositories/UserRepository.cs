@@ -16,12 +16,15 @@ public class UserRepository : IUserRepository
 
     public async Task<List<UserAccount>> GetAll()
     {
-        return await _dbContext.Users.Where(u => u.IsActive).ToListAsync();
+        return await _dbContext.Users
+            .Where(u => u.IsActive)
+            .Include(u => u.Address)
+            .ToListAsync();
     }
 
     public async Task<UserAccount?> GetById(int id)
     {
-        return await _dbContext.Users.FirstOrDefaultAsync(u => u.ID == id && u.IsActive);
+        return await _dbContext.Users.Include(u => u.Address).FirstOrDefaultAsync(u => u.ID == id && u.IsActive);
     }
 
     public async Task Add(UserAccount userAccount)

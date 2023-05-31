@@ -9,7 +9,9 @@ public class UserProfile : Profile
 {
     public UserProfile()
     {
-        CreateMap<UserAccount, UserViewModel>().ReverseMap();
+        CreateMap<UserAccount, UserViewModel>()
+            .ForMember(uvm => uvm.Address, opt => opt.MapFrom(u => u.Address))
+            .ReverseMap();
         CreateMap<UserAccount, UserInputModel>().ReverseMap();
     }
 }
