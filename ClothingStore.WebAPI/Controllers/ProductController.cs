@@ -15,7 +15,7 @@ public class ProductController : Controller
     {
         _productService = productService;
     }
-    
+
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<ProductViewModel>))]
     [HttpGet]
     public async Task<ActionResult<List<ProductViewModel>>> GetAllProducts()
@@ -78,7 +78,7 @@ public class ProductController : Controller
 
         return Ok();
     }
-    
+
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpDelete("{id}")]
@@ -97,19 +97,35 @@ public class ProductController : Controller
     }
 
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<ProductViewModel>))]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("section-category/{sectionId}/{categoryId}")]
-    public async Task<ActionResult<List<ProductViewModel>>> GetProductsBySectionAndCategory([FromRoute]int sectionId,
-        [FromRoute]int categoryId)
+    public async Task<ActionResult<List<ProductViewModel>>> GetProductsBySectionAndCategory([FromRoute] int sectionId,
+        [FromRoute] int categoryId)
     {
-        var products = await _productService.GetProductsBySectionAndCategory(sectionId, categoryId);
-        return Ok(products);
+        try
+        {
+            var products = await _productService.GetProductsBySectionAndCategory(sectionId, categoryId);
+            return Ok(products);
+        }
+        catch (Exception ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<ProductViewModel>))]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("brand/{brandId}")]
-    public async Task<ActionResult<List<ProductViewModel>>> GetProductsByBrand([FromRoute]int brandId)
+    public async Task<ActionResult<List<ProductViewModel>>> GetProductsByBrand([FromRoute] int brandId)
     {
-        var products = await _productService.GetProductsByBrand(brandId);
-        return Ok(products);
+        try
+        {
+            var products = await _productService.GetProductsByBrand(brandId);
+            return Ok(products);
+        }
+        catch (Exception ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 }

@@ -58,7 +58,7 @@ public class ProductRepository : IProductRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<Product>> GetProductsBySectionAndCategory(int categoryId, int sectionId)
+    public async Task<IEnumerable<Product>> GetProductsBySectionAndCategory(int sectionId, int categoryId)
     {
         return await _dbContext.Products
             .Include(p => p.Brand)
