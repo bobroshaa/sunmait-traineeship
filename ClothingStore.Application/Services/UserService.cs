@@ -39,6 +39,16 @@ public class UserService : IUserService
 
     public async Task<int> Add(UserInputModel userInputModel)
     {
+        if (!await _userRepository.EmailIsUnique(userInputModel.Email))
+        {
+            throw new Exception(ExceptionMessages.EmailIsNotUnique);
+        }
+
+        if (userInputModel.Phone is not null && !await _userRepository.PhoneIsUnique(userInputModel.Phone))
+        {
+            throw new Exception(ExceptionMessages.PhoneIsNotUnique);
+        }
+
         var user = _mapper.Map<UserAccount>(userInputModel);
         user.Password = GetHashSha256(user.Password);
         user.Role = Role.Customer;
@@ -52,6 +62,16 @@ public class UserService : IUserService
         if (updatingUser is null)
         {
             throw new Exception(ExceptionMessages.UserNotFound);
+        }
+        
+        if (!await _userRepository.EmailIsUnique(userInputModel.Email))
+        {
+            throw new Exception(ExceptionMessages.EmailIsNotUnique);
+        }
+
+        if (userInputModel.Phone is not null && !await _userRepository.PhoneIsUnique(userInputModel.Phone))
+        {
+            throw new Exception(ExceptionMessages.PhoneIsNotUnique);
         }
 
         await _userRepository.Update(updatingUser, _mapper.Map<UserAccount>(userInputModel));
