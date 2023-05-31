@@ -53,7 +53,7 @@ public class ReviewService : IReviewService
             throw new Exception(ExceptionMessages.ProductNotFound);
         }
 
-        var user = await _productRepository.GetById(reviewInputModel.UserID);
+        var user = await _userRepository.GetById(reviewInputModel.UserID);
         if (user is null)
         {
             throw new Exception(ExceptionMessages.UserNotFound);
