@@ -5,9 +5,6 @@ namespace ClothingStore.Application.Models.InputModels;
 
 public class OrderInputModel
 {
-    [Required(ErrorMessage = "The Status field is required.")]
-    public Status CurrentStatus { get; set; }
-    
     [Required(ErrorMessage = "The UserID field is required.")]
     public int UserID {get; set;}
 

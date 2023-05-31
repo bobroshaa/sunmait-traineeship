@@ -55,6 +55,7 @@ public class OrderService : IOrderService
     {
         var order = _mapper.Map<CustomerOrder>(orderInputModel);
         order.OrderDate = DateTime.UtcNow;
+        order.CurrentStatus = Status.InReview;
         var productsIds = orderInputModel.Products.Select(p => p.ProductID).ToList();
         var user = await _userRepository.GetById(order.UserID);
         if (user is null)
