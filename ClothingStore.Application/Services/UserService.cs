@@ -45,7 +45,7 @@ public class UserService : IUserService
             throw new NotUniqueException(string.Format(ExceptionMessages.EmailIsNotUnique, userInputModel.Email));
         }
 
-        if (userInputModel.Phone is not null && !await _userRepository.PhoneIsUnique(userInputModel.Phone))
+        if (userInputModel.Phone is not null && !await _userRepository.PhoneNumberIsUnique(userInputModel.Phone))
         {
             throw new NotUniqueException(string.Format(ExceptionMessages.PhoneNumberIsNotUnique, userInputModel.Phone));
         }
@@ -70,7 +70,7 @@ public class UserService : IUserService
             throw new NotUniqueException(string.Format(ExceptionMessages.EmailIsNotUnique, userInputModel.Email));
         }
 
-        if (userInputModel.Phone is not null && !await _userRepository.PhoneIsUnique(userInputModel.Phone))
+        if (userInputModel.Phone is not null && !await _userRepository.PhoneNumberIsUnique(userInputModel.Phone))
         {
             throw new NotUniqueException(string.Format(ExceptionMessages.PhoneNumberIsNotUnique, userInputModel.Phone));
         }

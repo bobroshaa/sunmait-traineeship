@@ -83,7 +83,7 @@ public class UserRepository : IUserRepository
         return !await _dbContext.Users.AnyAsync(u => u.Email == email && u.IsActive);
     }
 
-    public async Task<bool> PhoneIsUnique(string phone)
+    public async Task<bool> PhoneNumberIsUnique(string phone)
     {
         return !await _dbContext.Users.AnyAsync(u => u.Phone == phone && u.IsActive);
     }
