@@ -25,7 +25,7 @@ public class SectionRepository : ISectionRepository
     
     public async Task Add(Section section)
     {
-        await _dbContext.Sections.AddAsync(section);
+        _dbContext.Sections.Add(section);
         await _dbContext.SaveChangesAsync();
     }
 

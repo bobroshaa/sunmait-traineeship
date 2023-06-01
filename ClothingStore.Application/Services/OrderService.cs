@@ -84,10 +84,10 @@ public class OrderService : IOrderService
         foreach (var item in orderInputModel.Products)
         {
             var mappedItem = _mapper.Map<OrderProduct>(item);
-            await _orderRepository.AddOrderItem(mappedItem, products.First(p => p.ID == item.ProductID));
+            _orderRepository.AddOrderItem(mappedItem, products.First(p => p.ID == item.ProductID));
         }
 
-        await _orderRepository.Add(order);
+        _orderRepository.Add(order);
         await _orderRepository.Save();
         return order.ID;
     }
@@ -139,7 +139,7 @@ public class OrderService : IOrderService
 
         var mappedItem = _mapper.Map<OrderProduct>(orderItemInputModel);
         mappedItem.OrderID = orderId;
-        await _orderRepository.AddOrderItem(mappedItem, product);
+        _orderRepository.AddOrderItem(mappedItem, product);
         await _orderRepository.Save();
         return mappedItem.ID;
     }

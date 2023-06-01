@@ -21,7 +21,7 @@ public class CategoryRepository : ICategoryRepository
 
     public async Task Add(Category category)
     {
-        await _dbContext.Categories.AddAsync(category);
+        _dbContext.Categories.Add(category);
         await _dbContext.SaveChangesAsync();
     }
 
@@ -40,7 +40,7 @@ public class CategoryRepository : ICategoryRepository
 
     public async Task LinkCategoryToSection(SectionCategory sectionCategory)
     {
-        await _dbContext.SectionCategories.AddAsync(sectionCategory);
+        _dbContext.SectionCategories.Add(sectionCategory);
         await _dbContext.SaveChangesAsync();
     }
     

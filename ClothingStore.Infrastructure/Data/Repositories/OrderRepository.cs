@@ -30,9 +30,9 @@ public class OrderRepository : IOrderRepository
         return await _dbContext.CustomerOrders.FirstOrDefaultAsync(co => co.ID == id && co.IsActive);
     }
 
-    public async Task Add(CustomerOrder order)
+    public void Add(CustomerOrder order)
     {
-        await _dbContext.CustomerOrders.AddAsync(order);
+        _dbContext.CustomerOrders.Add(order);
     }
     
     public void Update(CustomerOrder updatingOrder, Status orderStatus)
@@ -50,9 +50,9 @@ public class OrderRepository : IOrderRepository
         return await _dbContext.OrderProducts.FirstOrDefaultAsync(op => op.ID == id && op.IsActive);
     }
 
-    public async Task AddOrderItem(OrderProduct orderItem, Product product)
+    public void AddOrderItem(OrderProduct orderItem, Product product)
     {
-        await _dbContext.OrderProducts.AddAsync(orderItem);
+        _dbContext.OrderProducts.Add(orderItem);
         product.Quantity -= orderItem.Quantity;
     }
 

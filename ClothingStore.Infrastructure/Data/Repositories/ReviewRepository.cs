@@ -25,7 +25,7 @@ public class ReviewRepository : IReviewRepository
 
     public async Task Add(Review review)
     {
-        await _dbContext.Reviews.AddAsync(review);
+        _dbContext.Reviews.Add(review);
         await _dbContext.SaveChangesAsync();
     }
 

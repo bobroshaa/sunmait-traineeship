@@ -29,7 +29,7 @@ public class UserRepository : IUserRepository
 
     public async Task Add(UserAccount userAccount)
     {
-        await _dbContext.Users.AddAsync(userAccount);
+        _dbContext.Users.Add(userAccount);
         await _dbContext.SaveChangesAsync();
     }
 
@@ -51,7 +51,7 @@ public class UserRepository : IUserRepository
 
     public async Task AddAddress(Address address)
     {
-        await _dbContext.Addresses.AddAsync(address);
+        _dbContext.Addresses.Add(address);
         await _dbContext.SaveChangesAsync();
     }
 
