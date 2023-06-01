@@ -60,7 +60,6 @@ public class ProductService : IProductService
         }
 
         var product = _mapper.Map<Product>(productInputModel);
-        product.AddDate = DateTime.UtcNow;
         await _productRepository.Add(product);
         return product.ID;
     }

@@ -25,6 +25,7 @@ public class ReviewRepository : IReviewRepository
 
     public async Task Add(Review review)
     {
+        review.AddDate = DateTime.UtcNow;
         _dbContext.Reviews.Add(review);
         await _dbContext.SaveChangesAsync();
     }

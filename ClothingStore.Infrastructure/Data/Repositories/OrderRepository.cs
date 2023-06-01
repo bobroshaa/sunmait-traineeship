@@ -32,6 +32,7 @@ public class OrderRepository : IOrderRepository
 
     public void Add(CustomerOrder order)
     {
+        order.OrderDate = DateTime.UtcNow;
         _dbContext.CustomerOrders.Add(order);
     }
     

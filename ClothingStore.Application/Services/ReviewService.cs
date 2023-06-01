@@ -61,7 +61,6 @@ public class ReviewService : IReviewService
         }
 
         var review = _mapper.Map<Review>(reviewInputModel);
-        review.AddDate = DateTime.UtcNow;
         await _reviewRepository.Add(review);
         return review.ID;
     }

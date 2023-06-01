@@ -35,6 +35,7 @@ public class ProductRepository : IProductRepository
 
     public async Task Add(Product product)
     {
+        product.AddDate = DateTime.UtcNow;
         _dbContext.Products.Add(product);
         await _dbContext.SaveChangesAsync();
     }
