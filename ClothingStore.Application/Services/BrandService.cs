@@ -39,7 +39,7 @@ public class BrandService : IBrandService
 
     public async Task<int> Add(BrandInputModel brandInputModel)
     {
-        if (!(await _brandRepository.NameIsUnique(brandInputModel.Name)))
+        if (!(await _brandRepository.DoesBrandExist(brandInputModel.Name)))
         {
             throw new NotUniqueException(string.Format(ExceptionMessages.BrandAlreadyExists, brandInputModel.Name));
         }
@@ -57,7 +57,7 @@ public class BrandService : IBrandService
             throw new EntityNotFoundException(string.Format(ExceptionMessages.BrandNotFound, id));
         }
 
-        if (!await _brandRepository.NameIsUnique(brandInputModel.Name))
+        if (!await _brandRepository.DoesBrandExist(brandInputModel.Name))
         {
             throw new NotUniqueException(string.Format(ExceptionMessages.BrandAlreadyExists, brandInputModel.Name));
         }

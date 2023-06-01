@@ -41,9 +41,9 @@ public class BrandRepository : IBrandRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<bool> NameIsUnique(string name)
+    public async Task<bool> DoesBrandExist(string name)
     {
-        return !await _dbContext.Brands.AnyAsync(b => b.Name == name && b.IsActive);
+        return await _dbContext.Brands.AnyAsync(b => b.Name == name && b.IsActive);
     }
 
     public async Task AssignProduct(Product product, int brandId)
