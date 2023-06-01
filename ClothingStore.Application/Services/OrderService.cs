@@ -71,19 +71,17 @@ public class OrderService : IOrderService
             throw new EntityNotFoundException(ExceptionMessages.ProductNotFound);
         }
 
-        var product =
-            orderInputModel.Products.FirstOrDefault(item => item.Quantity > products[item.ProductID].Quantity);
-        if (product is not null)
-        {
-            throw new IncorrectParamsException(string.Format(ExceptionMessages.ProductQuantityIsNotAvailable,
-                product.ProductID, products[product.ProductID].Quantity));
-        }
-
         order.OrderProducts = new List<OrderProduct>();
         foreach (var item in orderInputModel.Products)
         {
-            var mappedItem = _mapper.Map<OrderProduct>(item);
-            _orderRepository.AddOrderItem(mappedItem, products[item.ProductID]);
+            if (item.Quantity > products[item.ProductID].Quantity)
+            {
+                throw new IncorrectParamsException(string.Format(ExceptionMessages.ProductQuantityIsNotAvailable,
+                    item.Quantity, products[item.ProductID].Quantity));
+            }
+            
+            order.OrderProducts.Add(_mapper.Map<OrderProduct>(item));
+            products[item.ProductID].Quantity -= item.Quantity;
         }
 
         _orderRepository.Add(order);
