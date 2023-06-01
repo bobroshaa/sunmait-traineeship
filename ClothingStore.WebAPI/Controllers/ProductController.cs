@@ -98,7 +98,7 @@ public class ProductController : Controller
     /// <param name="categoryId">The ID of the category.</param>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<ProductViewModel>))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [HttpGet("section-category/{sectionId}/{categoryId}")]
+    [HttpGet("sections/{sectionId}/categories/{categoryId}")]
     public async Task<ActionResult<List<ProductViewModel>>> GetProductsBySectionAndCategory([FromRoute] int sectionId,
         [FromRoute] int categoryId)
     {
