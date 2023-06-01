@@ -12,4 +12,6 @@ public interface IProductRepository
     Task<IEnumerable<Product>> GetProductsBySectionAndCategory(int sectionId, int categoryId);
     Task<IEnumerable<Product>> GetProductsByBrand(int brandId);
     Task<List<Product>> GetProductsByIds(IEnumerable<int> productIds);
+    Task AssignToBrand(Product product, int brandId);
+    Task UnassignFromBrand(Product product);
 }

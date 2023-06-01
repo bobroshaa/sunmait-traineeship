@@ -10,10 +10,12 @@ namespace ClothingStore.WebAPI.Controllers;
 public class BrandController : Controller
 {
     private readonly IBrandService _brandService;
+    private readonly IProductService _productServise;
 
-    public BrandController(IBrandService brandService)
+    public BrandController(IBrandService brandService, IProductService productService)
     {
         _brandService = brandService;
+        _productServise = productService;
     }
 
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<BrandViewModel>))]
@@ -74,18 +76,18 @@ public class BrandController : Controller
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpPut("assign")]
-    public async Task<ActionResult> AssignProduct([FromQuery] int productId, [FromQuery] int brandId)
+    public async Task<ActionResult> AssignToBrand([FromQuery] int productId, [FromQuery] int brandId)
     {
-        await _brandService.AssignProduct(productId, brandId);
+        await _productServise.AssignToBrand(productId, brandId);
         return Ok();
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpPut("unassign")]
-    public async Task<ActionResult> UnassignProduct([FromQuery] int productId)
+    public async Task<ActionResult> UnassignFromBrand([FromQuery] int productId)
     {
-        await _brandService.UnassignProduct(productId);
+        await _productServise.UnassignFromBrand(productId);
         return Ok();
     }
 }

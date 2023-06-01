@@ -75,32 +75,4 @@ public class BrandService : IBrandService
 
         await _brandRepository.Delete(brand);
     }
-
-    public async Task AssignProduct(int productId, int brandId)
-    {
-        var product = await _productRepository.GetById(productId);
-        if (product is null)
-        {
-            throw new EntityNotFoundException(string.Format(ExceptionMessages.ProductNotFound, productId));
-        }
-        
-        var brand = await _brandRepository.GetById(brandId);
-        if (brand is null)
-        {
-            throw new EntityNotFoundException(string.Format(ExceptionMessages.BrandNotFound, brandId));
-        }
-
-        await _brandRepository.AssignProduct(product, brandId);
-    }
-
-    public async Task UnassignProduct(int productId)
-    {
-        var product = await _productRepository.GetById(productId);
-        if (product is null)
-        {
-            throw new EntityNotFoundException(string.Format(ExceptionMessages.ProductNotFound, productId));
-        }
-        
-        await _brandRepository.UnassignProduct(product);
-    }
 }

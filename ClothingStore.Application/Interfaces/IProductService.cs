@@ -12,4 +12,6 @@ public interface IProductService
     public Task Delete(int id);
     Task<List<ProductViewModel>> GetProductsBySectionAndCategory(int sectionId, int categoryId);
     Task<List<ProductViewModel>> GetProductsByBrand(int brandId);
+    Task AssignToBrand(int productId, int brandId);
+    Task UnassignFromBrand(int productId);
 }

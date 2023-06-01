@@ -85,4 +85,16 @@ public class ProductRepository : IProductRepository
             .Where(p => productIds.Contains(p.ID))
             .ToListAsync();
     }
+    
+    public async Task AssignToBrand(Product product, int brandId)
+    {
+        product.BrandID = brandId;
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task UnassignFromBrand(Product product)
+    {
+        product.BrandID = null;
+        await _dbContext.SaveChangesAsync();
+    }
 }

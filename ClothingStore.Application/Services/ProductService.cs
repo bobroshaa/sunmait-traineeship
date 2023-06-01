@@ -131,4 +131,32 @@ public class ProductService : IProductService
         return _mapper.Map<List<ProductViewModel>>(
             await _productRepository.GetProductsByBrand(brandId));
     }
+    
+    public async Task AssignToBrand(int productId, int brandId)
+    {
+        var product = await _productRepository.GetById(productId);
+        if (product is null)
+        {
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.ProductNotFound, productId));
+        }
+        
+        var brand = await _brandRepository.GetById(brandId);
+        if (brand is null)
+        {
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.BrandNotFound, brandId));
+        }
+
+        await _productRepository.AssignToBrand(product, brandId);
+    }
+
+    public async Task UnassignFromBrand(int productId)
+    {
+        var product = await _productRepository.GetById(productId);
+        if (product is null)
+        {
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.ProductNotFound, productId));
+        }
+        
+        await _productRepository.UnassignFromBrand(product);
+    }
 }

@@ -45,16 +45,4 @@ public class BrandRepository : IBrandRepository
     {
         return await _dbContext.Brands.AnyAsync(b => b.Name == name && b.IsActive);
     }
-
-    public async Task AssignProduct(Product product, int brandId)
-    {
-        product.BrandID = brandId;
-        await _dbContext.SaveChangesAsync();
-    }
-
-    public async Task UnassignProduct(Product product)
-    {
-        product.BrandID = null;
-        await _dbContext.SaveChangesAsync();
-    }
 }

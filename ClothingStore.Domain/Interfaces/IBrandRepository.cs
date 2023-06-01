@@ -10,6 +10,4 @@ public interface IBrandRepository
     Task Update(Brand updatingBrand, Brand brand);
     Task Delete(Brand brand);
     Task<bool> DoesBrandExist(string name);
-    Task AssignProduct(Product product, int brandId);
-    Task UnassignProduct(Product product);
 }
