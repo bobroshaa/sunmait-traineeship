@@ -29,16 +29,7 @@ public class BrandController : Controller
     [HttpGet("{id}")]
     public async Task<ActionResult<BrandViewModel>> GetBrand([FromRoute] int id)
     {
-        BrandViewModel? brand;
-        try
-        {
-            brand = await _brandService.GetById(id);
-        }
-        catch (Exception ex)
-        {
-            return NotFound(ex.Message);
-        }
-
+        var brand = await _brandService.GetById(id);
         return Ok(brand);
     }
 
@@ -52,17 +43,8 @@ public class BrandController : Controller
             return BadRequest(ModelState);
         }
 
-        try
-        {
-            var id = await _brandService.Add(brandInputModel);
-            return CreatedAtAction(nameof(GetBrand), new { id }, id);
-
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
-
+        var id = await _brandService.Add(brandInputModel);
+        return CreatedAtAction(nameof(GetBrand), new { id }, id);
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -76,15 +58,7 @@ public class BrandController : Controller
             return BadRequest(ModelState);
         }
 
-        try
-        {
-            await _brandService.Update(id, brandInputModel);
-        }
-        catch (Exception ex)
-        {
-            return NotFound(ex.Message);
-        }
-
+        await _brandService.Update(id, brandInputModel);
         return Ok();
     }
 
@@ -93,49 +67,25 @@ public class BrandController : Controller
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteBrand([FromRoute] int id)
     {
-        try
-        {
-            await _brandService.Delete(id);
-        }
-        catch (Exception ex)
-        {
-            return NotFound(ex.Message);
-        }
-
+        await _brandService.Delete(id);
         return Ok();
     }
-    
+
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpPut("assign")]
     public async Task<ActionResult> AssignProduct([FromQuery] int productId, [FromQuery] int brandId)
     {
-        try
-        {
-            await _brandService.AssignProduct(productId, brandId);
-        }
-        catch (Exception ex)
-        {
-            return NotFound(ex.Message);
-        }
-
+        await _brandService.AssignProduct(productId, brandId);
         return Ok();
     }
-    
+
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpPut("unassign")]
     public async Task<ActionResult> UnassignProduct([FromQuery] int productId)
     {
-        try
-        {
-            await _brandService.UnassignProduct(productId);
-        }
-        catch (Exception ex)
-        {
-            return NotFound(ex.Message);
-        }
-
+        await _brandService.UnassignProduct(productId);
         return Ok();
     }
 }

@@ -29,16 +29,7 @@ public class ProductController : Controller
     [HttpGet("{id}")]
     public async Task<ActionResult<ProductViewModel>> GetProduct([FromRoute] int id)
     {
-        ProductViewModel? product;
-        try
-        {
-            product = await _productService.GetById(id);
-        }
-        catch (Exception ex)
-        {
-            return NotFound(ex.Message);
-        }
-
+        var product = await _productService.GetById(id);
         return Ok(product);
     }
 
@@ -52,15 +43,8 @@ public class ProductController : Controller
             return BadRequest(ModelState);
         }
 
-        try
-        {
-            var id = await _productService.Add(productInputModel);
-            return CreatedAtAction(nameof(GetProduct), new { id }, id);
-        }
-        catch (Exception ex)
-        {
-            return NotFound(ex.Message);
-        }
+        var id = await _productService.Add(productInputModel);
+        return CreatedAtAction(nameof(GetProduct), new { id }, id);
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -74,15 +58,7 @@ public class ProductController : Controller
             return BadRequest(ModelState);
         }
 
-        try
-        {
-            await _productService.Update(id, productInputModel);
-        }
-        catch (Exception ex)
-        {
-            return NotFound(ex.Message);
-        }
-
+        await _productService.Update(id, productInputModel);
         return Ok();
     }
 
@@ -91,15 +67,7 @@ public class ProductController : Controller
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteProduct([FromRoute] int id)
     {
-        try
-        {
-            await _productService.Delete(id);
-        }
-        catch (Exception ex)
-        {
-            return NotFound(ex.Message);
-        }
-
+        await _productService.Delete(id);
         return Ok();
     }
 
@@ -109,15 +77,8 @@ public class ProductController : Controller
     public async Task<ActionResult<List<ProductViewModel>>> GetProductsBySectionAndCategory([FromRoute] int sectionId,
         [FromRoute] int categoryId)
     {
-        try
-        {
-            var products = await _productService.GetProductsBySectionAndCategory(sectionId, categoryId);
-            return Ok(products);
-        }
-        catch (Exception ex)
-        {
-            return NotFound(ex.Message);
-        }
+        var products = await _productService.GetProductsBySectionAndCategory(sectionId, categoryId);
+        return Ok(products);
     }
 
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<ProductViewModel>))]
@@ -125,14 +86,7 @@ public class ProductController : Controller
     [HttpGet("brand/{brandId}")]
     public async Task<ActionResult<List<ProductViewModel>>> GetProductsByBrand([FromRoute] int brandId)
     {
-        try
-        {
-            var products = await _productService.GetProductsByBrand(brandId);
-            return Ok(products);
-        }
-        catch (Exception ex)
-        {
-            return NotFound(ex.Message);
-        }
+        var products = await _productService.GetProductsByBrand(brandId);
+        return Ok(products);
     }
 }

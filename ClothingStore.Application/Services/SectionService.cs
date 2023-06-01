@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ClothingStore.Application.Exceptions;
 using ClothingStore.Application.Interfaces;
 using ClothingStore.Application.Models.InputModels;
 using ClothingStore.Application.Models.ViewModels;
@@ -28,7 +29,7 @@ public class SectionService : ISectionService
         var section = await _sectionRepository.GetById(id);
         if (section is null)
         {
-            throw new Exception(ExceptionMessages.SectionNotFound);
+            throw new EntityNotFoundException(ExceptionMessages.SectionNotFound);
         }
 
         return _mapper.Map<SectionViewModel>(section);
@@ -46,7 +47,7 @@ public class SectionService : ISectionService
         var updatingSection = await _sectionRepository.GetById(id);
         if (updatingSection is null)
         {
-            throw new Exception(ExceptionMessages.SectionNotFound);
+            throw new EntityNotFoundException(ExceptionMessages.SectionNotFound);
         }
 
         await _sectionRepository.Update(updatingSection, _mapper.Map<Section>(sectionInputModel));
@@ -57,7 +58,7 @@ public class SectionService : ISectionService
         var section = await _sectionRepository.GetById(id);
         if (section is null)
         {
-            throw new Exception(ExceptionMessages.SectionNotFound);
+            throw new EntityNotFoundException(ExceptionMessages.SectionNotFound);
         }
 
         await _sectionRepository.Delete(section);

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ClothingStore.Application.Exceptions;
 using ClothingStore.Application.Interfaces;
 using ClothingStore.Application.Models.InputModels;
 using ClothingStore.Application.Models.ViewModels;
@@ -25,7 +26,7 @@ public class CategoryService : ICategoryService
         var category = await _categoryRepository.GetById(id);
         if (category is null)
         {
-            throw new Exception(ExceptionMessages.CategoryNotFound);
+            throw new EntityNotFoundException(ExceptionMessages.CategoryNotFound);
         }
 
         return _mapper.Map<CategoryViewModel>(category);
@@ -43,7 +44,7 @@ public class CategoryService : ICategoryService
         var updatingCategory = await _categoryRepository.GetById(id);
         if (updatingCategory is null)
         {
-            throw new Exception(ExceptionMessages.CategoryNotFound);
+            throw new EntityNotFoundException(ExceptionMessages.CategoryNotFound);
         }
 
         await _categoryRepository.Update(updatingCategory, _mapper.Map<Category>(categoryInputModel));
@@ -54,7 +55,7 @@ public class CategoryService : ICategoryService
         var category = await _categoryRepository.GetById(id);
         if (category is null)
         {
-            throw new Exception(ExceptionMessages.CategoryNotFound);
+            throw new EntityNotFoundException(ExceptionMessages.CategoryNotFound);
         }
 
         await _categoryRepository.Delete(category);
@@ -65,18 +66,18 @@ public class CategoryService : ICategoryService
         var section = await _sectionRepository.GetById(sectionId);
         if (section is null)
         {
-            throw new Exception(ExceptionMessages.SectionNotFound);
+            throw new EntityNotFoundException(ExceptionMessages.SectionNotFound);
         }
 
         var category = await _categoryRepository.GetById(categoryId);
         if (category is null)
         {
-            throw new Exception(ExceptionMessages.CategoryNotFound);
+            throw new EntityNotFoundException(ExceptionMessages.CategoryNotFound);
         }
         
         if (!await _categoryRepository.SectionCategoryIsUnique(sectionId, categoryId))
         {
-            throw new Exception(ExceptionMessages.CategoryLinked);
+            throw new IncorrectParamsException(ExceptionMessages.CategoryLinked);
         }
 
         await _categoryRepository.LinkCategoryToSection(new SectionCategory

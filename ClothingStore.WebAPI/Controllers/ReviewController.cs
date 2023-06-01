@@ -21,16 +21,7 @@ public class ReviewController : Controller
     [HttpGet("{id}")]
     public async Task<ActionResult<ReviewViewModel>> GetReview([FromRoute] int id)
     {
-        ReviewViewModel? review;
-        try
-        {
-            review = await _reviewService.GetById(id);
-        }
-        catch (Exception ex)
-        {
-            return NotFound(ex.Message);
-        }
-
+        var review = await _reviewService.GetById(id);
         return Ok(review);
     }
 
@@ -38,15 +29,8 @@ public class ReviewController : Controller
     [HttpGet("product/{productId}")]
     public async Task<ActionResult<List<ReviewViewModel>>> GetReviewsByProductId([FromRoute] int productId)
     {
-        try
-        {
-            var reviews = await _reviewService.GetReviewsByProductId(productId);
-            return Ok(reviews);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var reviews = await _reviewService.GetReviewsByProductId(productId);
+        return Ok(reviews);
     }
 
     [ProducesResponseType(StatusCodes.Status201Created)]
@@ -59,15 +43,8 @@ public class ReviewController : Controller
             return BadRequest(ModelState);
         }
 
-        try
-        {
-            var id = await _reviewService.Add(reviewInputModel);
-            return CreatedAtAction(nameof(GetReview), new { id }, id);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var id = await _reviewService.Add(reviewInputModel);
+        return CreatedAtAction(nameof(GetReview), new { id }, id);
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -81,15 +58,7 @@ public class ReviewController : Controller
             return BadRequest(ModelState);
         }
 
-        try
-        {
-            await _reviewService.Update(id, reviewInputModel);
-        }
-        catch (Exception ex)
-        {
-            return NotFound(ex.Message);
-        }
-
+        await _reviewService.Update(id, reviewInputModel);
         return Ok();
     }
 
@@ -98,15 +67,7 @@ public class ReviewController : Controller
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteReview([FromRoute] int id)
     {
-        try
-        {
-            await _reviewService.Delete(id);
-        }
-        catch (Exception ex)
-        {
-            return NotFound(ex.Message);
-        }
-
+        await _reviewService.Delete(id);
         return Ok();
     }
 }

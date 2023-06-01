@@ -21,16 +21,7 @@ public class CategoryController : Controller
     [HttpGet("{id}")]
     public async Task<ActionResult<CategoryViewModel>> GetCategory([FromRoute] int id)
     {
-        CategoryViewModel? category;
-        try
-        {
-            category = await _categoryService.GetById(id);
-        }
-        catch (Exception ex)
-        {
-            return NotFound(ex.Message);
-        }
-
+        var category = await _categoryService.GetById(id);
         return Ok(category);
     }
 
@@ -59,15 +50,7 @@ public class CategoryController : Controller
             return BadRequest(ModelState);
         }
 
-        try
-        {
-            await _categoryService.Update(id, categoryInputModel);
-        }
-        catch (Exception ex)
-        {
-            return NotFound(ex.Message);
-        }
-
+        await _categoryService.Update(id, categoryInputModel);
         return Ok();
     }
 
@@ -76,15 +59,7 @@ public class CategoryController : Controller
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteCategory([FromRoute] int id)
     {
-        try
-        {
-            await _categoryService.Delete(id);
-        }
-        catch (Exception ex)
-        {
-            return NotFound(ex.Message);
-        }
-
+        await _categoryService.Delete(id);
         return Ok();
     }
 
@@ -98,15 +73,7 @@ public class CategoryController : Controller
             return BadRequest(ModelState);
         }
 
-        try
-        {
-            await _categoryService.LinkCategoryToSection(sectionId, categoryId);
-        }
-        catch (Exception ex)
-        {
-            return NotFound(ex.Message);
-        }
-
+        await _categoryService.LinkCategoryToSection(sectionId, categoryId);
         return Ok();
     }
 }

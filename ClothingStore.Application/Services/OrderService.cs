@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ClothingStore.Application.Exceptions;
 using ClothingStore.Application.Interfaces;
 using ClothingStore.Application.Models.InputModels;
 using ClothingStore.Application.Models.ViewModels;
@@ -34,7 +35,7 @@ public class OrderService : IOrderService
         var order = await _orderRepository.GetById(orderId);
         if (order is null)
         {
-            throw new Exception(ExceptionMessages.OrderNotFound);
+            throw new EntityNotFoundException(ExceptionMessages.OrderNotFound);
         }
 
         return _mapper.Map<List<OrderItemViewModel>>(await _orderRepository.GetAllByOrderId(orderId));
@@ -45,7 +46,7 @@ public class OrderService : IOrderService
         var order = await _orderRepository.GetById(id);
         if (order is null)
         {
-            throw new Exception(ExceptionMessages.OrderNotFound);
+            throw new EntityNotFoundException(ExceptionMessages.OrderNotFound);
         }
 
         return _mapper.Map<OrderViewModel>(order);
@@ -60,18 +61,18 @@ public class OrderService : IOrderService
         var user = await _userRepository.GetById(order.UserID);
         if (user is null)
         {
-            throw new Exception(ExceptionMessages.UserNotFound);
+            throw new EntityNotFoundException(ExceptionMessages.UserNotFound);
         }
 
         var products = await _productRepository.GetProductsByIds(productsIds);
         if (products.Count < productsIds.Count)
         {
-            throw new Exception(ExceptionMessages.ProductNotFound);
+            throw new EntityNotFoundException(ExceptionMessages.ProductNotFound);
         }
 
         if (orderInputModel.Products.Any(item => item.Quantity > products.First(p => p.ID == item.ProductID).Quantity))
         {
-            throw new Exception(ExceptionMessages.ProductQuantityIsNotAvailable);
+            throw new IncorrectParamsException(ExceptionMessages.ProductQuantityIsNotAvailable);
         }
 
         order.OrderProducts = new List<OrderProduct>();
@@ -91,7 +92,7 @@ public class OrderService : IOrderService
         var updatingOrder = await _orderRepository.GetById(id);
         if (updatingOrder is null)
         {
-            throw new Exception(ExceptionMessages.OrderNotFound);
+            throw new EntityNotFoundException(ExceptionMessages.OrderNotFound);
         }
 
         _orderRepository.Update(updatingOrder, orderStatus);
@@ -103,7 +104,7 @@ public class OrderService : IOrderService
         var order = await _orderRepository.GetById(id);
         if (order is null)
         {
-            throw new Exception(ExceptionMessages.OrderNotFound);
+            throw new EntityNotFoundException(ExceptionMessages.OrderNotFound);
         }
 
         _orderRepository.Delete(order);
@@ -115,18 +116,18 @@ public class OrderService : IOrderService
         var order = await _orderRepository.GetById(orderId);
         if (order is null)
         {
-            throw new Exception(ExceptionMessages.OrderNotFound);
+            throw new EntityNotFoundException(ExceptionMessages.OrderNotFound);
         }
 
         var product = await _productRepository.GetById(orderItemInputModel.ProductID);
         if (product is null)
         {
-            throw new Exception(ExceptionMessages.ProductNotFound);
+            throw new EntityNotFoundException(ExceptionMessages.ProductNotFound);
         }
 
         if (orderItemInputModel.Quantity > product.Quantity)
         {
-            throw new Exception(ExceptionMessages.ProductQuantityIsNotAvailable);
+            throw new IncorrectParamsException(ExceptionMessages.ProductQuantityIsNotAvailable);
         }
 
         var mappedItem = _mapper.Map<OrderProduct>(orderItemInputModel);
@@ -141,7 +142,7 @@ public class OrderService : IOrderService
         var orderItem = await _orderRepository.GetOrderItemById(orderItemId);
         if (orderItem is null)
         {
-            throw new Exception(ExceptionMessages.OrderItemNotFound);
+            throw new EntityNotFoundException(ExceptionMessages.OrderItemNotFound);
         }
 
         var product = await _productRepository.GetById(orderItem.ProductID);

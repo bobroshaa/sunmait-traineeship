@@ -1,6 +1,7 @@
 using ClothingStore.Application;
 using ClothingStore.Application.Profiles;
 using ClothingStore.Infrastructure;
+using ClothingStore.WebAPI;
 
 var builder = WebApplication.CreateBuilder(args);
 {
@@ -11,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddAutoMapper(typeof(BrandProfile), typeof(ProductProfile), typeof(OrderProfile),
         typeof(OrderItemProfile));
     builder.Services.AddSwaggerGen();
+    builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 }
 
 var app = builder.Build();
@@ -21,5 +23,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.MapControllers();
 app.Run();

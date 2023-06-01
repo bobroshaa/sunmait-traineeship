@@ -30,16 +30,7 @@ public class OrderController : Controller
     [HttpGet("{orderId}/items")]
     public async Task<ActionResult<List<OrderItemViewModel>>> GetOrderItemsByOrder(int orderId)
     {
-        List<OrderItemViewModel> orderItems;
-        try
-        {
-            orderItems = await _orderService.GetOrderItemsByOrderId(orderId);
-        }
-        catch (Exception ex)
-        {
-            return NotFound(ex.Message);
-        }
-
+        var orderItems = await _orderService.GetOrderItemsByOrderId(orderId);
         return Ok(orderItems);
     }
 
@@ -48,16 +39,7 @@ public class OrderController : Controller
     [HttpGet("{id}")]
     public async Task<ActionResult<OrderViewModel>> GetOrder([FromRoute] int id)
     {
-        OrderViewModel? order;
-        try
-        {
-            order = await _orderService.GetById(id);
-        }
-        catch (Exception ex)
-        {
-            return NotFound(ex.Message);
-        }
-
+        var order = await _orderService.GetById(id);
         return Ok(order);
     }
 
@@ -71,16 +53,8 @@ public class OrderController : Controller
             return BadRequest(ModelState);
         }
 
-        try
-        {
-            var id = await _orderService.Add(orderInputModel);
-            return CreatedAtAction(nameof(GetOrder), new { id }, id);
-        }
-        catch (Exception ex)
-        {
-            return NotFound(ex.Message);
-        }
-
+        var id = await _orderService.Add(orderInputModel);
+        return CreatedAtAction(nameof(GetOrder), new { id }, id);
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -94,15 +68,7 @@ public class OrderController : Controller
             return BadRequest(ModelState);
         }
 
-        try
-        {
-            await _orderService.Update(id, orderStatus);
-        }
-        catch (Exception ex)
-        {
-            return NotFound(ex.Message);
-        }
-
+        await _orderService.Update(id, orderStatus);
         return Ok();
     }
 
@@ -111,15 +77,7 @@ public class OrderController : Controller
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteOrder([FromRoute] int id)
     {
-        try
-        {
-            await _orderService.Delete(id);
-        }
-        catch (Exception ex)
-        {
-            return NotFound(ex.Message);
-        }
-
+        await _orderService.Delete(id);
         return Ok();
     }
 
@@ -134,15 +92,8 @@ public class OrderController : Controller
             return BadRequest(ModelState);
         }
 
-        try
-        {
-            var id = await _orderService.AddOrderItemInOrder(orderId, orderItemInputModel);
-            return CreatedAtAction(nameof(GetOrder), new { id }, id);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var id = await _orderService.AddOrderItemInOrder(orderId, orderItemInputModel);
+        return CreatedAtAction(nameof(GetOrder), new { id }, id);
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -150,15 +101,7 @@ public class OrderController : Controller
     [HttpDelete("items/{orderItemId}")]
     public async Task<ActionResult> DeleteOrderItemFromOrder([FromRoute] int orderItemId)
     {
-        try
-        {
-            await _orderService.DeleteOrderItemFromOrder(orderItemId);
-        }
-        catch (Exception ex)
-        {
-            return NotFound(ex.Message);
-        }
-
+        await _orderService.DeleteOrderItemFromOrder(orderItemId);
         return Ok();
     }
 }

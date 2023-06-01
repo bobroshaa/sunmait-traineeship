@@ -1,6 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 using AutoMapper;
+using ClothingStore.Application.Exceptions;
 using ClothingStore.Application.Interfaces;
 using ClothingStore.Application.Models.InputModels;
 using ClothingStore.Application.Models.ViewModels;
@@ -31,7 +32,7 @@ public class UserService : IUserService
         var user = await _userRepository.GetById(id);
         if (user is null)
         {
-            throw new Exception(ExceptionMessages.UserNotFound);
+            throw new EntityNotFoundException(ExceptionMessages.UserNotFound);
         }
 
         return _mapper.Map<UserViewModel>(user);
@@ -41,12 +42,12 @@ public class UserService : IUserService
     {
         if (!await _userRepository.EmailIsUnique(userInputModel.Email))
         {
-            throw new Exception(ExceptionMessages.EmailIsNotUnique);
+            throw new NotUniqueException(ExceptionMessages.EmailIsNotUnique);
         }
 
         if (userInputModel.Phone is not null && !await _userRepository.PhoneIsUnique(userInputModel.Phone))
         {
-            throw new Exception(ExceptionMessages.PhoneIsNotUnique);
+            throw new NotUniqueException(ExceptionMessages.PhoneIsNotUnique);
         }
 
         var user = _mapper.Map<UserAccount>(userInputModel);
@@ -61,17 +62,17 @@ public class UserService : IUserService
         var updatingUser = await _userRepository.GetById(id);
         if (updatingUser is null)
         {
-            throw new Exception(ExceptionMessages.UserNotFound);
+            throw new EntityNotFoundException(ExceptionMessages.UserNotFound);
         }
         
         if (!await _userRepository.EmailIsUnique(userInputModel.Email))
         {
-            throw new Exception(ExceptionMessages.EmailIsNotUnique);
+            throw new NotUniqueException(ExceptionMessages.EmailIsNotUnique);
         }
 
         if (userInputModel.Phone is not null && !await _userRepository.PhoneIsUnique(userInputModel.Phone))
         {
-            throw new Exception(ExceptionMessages.PhoneIsNotUnique);
+            throw new NotUniqueException(ExceptionMessages.PhoneIsNotUnique);
         }
 
         await _userRepository.Update(updatingUser, _mapper.Map<UserAccount>(userInputModel));
@@ -82,7 +83,7 @@ public class UserService : IUserService
         var user = await _userRepository.GetById(id);
         if (user is null)
         {
-            throw new Exception(ExceptionMessages.UserNotFound);
+            throw new EntityNotFoundException(ExceptionMessages.UserNotFound);
         }
 
         await _userRepository.Delete(user);
@@ -93,7 +94,7 @@ public class UserService : IUserService
         var user = await _userRepository.GetById(userId);
         if (user is null)
         {
-            throw new Exception(ExceptionMessages.UserNotFound);
+            throw new EntityNotFoundException(ExceptionMessages.UserNotFound);
         }
 
         var mappedAddress = _mapper.Map<Address>(addressInputModel);
@@ -114,7 +115,7 @@ public class UserService : IUserService
         var user = await _userRepository.GetById(id);
         if (user is null)
         {
-            throw new Exception(ExceptionMessages.UserNotFound);
+            throw new EntityNotFoundException(ExceptionMessages.UserNotFound);
         }
 
         await _userRepository.UpdateRole(user, role);

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ClothingStore.Application.Exceptions;
 using ClothingStore.Application.Interfaces;
 using ClothingStore.Application.Models.InputModels;
 using ClothingStore.Application.Models.ViewModels;
@@ -28,7 +29,7 @@ public class ReviewService : IReviewService
         var review = await _reviewRepository.GetById(id);
         if (review is null)
         {
-            throw new Exception(ExceptionMessages.ReviewNotFound);
+            throw new EntityNotFoundException(ExceptionMessages.ReviewNotFound);
         }
 
         return _mapper.Map<ReviewViewModel>(review);
@@ -39,7 +40,7 @@ public class ReviewService : IReviewService
         var product = await _productRepository.GetById(productId);
         if (product is null)
         {
-            throw new Exception(ExceptionMessages.ProductNotFound);
+            throw new EntityNotFoundException(ExceptionMessages.ProductNotFound);
         }
 
         return _mapper.Map<List<ReviewViewModel>>(await _reviewRepository.GetReviewByProductId(productId));
@@ -50,13 +51,13 @@ public class ReviewService : IReviewService
         var product = await _productRepository.GetById(reviewInputModel.ProductID);
         if (product is null)
         {
-            throw new Exception(ExceptionMessages.ProductNotFound);
+            throw new EntityNotFoundException(ExceptionMessages.ProductNotFound);
         }
 
         var user = await _userRepository.GetById(reviewInputModel.UserID);
         if (user is null)
         {
-            throw new Exception(ExceptionMessages.UserNotFound);
+            throw new EntityNotFoundException(ExceptionMessages.UserNotFound);
         }
 
         var review = _mapper.Map<Review>(reviewInputModel);
@@ -70,7 +71,7 @@ public class ReviewService : IReviewService
         var updatingReview = await _reviewRepository.GetById(id);
         if (updatingReview is null)
         {
-            throw new Exception(ExceptionMessages.ReviewNotFound);
+            throw new EntityNotFoundException(ExceptionMessages.ReviewNotFound);
         }
 
         await _reviewRepository.Update(updatingReview, _mapper.Map<Review>(reviewInputModel));
@@ -81,7 +82,7 @@ public class ReviewService : IReviewService
         var review = await _reviewRepository.GetById(id);
         if (review is null)
         {
-            throw new Exception(ExceptionMessages.ReviewNotFound);
+            throw new EntityNotFoundException(ExceptionMessages.ReviewNotFound);
         }
 
         await _reviewRepository.Delete(review);
