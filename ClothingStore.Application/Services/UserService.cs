@@ -59,8 +59,8 @@ public class UserService : IUserService
 
     public async Task Update(int id, UserInputModel userInputModel)
     {
-        var updatingUser = await _userRepository.GetById(id);
-        if (updatingUser is null)
+        var user = await _userRepository.GetById(id);
+        if (user is null)
         {
             throw new EntityNotFoundException(string.Format(ExceptionMessages.UserNotFound, id));
         }
@@ -75,7 +75,7 @@ public class UserService : IUserService
             throw new NotUniqueException(string.Format(ExceptionMessages.PhoneNumberIsNotUnique, userInputModel.Phone));
         }
 
-        await _userRepository.Update(updatingUser, _mapper.Map<UserAccount>(userInputModel));
+        await _userRepository.Update(user, _mapper.Map<UserAccount>(userInputModel));
     }
 
     public async Task Delete(int id)

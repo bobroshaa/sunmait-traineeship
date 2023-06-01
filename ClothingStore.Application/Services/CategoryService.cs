@@ -41,13 +41,13 @@ public class CategoryService : ICategoryService
 
     public async Task Update(int id, CategoryInputModel categoryInputModel)
     {
-        var updatingCategory = await _categoryRepository.GetById(id);
-        if (updatingCategory is null)
+        var category = await _categoryRepository.GetById(id);
+        if (category is null)
         {
             throw new EntityNotFoundException(string.Format(ExceptionMessages.CategoryNotFound, id));
         }
 
-        await _categoryRepository.Update(updatingCategory, _mapper.Map<Category>(categoryInputModel));
+        await _categoryRepository.Update(category, _mapper.Map<Category>(categoryInputModel));
     }
 
     public async Task Delete(int id)

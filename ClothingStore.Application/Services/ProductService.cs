@@ -67,8 +67,8 @@ public class ProductService : IProductService
 
     public async Task Update(int id, ProductInputModel productInputModel)
     {
-        var updatingProduct = await _productRepository.GetById(id);
-        if (updatingProduct is null)
+        var product = await _productRepository.GetById(id);
+        if (product is null)
         {
             throw new EntityNotFoundException(string.Format(ExceptionMessages.ProductNotFound, id));
         }
@@ -88,7 +88,7 @@ public class ProductService : IProductService
             }
         }
 
-        await _productRepository.Update(updatingProduct, _mapper.Map<Product>(productInputModel));
+        await _productRepository.Update(product, _mapper.Map<Product>(productInputModel));
     }
 
     public async Task Delete(int id)

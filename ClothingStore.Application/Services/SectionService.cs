@@ -44,13 +44,13 @@ public class SectionService : ISectionService
 
     public async Task Update(int id, SectionInputModel sectionInputModel)
     {
-        var updatingSection = await _sectionRepository.GetById(id);
-        if (updatingSection is null)
+        var section = await _sectionRepository.GetById(id);
+        if (section is null)
         {
             throw new EntityNotFoundException(string.Format(ExceptionMessages.SectionNotFound, id));
         }
 
-        await _sectionRepository.Update(updatingSection, _mapper.Map<Section>(sectionInputModel));
+        await _sectionRepository.Update(section, _mapper.Map<Section>(sectionInputModel));
     }
     
     public async Task Delete(int id)

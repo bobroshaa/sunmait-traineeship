@@ -51,8 +51,8 @@ public class BrandService : IBrandService
 
     public async Task Update(int id, BrandInputModel brandInputModel)
     {
-        var updatingBrand = await _brandRepository.GetById(id);
-        if (updatingBrand is null)
+        var brand = await _brandRepository.GetById(id);
+        if (brand is null)
         {
             throw new EntityNotFoundException(string.Format(ExceptionMessages.BrandNotFound, id));
         }
@@ -62,7 +62,7 @@ public class BrandService : IBrandService
             throw new NotUniqueException(string.Format(ExceptionMessages.BrandAlreadyExists, brandInputModel.Name));
         }
 
-        await _brandRepository.Update(updatingBrand, _mapper.Map<Brand>(brandInputModel));
+        await _brandRepository.Update(brand, _mapper.Map<Brand>(brandInputModel));
     }
 
     public async Task Delete(int id)

@@ -94,13 +94,13 @@ public class OrderService : IOrderService
 
     public async Task Update(int id, Status orderStatus)
     {
-        var updatingOrder = await _orderRepository.GetById(id);
-        if (updatingOrder is null)
+        var order = await _orderRepository.GetById(id);
+        if (order is null)
         {
             throw new EntityNotFoundException(string.Format(ExceptionMessages.OrderNotFound, id));
         }
 
-        _orderRepository.Update(updatingOrder, orderStatus);
+        _orderRepository.Update(order, orderStatus);
         await _orderRepository.Save();
     }
 

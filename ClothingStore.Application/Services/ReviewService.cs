@@ -68,13 +68,13 @@ public class ReviewService : IReviewService
 
     public async Task Update(int id, ReviewInputModel reviewInputModel)
     {
-        var updatingReview = await _reviewRepository.GetById(id);
-        if (updatingReview is null)
+        var review = await _reviewRepository.GetById(id);
+        if (review is null)
         {
             throw new EntityNotFoundException(string.Format(ExceptionMessages.ReviewNotFound, id));
         }
 
-        await _reviewRepository.Update(updatingReview, _mapper.Map<Review>(reviewInputModel));
+        await _reviewRepository.Update(review, _mapper.Map<Review>(reviewInputModel));
     }
 
     public async Task Delete(int id)
