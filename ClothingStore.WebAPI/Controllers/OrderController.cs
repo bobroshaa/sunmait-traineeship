@@ -84,7 +84,7 @@ public class OrderController : Controller
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPost("{orderId}/items")]
-    public async Task<ActionResult<int>> AddOrderItemInOrder([FromRoute] int orderId,
+    public async Task<ActionResult<int>> AddOrderItemToOrder([FromRoute] int orderId,
         [FromBody] OrderItemInputModel orderItemInputModel)
     {
         if (!ModelState.IsValid)
@@ -92,7 +92,7 @@ public class OrderController : Controller
             return BadRequest(ModelState);
         }
 
-        var id = await _orderService.AddOrderItemInOrder(orderId, orderItemInputModel);
+        var id = await _orderService.AddOrderItemToOrder(orderId, orderItemInputModel);
         return CreatedAtAction(nameof(GetOrder), new { id }, id);
     }
 

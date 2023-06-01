@@ -116,7 +116,7 @@ public class OrderService : IOrderService
         await _orderRepository.Save();
     }
 
-    public async Task<int> AddOrderItemInOrder(int orderId, OrderItemInputModel orderItemInputModel)
+    public async Task<int> AddOrderItemToOrder(int orderId, OrderItemInputModel orderItemInputModel)
     {
         var order = await _orderRepository.GetById(orderId);
         if (order is null)
