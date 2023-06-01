@@ -49,7 +49,7 @@ public class UserRepository : IUserRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task AddAddress(Address? address)
+    public async Task AddAddress(Address address)
     {
         await _dbContext.Addresses.AddAsync(address);
         await _dbContext.SaveChangesAsync();
@@ -80,11 +80,11 @@ public class UserRepository : IUserRepository
 
     public async Task<bool> EmailIsUnique(string email)
     {
-        return await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email && u.IsActive) is null;
+        return !await _dbContext.Users.AnyAsync(u => u.Email == email && u.IsActive);
     }
 
     public async Task<bool> PhoneIsUnique(string phone)
     {
-        return await _dbContext.Users.FirstOrDefaultAsync(u => u.Phone == phone && u.IsActive) is null;
+        return !await _dbContext.Users.AnyAsync(u => u.Phone == phone && u.IsActive);
     }
 }

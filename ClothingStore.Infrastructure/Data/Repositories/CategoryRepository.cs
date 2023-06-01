@@ -46,7 +46,7 @@ public class CategoryRepository : ICategoryRepository
     
     public async Task<bool> SectionCategoryIsUnique(int sectionId, int categoryId)
     {
-        return await _dbContext.SectionCategories.FirstOrDefaultAsync(sc => sc.CategoryID == categoryId && sc.SectionID == sectionId) is null;
+        return !await _dbContext.SectionCategories.AnyAsync(sc => sc.CategoryID == categoryId && sc.SectionID == sectionId);
     }
 
     public async Task<SectionCategory?> GetSectionCategoryById(int id)

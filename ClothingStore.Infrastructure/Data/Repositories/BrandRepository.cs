@@ -43,7 +43,7 @@ public class BrandRepository : IBrandRepository
 
     public async Task<bool> NameIsUnique(string name)
     {
-        return await _dbContext.Brands.FirstOrDefaultAsync(b => b.Name == name && b.IsActive) is null;
+        return !await _dbContext.Brands.AnyAsync(b => b.Name == name && b.IsActive);
     }
 
     public async Task AssignProduct(Product product, int brandId)
