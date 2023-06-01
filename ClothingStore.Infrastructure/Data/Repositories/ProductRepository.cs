@@ -79,11 +79,12 @@ public class ProductRepository : IProductRepository
             .ToListAsync();
     }
 
-    public async Task<List<Product>> GetProductsByIds(IEnumerable<int> productIds)
+    public async Task<Dictionary<int, Product>> GetProductsByIds(IEnumerable<int> productIds)
     {
-        return await _dbContext.Products
+        var products = await _dbContext.Products
             .Where(p => productIds.Contains(p.ID))
             .ToListAsync();
+        return products.ToDictionary(keySelector: p => p.ID, elementSelector: p => p);
     }
     
     public async Task AssignToBrand(Product product, int brandId)
