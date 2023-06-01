@@ -79,7 +79,7 @@ public class OrderService : IOrderService
                 throw new IncorrectParamsException(string.Format(ExceptionMessages.ProductQuantityIsNotAvailable,
                     item.Quantity, products[item.ProductID].Quantity));
             }
-            
+
             order.OrderProducts.Add(_mapper.Map<OrderProduct>(item));
             products[item.ProductID].Quantity -= item.Quantity;
         }
@@ -95,6 +95,12 @@ public class OrderService : IOrderService
         if (order is null)
         {
             throw new EntityNotFoundException(string.Format(ExceptionMessages.OrderNotFound, id));
+        }
+
+        if (orderStatus - order.CurrentStatus != 1)
+        {
+            throw new IncorrectParamsException(string.Format(ExceptionMessages.IncorrectStatus,
+                Enum.GetName(order.CurrentStatus), Enum.GetName(orderStatus)));
         }
 
         _orderRepository.Update(order, orderStatus);
