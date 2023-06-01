@@ -29,7 +29,7 @@ public class SectionService : ISectionService
         var section = await _sectionRepository.GetById(id);
         if (section is null)
         {
-            throw new EntityNotFoundException(ExceptionMessages.SectionNotFound);
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.SectionNotFound, id));
         }
 
         return _mapper.Map<SectionViewModel>(section);
@@ -47,7 +47,7 @@ public class SectionService : ISectionService
         var updatingSection = await _sectionRepository.GetById(id);
         if (updatingSection is null)
         {
-            throw new EntityNotFoundException(ExceptionMessages.SectionNotFound);
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.SectionNotFound, id));
         }
 
         await _sectionRepository.Update(updatingSection, _mapper.Map<Section>(sectionInputModel));
@@ -58,7 +58,7 @@ public class SectionService : ISectionService
         var section = await _sectionRepository.GetById(id);
         if (section is null)
         {
-            throw new EntityNotFoundException(ExceptionMessages.SectionNotFound);
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.SectionNotFound, id));
         }
 
         await _sectionRepository.Delete(section);

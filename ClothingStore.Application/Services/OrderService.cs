@@ -35,7 +35,7 @@ public class OrderService : IOrderService
         var order = await _orderRepository.GetById(orderId);
         if (order is null)
         {
-            throw new EntityNotFoundException(ExceptionMessages.OrderNotFound);
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.OrderNotFound, orderId));
         }
 
         return _mapper.Map<List<OrderItemViewModel>>(await _orderRepository.GetAllByOrderId(orderId));
@@ -46,7 +46,7 @@ public class OrderService : IOrderService
         var order = await _orderRepository.GetById(id);
         if (order is null)
         {
-            throw new EntityNotFoundException(ExceptionMessages.OrderNotFound);
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.OrderNotFound, id));
         }
 
         return _mapper.Map<OrderViewModel>(order);
@@ -61,18 +61,23 @@ public class OrderService : IOrderService
         var user = await _userRepository.GetById(order.UserID);
         if (user is null)
         {
-            throw new EntityNotFoundException(ExceptionMessages.UserNotFound);
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.UserNotFound, order.UserID));
         }
 
         var products = await _productRepository.GetProductsByIds(productsIds);
         if (products.Count < productsIds.Count)
         {
+            // TODO: Find id of non-existing product
             throw new EntityNotFoundException(ExceptionMessages.ProductNotFound);
         }
 
-        if (orderInputModel.Products.Any(item => item.Quantity > products.First(p => p.ID == item.ProductID).Quantity))
+        var product =
+            orderInputModel.Products.FirstOrDefault(item =>
+                item.Quantity > products.First(p => p.ID == item.ProductID).Quantity);
+        if (product is not null)
         {
-            throw new IncorrectParamsException(ExceptionMessages.ProductQuantityIsNotAvailable);
+            throw new IncorrectParamsException(string.Format(ExceptionMessages.ProductQuantityIsNotAvailable,
+                product.ProductID, products.First(p => p.ID == product.ProductID).Quantity));
         }
 
         order.OrderProducts = new List<OrderProduct>();
@@ -92,7 +97,7 @@ public class OrderService : IOrderService
         var updatingOrder = await _orderRepository.GetById(id);
         if (updatingOrder is null)
         {
-            throw new EntityNotFoundException(ExceptionMessages.OrderNotFound);
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.OrderNotFound, id));
         }
 
         _orderRepository.Update(updatingOrder, orderStatus);
@@ -104,7 +109,7 @@ public class OrderService : IOrderService
         var order = await _orderRepository.GetById(id);
         if (order is null)
         {
-            throw new EntityNotFoundException(ExceptionMessages.OrderNotFound);
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.OrderNotFound, id));
         }
 
         _orderRepository.Delete(order);
@@ -116,18 +121,20 @@ public class OrderService : IOrderService
         var order = await _orderRepository.GetById(orderId);
         if (order is null)
         {
-            throw new EntityNotFoundException(ExceptionMessages.OrderNotFound);
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.OrderNotFound, orderId));
         }
 
         var product = await _productRepository.GetById(orderItemInputModel.ProductID);
         if (product is null)
         {
-            throw new EntityNotFoundException(ExceptionMessages.ProductNotFound);
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.ProductNotFound,
+                orderItemInputModel.ProductID));
         }
 
         if (orderItemInputModel.Quantity > product.Quantity)
         {
-            throw new IncorrectParamsException(ExceptionMessages.ProductQuantityIsNotAvailable);
+            throw new IncorrectParamsException(string.Format(ExceptionMessages.ProductQuantityIsNotAvailable,
+                product.ID, product.Quantity));
         }
 
         var mappedItem = _mapper.Map<OrderProduct>(orderItemInputModel);
@@ -142,7 +149,7 @@ public class OrderService : IOrderService
         var orderItem = await _orderRepository.GetOrderItemById(orderItemId);
         if (orderItem is null)
         {
-            throw new EntityNotFoundException(ExceptionMessages.OrderItemNotFound);
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.OrderItemNotFound, orderItemId));
         }
 
         var product = await _productRepository.GetById(orderItem.ProductID);

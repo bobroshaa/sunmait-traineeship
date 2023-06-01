@@ -32,7 +32,7 @@ public class UserService : IUserService
         var user = await _userRepository.GetById(id);
         if (user is null)
         {
-            throw new EntityNotFoundException(ExceptionMessages.UserNotFound);
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.UserNotFound, id));
         }
 
         return _mapper.Map<UserViewModel>(user);
@@ -42,12 +42,12 @@ public class UserService : IUserService
     {
         if (!await _userRepository.EmailIsUnique(userInputModel.Email))
         {
-            throw new NotUniqueException(ExceptionMessages.EmailIsNotUnique);
+            throw new NotUniqueException(string.Format(ExceptionMessages.EmailIsNotUnique, userInputModel.Email));
         }
 
         if (userInputModel.Phone is not null && !await _userRepository.PhoneIsUnique(userInputModel.Phone))
         {
-            throw new NotUniqueException(ExceptionMessages.PhoneIsNotUnique);
+            throw new NotUniqueException(string.Format(ExceptionMessages.PhoneNumberIsNotUnique, userInputModel.Phone));
         }
 
         var user = _mapper.Map<UserAccount>(userInputModel);
@@ -62,17 +62,17 @@ public class UserService : IUserService
         var updatingUser = await _userRepository.GetById(id);
         if (updatingUser is null)
         {
-            throw new EntityNotFoundException(ExceptionMessages.UserNotFound);
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.UserNotFound, id));
         }
-        
+
         if (!await _userRepository.EmailIsUnique(userInputModel.Email))
         {
-            throw new NotUniqueException(ExceptionMessages.EmailIsNotUnique);
+            throw new NotUniqueException(string.Format(ExceptionMessages.EmailIsNotUnique, userInputModel.Email));
         }
 
         if (userInputModel.Phone is not null && !await _userRepository.PhoneIsUnique(userInputModel.Phone))
         {
-            throw new NotUniqueException(ExceptionMessages.PhoneIsNotUnique);
+            throw new NotUniqueException(string.Format(ExceptionMessages.PhoneNumberIsNotUnique, userInputModel.Phone));
         }
 
         await _userRepository.Update(updatingUser, _mapper.Map<UserAccount>(userInputModel));
@@ -83,7 +83,7 @@ public class UserService : IUserService
         var user = await _userRepository.GetById(id);
         if (user is null)
         {
-            throw new EntityNotFoundException(ExceptionMessages.UserNotFound);
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.UserNotFound, id));
         }
 
         await _userRepository.Delete(user);
@@ -94,7 +94,7 @@ public class UserService : IUserService
         var user = await _userRepository.GetById(userId);
         if (user is null)
         {
-            throw new EntityNotFoundException(ExceptionMessages.UserNotFound);
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.UserNotFound, userId));
         }
 
         var mappedAddress = _mapper.Map<Address>(addressInputModel);
@@ -115,7 +115,7 @@ public class UserService : IUserService
         var user = await _userRepository.GetById(id);
         if (user is null)
         {
-            throw new EntityNotFoundException(ExceptionMessages.UserNotFound);
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.UserNotFound, id));
         }
 
         await _userRepository.UpdateRole(user, role);

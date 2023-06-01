@@ -26,7 +26,7 @@ public class CategoryService : ICategoryService
         var category = await _categoryRepository.GetById(id);
         if (category is null)
         {
-            throw new EntityNotFoundException(ExceptionMessages.CategoryNotFound);
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.CategoryNotFound, id));
         }
 
         return _mapper.Map<CategoryViewModel>(category);
@@ -44,7 +44,7 @@ public class CategoryService : ICategoryService
         var updatingCategory = await _categoryRepository.GetById(id);
         if (updatingCategory is null)
         {
-            throw new EntityNotFoundException(ExceptionMessages.CategoryNotFound);
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.CategoryNotFound, id));
         }
 
         await _categoryRepository.Update(updatingCategory, _mapper.Map<Category>(categoryInputModel));
@@ -55,7 +55,7 @@ public class CategoryService : ICategoryService
         var category = await _categoryRepository.GetById(id);
         if (category is null)
         {
-            throw new EntityNotFoundException(ExceptionMessages.CategoryNotFound);
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.CategoryNotFound, id));
         }
 
         await _categoryRepository.Delete(category);
@@ -66,18 +66,18 @@ public class CategoryService : ICategoryService
         var section = await _sectionRepository.GetById(sectionId);
         if (section is null)
         {
-            throw new EntityNotFoundException(ExceptionMessages.SectionNotFound);
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.SectionNotFound, sectionId));
         }
 
         var category = await _categoryRepository.GetById(categoryId);
         if (category is null)
         {
-            throw new EntityNotFoundException(ExceptionMessages.CategoryNotFound);
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.CategoryNotFound, categoryId));
         }
-        
+
         if (!await _categoryRepository.SectionCategoryIsUnique(sectionId, categoryId))
         {
-            throw new IncorrectParamsException(ExceptionMessages.CategoryLinked);
+            throw new IncorrectParamsException(string.Format(ExceptionMessages.CategoryLinked, categoryId, sectionId));
         }
 
         await _categoryRepository.LinkCategoryToSection(new SectionCategory

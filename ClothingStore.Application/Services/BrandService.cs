@@ -31,7 +31,7 @@ public class BrandService : IBrandService
         var brand = await _brandRepository.GetById(id);
         if (brand is null)
         {
-            throw new EntityNotFoundException(ExceptionMessages.BrandNotFound);
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.BrandNotFound, id));
         }
 
         return _mapper.Map<BrandViewModel>(brand);
@@ -41,7 +41,7 @@ public class BrandService : IBrandService
     {
         if (!(await _brandRepository.NameIsUnique(brandInputModel.Name)))
         {
-            throw new NotUniqueException(ExceptionMessages.BrandAlreadyExists);
+            throw new NotUniqueException(string.Format(ExceptionMessages.BrandAlreadyExists, brandInputModel.Name));
         }
 
         var brand = _mapper.Map<Brand>(brandInputModel);
@@ -54,12 +54,12 @@ public class BrandService : IBrandService
         var updatingBrand = await _brandRepository.GetById(id);
         if (updatingBrand is null)
         {
-            throw new EntityNotFoundException(ExceptionMessages.BrandNotFound);
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.BrandNotFound, id));
         }
 
         if (!await _brandRepository.NameIsUnique(brandInputModel.Name))
         {
-            throw new NotUniqueException(ExceptionMessages.BrandAlreadyExists);
+            throw new NotUniqueException(string.Format(ExceptionMessages.BrandAlreadyExists, brandInputModel.Name));
         }
 
         await _brandRepository.Update(updatingBrand, _mapper.Map<Brand>(brandInputModel));
@@ -70,7 +70,7 @@ public class BrandService : IBrandService
         var brand = await _brandRepository.GetById(id);
         if (brand is null)
         {
-            throw new EntityNotFoundException(ExceptionMessages.BrandNotFound);
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.BrandNotFound, id));
         }
 
         await _brandRepository.Delete(brand);
@@ -81,13 +81,13 @@ public class BrandService : IBrandService
         var product = await _productRepository.GetById(productId);
         if (product is null)
         {
-            throw new EntityNotFoundException(ExceptionMessages.ProductNotFound);
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.ProductNotFound, productId));
         }
         
         var brand = await _brandRepository.GetById(brandId);
         if (brand is null)
         {
-            throw new EntityNotFoundException(ExceptionMessages.BrandNotFound);
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.BrandNotFound, brandId));
         }
 
         await _brandRepository.AssignProduct(product, brandId);
@@ -98,7 +98,7 @@ public class BrandService : IBrandService
         var product = await _productRepository.GetById(productId);
         if (product is null)
         {
-            throw new EntityNotFoundException(ExceptionMessages.ProductNotFound);
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.ProductNotFound, productId));
         }
         
         await _brandRepository.UnassignProduct(product);
