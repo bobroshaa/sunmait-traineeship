@@ -52,6 +52,7 @@ public class OrderRepository : IOrderRepository
 
     public void AddOrderItem(OrderProduct orderItem, Product product)
     {
+        orderItem.Price = product.Price;
         _dbContext.OrderProducts.Add(orderItem);
         product.Quantity -= orderItem.Quantity;
     }
