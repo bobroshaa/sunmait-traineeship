@@ -40,12 +40,12 @@ public class UserService : IUserService
 
     public async Task<int> Add(UserInputModel userInputModel)
     {
-        if (!await _userRepository.EmailIsUnique(userInputModel.Email))
+        if (await _userRepository.DoesEmailExist(userInputModel.Email))
         {
             throw new NotUniqueException(string.Format(ExceptionMessages.EmailIsNotUnique, userInputModel.Email));
         }
 
-        if (userInputModel.Phone is not null && !await _userRepository.PhoneNumberIsUnique(userInputModel.Phone))
+        if (userInputModel.Phone is not null && await _userRepository.DoesPhoneNumberExist(userInputModel.Phone))
         {
             throw new NotUniqueException(string.Format(ExceptionMessages.PhoneNumberIsNotUnique, userInputModel.Phone));
         }
@@ -65,12 +65,12 @@ public class UserService : IUserService
             throw new EntityNotFoundException(string.Format(ExceptionMessages.UserNotFound, id));
         }
 
-        if (!await _userRepository.EmailIsUnique(userInputModel.Email))
+        if (await _userRepository.DoesEmailExist(userInputModel.Email))
         {
             throw new NotUniqueException(string.Format(ExceptionMessages.EmailIsNotUnique, userInputModel.Email));
         }
 
-        if (userInputModel.Phone is not null && !await _userRepository.PhoneNumberIsUnique(userInputModel.Phone))
+        if (userInputModel.Phone is not null && await _userRepository.DoesPhoneNumberExist(userInputModel.Phone))
         {
             throw new NotUniqueException(string.Format(ExceptionMessages.PhoneNumberIsNotUnique, userInputModel.Phone));
         }

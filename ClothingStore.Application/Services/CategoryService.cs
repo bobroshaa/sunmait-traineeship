@@ -75,7 +75,7 @@ public class CategoryService : ICategoryService
             throw new EntityNotFoundException(string.Format(ExceptionMessages.CategoryNotFound, categoryId));
         }
 
-        if (!await _categoryRepository.SectionCategoryIsUnique(sectionId, categoryId))
+        if (await _categoryRepository.DoesSectionCategoryExist(sectionId, categoryId))
         {
             throw new IncorrectParamsException(string.Format(ExceptionMessages.CategoryLinked, categoryId, sectionId));
         }

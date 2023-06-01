@@ -78,12 +78,12 @@ public class UserRepository : IUserRepository
         return await _dbContext.Addresses.FirstOrDefaultAsync(a => a.UserID == userId && a.IsActive);
     }
 
-    public async Task<bool> EmailIsUnique(string email)
+    public async Task<bool> DoesEmailExist(string email)
     {
         return !await _dbContext.Users.AnyAsync(u => u.Email == email && u.IsActive);
     }
 
-    public async Task<bool> PhoneNumberIsUnique(string phone)
+    public async Task<bool> DoesPhoneNumberExist(string phone)
     {
         return !await _dbContext.Users.AnyAsync(u => u.Phone == phone && u.IsActive);
     }

@@ -44,9 +44,9 @@ public class CategoryRepository : ICategoryRepository
         await _dbContext.SaveChangesAsync();
     }
     
-    public async Task<bool> SectionCategoryIsUnique(int sectionId, int categoryId)
+    public async Task<bool> DoesSectionCategoryExist(int sectionId, int categoryId)
     {
-        return !await _dbContext.SectionCategories.AnyAsync(sc => sc.CategoryID == categoryId && sc.SectionID == sectionId);
+        return await _dbContext.SectionCategories.AnyAsync(sc => sc.CategoryID == categoryId && sc.SectionID == sectionId);
     }
 
     public async Task<SectionCategory?> GetSectionCategoryById(int id)

@@ -11,14 +11,12 @@ namespace ClothingStore.Application.Services;
 public class BrandService : IBrandService
 {
     private readonly IBrandRepository _brandRepository;
-    private readonly IProductRepository _productRepository;
     private readonly IMapper _mapper;
 
-    public BrandService(IMapper mapper, IBrandRepository brandRepository, IProductRepository productRepository)
+    public BrandService(IMapper mapper, IBrandRepository brandRepository)
     {
         _mapper = mapper;
         _brandRepository = brandRepository;
-        _productRepository = productRepository;
     }
 
     public async Task<List<BrandViewModel>> GetAll()
@@ -39,7 +37,7 @@ public class BrandService : IBrandService
 
     public async Task<int> Add(BrandInputModel brandInputModel)
     {
-        if (!(await _brandRepository.DoesBrandExist(brandInputModel.Name)))
+        if (await _brandRepository.DoesBrandExist(brandInputModel.Name))
         {
             throw new NotUniqueException(string.Format(ExceptionMessages.BrandAlreadyExists, brandInputModel.Name));
         }
@@ -57,7 +55,7 @@ public class BrandService : IBrandService
             throw new EntityNotFoundException(string.Format(ExceptionMessages.BrandNotFound, id));
         }
 
-        if (!await _brandRepository.DoesBrandExist(brandInputModel.Name))
+        if (await _brandRepository.DoesBrandExist(brandInputModel.Name))
         {
             throw new NotUniqueException(string.Format(ExceptionMessages.BrandAlreadyExists, brandInputModel.Name));
         }

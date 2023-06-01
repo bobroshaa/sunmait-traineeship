@@ -14,6 +14,6 @@ public interface IUserRepository
     Task UpdateAddress(Address updatingAddress, Address address);
     Task UpdateRole(UserAccount user, Role role);
     Task<Address?> GetAddressByUserId(int userId);
-    Task<bool> EmailIsUnique(string email);
-    Task<bool> PhoneNumberIsUnique(string phone);
+    Task<bool> DoesEmailExist(string email);
+    Task<bool> DoesPhoneNumberExist(string phone);
 }

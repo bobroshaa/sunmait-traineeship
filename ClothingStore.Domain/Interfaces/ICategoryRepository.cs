@@ -9,6 +9,6 @@ public interface ICategoryRepository
     Task Update(Category updatingCategory, Category category);
     Task Delete(Category category);
     public Task LinkCategoryToSection(SectionCategory sectionCategory);
-    Task<bool> SectionCategoryIsUnique(int sectionId, int categoryId);
+    Task<bool> DoesSectionCategoryExist(int sectionId, int categoryId);
     Task<SectionCategory?> GetSectionCategoryById(int id);
 }
