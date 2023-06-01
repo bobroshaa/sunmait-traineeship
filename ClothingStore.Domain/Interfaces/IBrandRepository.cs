@@ -4,7 +4,7 @@ namespace ClothingStore.Domain.Interfaces;
 
 public interface IBrandRepository
 {
-    Task<IEnumerable<Brand>> GetAll();
+    Task<List<Brand>> GetAll();
     Task<Brand?> GetById(int id);
     Task Add(Brand brand);
     Task Update(Brand updatingBrand, Brand brand);

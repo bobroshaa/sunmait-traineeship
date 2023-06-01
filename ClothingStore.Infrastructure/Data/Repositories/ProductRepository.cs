@@ -13,7 +13,7 @@ public class ProductRepository : IProductRepository
         _dbContext = dbContext;
     }
 
-    public async Task<IEnumerable<Product>> GetAll()
+    public async Task<List<Product>> GetAll()
     {
         return await _dbContext.Products
             .Where(p => p.IsActive)
@@ -59,7 +59,7 @@ public class ProductRepository : IProductRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<Product>> GetProductsBySectionAndCategory(int sectionId, int categoryId)
+    public async Task<List<Product>> GetProductsBySectionAndCategory(int sectionId, int categoryId)
     {
         return await _dbContext.Products
             .Include(p => p.Brand)
@@ -70,7 +70,7 @@ public class ProductRepository : IProductRepository
             .ToListAsync();
     }
     
-    public async Task<IEnumerable<Product>> GetProductsByBrand(int brandId)
+    public async Task<List<Product>> GetProductsByBrand(int brandId)
     {
         return await _dbContext.Products
             .Include(p => p.Brand)
@@ -80,7 +80,7 @@ public class ProductRepository : IProductRepository
             .ToListAsync();
     }
 
-    public async Task<Dictionary<int, Product>> GetProductsByIds(IEnumerable<int> productIds)
+    public async Task<Dictionary<int, Product>> GetProductsByIds(List<int> productIds)
     {
         var products = await _dbContext.Products
             .Where(p => productIds.Contains(p.ID))

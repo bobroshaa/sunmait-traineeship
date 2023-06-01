@@ -25,7 +25,7 @@ public class OrderService : IOrderService
         _userRepository = userRepository;
     }
 
-    public async Task<IEnumerable<OrderViewModel>> GetAll()
+    public async Task<List<OrderViewModel>> GetAll()
     {
         return _mapper.Map<List<OrderViewModel>>(await _orderRepository.GetAll());
     }

@@ -14,12 +14,12 @@ public class OrderRepository : IOrderRepository
         _dbContext = dbContext;
     }
 
-    public async Task<IEnumerable<CustomerOrder>> GetAll()
+    public async Task<List<CustomerOrder>> GetAll()
     {
         return await _dbContext.CustomerOrders.Where(co => co.IsActive).ToListAsync();
     }
 
-    public async Task<IEnumerable<OrderProduct>> GetAllByOrderId(int orderId)
+    public async Task<List<OrderProduct>> GetAllByOrderId(int orderId)
     {
         return await _dbContext.OrderProducts
             .Where(op => op.OrderID == orderId && op.IsActive)

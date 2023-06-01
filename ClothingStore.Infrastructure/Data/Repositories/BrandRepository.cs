@@ -13,7 +13,7 @@ public class BrandRepository : IBrandRepository
         _dbContext = dbContext;
     }
 
-    public async Task<IEnumerable<Brand>> GetAll()
+    public async Task<List<Brand>> GetAll()
     {
         return await _dbContext.Brands.Where(b => b.IsActive).ToListAsync();
     }
