@@ -44,28 +44,7 @@ public class OrderRepository : IOrderRepository
     {
         order.IsActive = false;
     }
-
-    public async Task<OrderProduct?> GetOrderItemById(int id)
-    {
-        return await _dbContext.OrderProducts.FirstOrDefaultAsync(op => op.ID == id && op.IsActive);
-    }
-
-    public void AddOrderItem(OrderProduct orderItem, Product product)
-    {
-        orderItem.Price = product.Price;
-        _dbContext.OrderProducts.Add(orderItem);
-        product.Quantity -= orderItem.Quantity;
-    }
-
-    public void DeleteOrderItemFromOrder(OrderProduct orderItem, Product? product)
-    {
-        if (product is not null)
-        {
-            product.Quantity += orderItem.Quantity;
-        }
-        orderItem.IsActive = false;
-    }
-
+    
     public async Task Save()
     {
         await _dbContext.SaveChangesAsync();

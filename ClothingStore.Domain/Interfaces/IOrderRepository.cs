@@ -11,8 +11,5 @@ public interface IOrderRepository
     void Add(CustomerOrder order);
     void Update(CustomerOrder updatingOrder, Status orderStatus);
     void Delete(CustomerOrder order);
-    void AddOrderItem(OrderProduct orderItem, Product product);
-    void DeleteOrderItemFromOrder(OrderProduct orderItem, Product? product);
-    Task<OrderProduct?> GetOrderItemById(int id);
     Task Save();
 }

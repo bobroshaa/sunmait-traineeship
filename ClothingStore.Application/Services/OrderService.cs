@@ -118,45 +118,4 @@ public class OrderService : IOrderService
         _orderRepository.Delete(order);
         await _orderRepository.Save();
     }
-
-    public async Task<int> AddOrderItemToOrder(int orderId, OrderItemInputModel orderItemInputModel)
-    {
-        var order = await _orderRepository.GetById(orderId);
-        if (order is null)
-        {
-            throw new EntityNotFoundException(string.Format(ExceptionMessages.OrderNotFound, orderId));
-        }
-
-        var product = await _productRepository.GetById(orderItemInputModel.ProductID);
-        if (product is null)
-        {
-            throw new EntityNotFoundException(string.Format(ExceptionMessages.ProductNotFound,
-                orderItemInputModel.ProductID));
-        }
-
-        if (orderItemInputModel.Quantity > product.Quantity)
-        {
-            throw new IncorrectParamsException(string.Format(ExceptionMessages.ProductQuantityIsNotAvailable,
-                product.ID, product.Quantity));
-        }
-
-        var mappedItem = _mapper.Map<OrderProduct>(orderItemInputModel);
-        mappedItem.OrderID = orderId;
-        _orderRepository.AddOrderItem(mappedItem, product);
-        await _orderRepository.Save();
-        return mappedItem.ID;
-    }
-
-    public async Task DeleteOrderItemFromOrder(int orderItemId)
-    {
-        var orderItem = await _orderRepository.GetOrderItemById(orderItemId);
-        if (orderItem is null)
-        {
-            throw new EntityNotFoundException(string.Format(ExceptionMessages.OrderItemNotFound, orderItemId));
-        }
-
-        var product = await _productRepository.GetById(orderItem.ProductID);
-        _orderRepository.DeleteOrderItemFromOrder(orderItem, product);
-        await _orderRepository.Save();
-    }
 }

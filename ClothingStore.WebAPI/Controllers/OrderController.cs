@@ -80,28 +80,4 @@ public class OrderController : Controller
         await _orderService.Delete(id);
         return Ok();
     }
-
-    [ProducesResponseType(StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [HttpPost("{orderId}/items")]
-    public async Task<ActionResult<int>> AddOrderItemToOrder([FromRoute] int orderId,
-        [FromBody] OrderItemInputModel orderItemInputModel)
-    {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
-        var id = await _orderService.AddOrderItemToOrder(orderId, orderItemInputModel);
-        return CreatedAtAction(nameof(GetOrder), new { id }, id);
-    }
-
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [HttpDelete("items/{orderItemId}")]
-    public async Task<ActionResult> DeleteOrderItemFromOrder([FromRoute] int orderItemId)
-    {
-        await _orderService.DeleteOrderItemFromOrder(orderItemId);
-        return Ok();
-    }
 }
