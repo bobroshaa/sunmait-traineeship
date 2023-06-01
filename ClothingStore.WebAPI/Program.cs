@@ -1,6 +1,4 @@
-using ClothingStore.Application;
 using ClothingStore.Application.Profiles;
-using ClothingStore.Infrastructure;
 using ClothingStore.WebAPI;
 
 var builder = WebApplication.CreateBuilder(args);

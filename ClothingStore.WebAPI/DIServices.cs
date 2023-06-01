@@ -1,10 +1,9 @@
 ﻿using ClothingStore.Application.Interfaces;
 using ClothingStore.Application.Services;
-using Microsoft.Extensions.DependencyInjection;
 
-namespace ClothingStore.Application;
+namespace ClothingStore.WebAPI;
 
-public static class DependencyInjection
+public static class DIServices
 {
     public static IServiceCollection AddApplicationDependencies(this IServiceCollection services)
     {
