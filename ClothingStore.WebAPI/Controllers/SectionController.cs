@@ -16,6 +16,9 @@ public class SectionController : Controller
         _sectionService = sectionService;
     }
 
+    /// <summary>
+    /// Get all sections.
+    /// </summary>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<SectionViewModel>))]
     [HttpGet]
     public async Task<ActionResult<List<SectionViewModel>>> GetAllSections()
@@ -24,6 +27,10 @@ public class SectionController : Controller
         return Ok(sections);
     }
 
+    /// <summary>
+    /// Get a section by ID.
+    /// </summary>
+    /// <param name="id">The ID of the section.</param>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SectionViewModel))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("{id}")]
@@ -33,6 +40,10 @@ public class SectionController : Controller
         return Ok(section);
     }
 
+    /// <summary>
+    /// Add a new section.
+    /// </summary>
+    /// <param name="sectionInputModel">The input model of the new section.</param>
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPost]
@@ -47,6 +58,11 @@ public class SectionController : Controller
         return CreatedAtAction(nameof(GetSection), new { id }, id);
     }
 
+    /// <summary>
+    /// Update section name by section ID.
+    /// </summary>
+    /// <param name="id">The ID of the section.</param>
+    /// <param name="sectionInputModel">The input model of the section.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -62,7 +78,11 @@ public class SectionController : Controller
         await _sectionService.Update(id, sectionInputModel);
         return Ok();
     }
-
+    
+    /// <summary>
+    /// Delete a section by ID.
+    /// </summary>
+    /// <param name="id">The ID of the section.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpDelete("{id}")]

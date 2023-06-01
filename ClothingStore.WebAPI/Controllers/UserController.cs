@@ -17,6 +17,9 @@ public class UserController : Controller
         _userService = userService;
     }
 
+    /// <summary>
+    /// Get all users.
+    /// </summary>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<UserViewModel>))]
     [HttpGet]
     public async Task<ActionResult<List<UserViewModel>>> GetAllUsers()
@@ -25,6 +28,10 @@ public class UserController : Controller
         return Ok(users);
     }
 
+    /// <summary>
+    /// Get a user by ID.
+    /// </summary>
+    /// <param name="id">The ID of the user.</param>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserViewModel))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("{id}")]
@@ -34,6 +41,10 @@ public class UserController : Controller
         return Ok(user);
     }
 
+    /// <summary>
+    /// Add a new user.
+    /// </summary>
+    /// <param name="userInputModel">The input model of the new user.</param>
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPost]
@@ -48,6 +59,11 @@ public class UserController : Controller
         return CreatedAtAction(nameof(GetUser), new { id }, id);
     }
 
+    /// <summary>
+    /// Update a user by ID.
+    /// </summary>
+    /// <param name="id">The ID of the user.</param>
+    /// <param name="userInputModel">The input model of the user.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -63,6 +79,10 @@ public class UserController : Controller
         return Ok();
     }
 
+    /// <summary>
+    /// Delete a user by ID.
+    /// </summary>
+    /// <param name="id">The ID of the user.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpDelete("{id}")]
@@ -72,6 +92,11 @@ public class UserController : Controller
         return Ok();
     }
 
+    /// <summary>
+    /// Update user address by him ID.
+    /// </summary>
+    /// <param name="userId">The ID of the section.</param>
+    /// <param name="addressInputModel">The input model of the address.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -88,6 +113,11 @@ public class UserController : Controller
         return Ok();
     }
 
+    /// <summary>
+    /// Update user role by his ID.
+    /// </summary>
+    /// <param name="userId">The ID of the section.</param>
+    /// <param name="role">A new role of the user.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

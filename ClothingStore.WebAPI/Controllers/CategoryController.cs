@@ -16,6 +16,10 @@ public class CategoryController : Controller
         _categoryService = categoryService;
     }
 
+    /// <summary>
+    /// Get a category by ID.
+    /// </summary>
+    /// <param name="id">The ID of the category.</param>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CategoryViewModel))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("{id}")]
@@ -25,6 +29,10 @@ public class CategoryController : Controller
         return Ok(category);
     }
 
+    /// <summary>
+    /// Add a new category.
+    /// </summary>
+    /// <param name="categoryInputModel">The input model of the new category.</param>
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPost]
@@ -39,6 +47,11 @@ public class CategoryController : Controller
         return CreatedAtAction(nameof(GetCategory), new { id }, id);
     }
 
+    /// <summary>
+    /// Update a category by ID.
+    /// </summary>
+    /// <param name="id">The ID of the category.</param>
+    /// <param name="categoryInputModel">The input model of the category.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -54,6 +67,10 @@ public class CategoryController : Controller
         return Ok();
     }
 
+    /// <summary>
+    /// Delete a category by ID.
+    /// </summary>
+    /// <param name="id">The ID of the category.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpDelete("{id}")]
@@ -62,7 +79,12 @@ public class CategoryController : Controller
         await _categoryService.Delete(id);
         return Ok();
     }
-
+    
+    /// <summary>
+    /// Link a category to the section.
+    /// </summary>
+    /// <param name="categoryId">The ID of the category.</param>
+    /// <param name="sectionId">The ID of the section.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPost("link-to-section")]

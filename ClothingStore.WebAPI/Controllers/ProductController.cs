@@ -16,6 +16,9 @@ public class ProductController : Controller
         _productService = productService;
     }
 
+    /// <summary>
+    /// Get all products.
+    /// </summary>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<ProductViewModel>))]
     [HttpGet]
     public async Task<ActionResult<List<ProductViewModel>>> GetAllProducts()
@@ -24,6 +27,10 @@ public class ProductController : Controller
         return Ok(products);
     }
 
+    /// <summary>
+    /// Get a product by ID.
+    /// </summary>
+    /// <param name="id">The ID of the product.</param>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductViewModel))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("{id}")]
@@ -33,6 +40,10 @@ public class ProductController : Controller
         return Ok(product);
     }
 
+    /// <summary>
+    /// Add a new product.
+    /// </summary>
+    /// <param name="productInputModel">The input model of the product.</param>
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPost]
@@ -47,6 +58,11 @@ public class ProductController : Controller
         return CreatedAtAction(nameof(GetProduct), new { id }, id);
     }
 
+    /// <summary>
+    /// Update a product by ID.
+    /// </summary>
+    /// <param name="id">The ID of the product.</param>
+    /// <param name="productInputModel">The input model of the product.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -62,6 +78,10 @@ public class ProductController : Controller
         return Ok();
     }
 
+    /// <summary>
+    /// Delete a product by ID.
+    /// </summary>
+    /// <param name="id">The ID of the product.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpDelete("{id}")]
@@ -71,6 +91,11 @@ public class ProductController : Controller
         return Ok();
     }
 
+    /// <summary>
+    /// Get products by section ID and category ID.
+    /// </summary>
+    /// <param name="sectionId">The ID of the section.</param>
+    /// <param name="categoryId">The ID of the category.</param>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<ProductViewModel>))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("section-category/{sectionId}/{categoryId}")]
@@ -81,9 +106,13 @@ public class ProductController : Controller
         return Ok(products);
     }
 
+    /// <summary>
+    /// Get products by brand ID.
+    /// </summary>
+    /// <param name="brandId">The ID of the brand.</param>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<ProductViewModel>))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [HttpGet("brand/{brandId}")]
+    [HttpGet("brands/{brandId}")]
     public async Task<ActionResult<List<ProductViewModel>>> GetProductsByBrand([FromRoute] int brandId)
     {
         var products = await _productService.GetProductsByBrand(brandId);

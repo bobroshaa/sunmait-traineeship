@@ -17,6 +17,9 @@ public class OrderController : Controller
         _orderService = orderService;
     }
 
+    /// <summary>
+    /// Get all orders.
+    /// </summary>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<OrderViewModel>))]
     [HttpGet]
     public async Task<ActionResult<List<OrderViewModel>>> GetAllOrders()
@@ -25,6 +28,10 @@ public class OrderController : Controller
         return Ok(orders);
     }
 
+    /// <summary>
+    /// Get order items by order ID.
+    /// </summary>
+    /// <param name="orderId">The ID of the order.</param>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<OrderItemViewModel>))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("{orderId}/items")]
@@ -34,6 +41,10 @@ public class OrderController : Controller
         return Ok(orderItems);
     }
 
+    /// <summary>
+    /// Get an order by ID.
+    /// </summary>
+    /// <param name="id">The ID of the order.</param>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderViewModel))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("{id}")]
@@ -43,6 +54,10 @@ public class OrderController : Controller
         return Ok(order);
     }
 
+    /// <summary>
+    /// Add a new order with items.
+    /// </summary>
+    /// <param name="orderInputModel">The input model of the new order.</param>
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPost]
@@ -57,6 +72,11 @@ public class OrderController : Controller
         return CreatedAtAction(nameof(GetOrder), new { id }, id);
     }
 
+    /// <summary>
+    /// Update order status by order ID.
+    /// </summary>
+    /// <param name="id">The ID of the order.</param>
+    /// <param name="orderStatus">A new status of the order.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -72,6 +92,10 @@ public class OrderController : Controller
         return Ok();
     }
 
+    /// <summary>
+    /// Delete an order by ID.
+    /// </summary>
+    /// <param name="id">The ID of the order.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpDelete("{id}")]

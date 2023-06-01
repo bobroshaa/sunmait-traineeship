@@ -16,6 +16,10 @@ public class ReviewController : Controller
         _reviewService = reviewService;
     }
 
+    /// <summary>
+    /// Get review by ID.
+    /// </summary>
+    /// <param name="id">The ID of the review.</param>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ReviewViewModel))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("{id}")]
@@ -25,6 +29,10 @@ public class ReviewController : Controller
         return Ok(review);
     }
 
+    /// <summary>
+    /// Get reviews by product ID.
+    /// </summary>
+    /// <param name="productId">The ID of the product.</param>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<ReviewViewModel>))]
     [HttpGet("product/{productId}")]
     public async Task<ActionResult<List<ReviewViewModel>>> GetReviewsByProductId([FromRoute] int productId)
@@ -33,6 +41,10 @@ public class ReviewController : Controller
         return Ok(reviews);
     }
 
+    /// <summary>
+    /// Add a new review.
+    /// </summary>
+    /// <param name="reviewInputModel">The input model of the new review.</param>
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPost]
@@ -47,6 +59,11 @@ public class ReviewController : Controller
         return CreatedAtAction(nameof(GetReview), new { id }, id);
     }
 
+    /// <summary>
+    /// Update a review by ID.
+    /// </summary>
+    /// <param name="id">The ID of the review.</param>
+    /// <param name="reviewInputModel">The input model of the review.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -62,6 +79,10 @@ public class ReviewController : Controller
         return Ok();
     }
 
+    /// <summary>
+    /// Delete a review by ID.
+    /// </summary>
+    /// <param name="id">The ID of the review.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpDelete("{id}")]

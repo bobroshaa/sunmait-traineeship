@@ -17,7 +17,10 @@ public class BrandController : Controller
         _brandService = brandService;
         _productServise = productService;
     }
-
+    
+    /// <summary>
+    /// Get all brands.
+    /// </summary>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<BrandViewModel>))]
     [HttpGet]
     public async Task<ActionResult<List<BrandViewModel>>> GetAllBrands()
@@ -25,7 +28,12 @@ public class BrandController : Controller
         var brands = await _brandService.GetAll();
         return Ok(brands);
     }
-
+    
+    /// <summary>
+    /// Get a brand by ID.
+    /// </summary>
+    /// <returns>The brand view model.</returns>
+    /// <param name="id">The ID of the brand.</param>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BrandViewModel))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("{id}")]
@@ -35,6 +43,10 @@ public class BrandController : Controller
         return Ok(brand);
     }
 
+    /// <summary>
+    /// Add a new brand.
+    /// </summary>
+    /// <param name="brandInputModel">The input model of the new brand.</param>
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPost]
@@ -49,6 +61,11 @@ public class BrandController : Controller
         return CreatedAtAction(nameof(GetBrand), new { id }, id);
     }
 
+    /// <summary>
+    /// Update a brand by ID.
+    /// </summary>
+    /// <param name="id">The ID of the brand.</param>
+    /// <param name="brandInputModel">The input model of the brand.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -64,6 +81,10 @@ public class BrandController : Controller
         return Ok();
     }
 
+    /// <summary>
+    /// Delete a brand by ID.
+    /// </summary>
+    /// <param name="id">The ID of the brand.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpDelete("{id}")]
@@ -73,6 +94,11 @@ public class BrandController : Controller
         return Ok();
     }
 
+    /// <summary>
+    /// Assign a product to a brand. 
+    /// </summary>
+    /// <param name="productId">The ID of the product.</param>
+    /// <param name="brandId">The ID of the brand.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpPut("assign")]
@@ -82,6 +108,10 @@ public class BrandController : Controller
         return Ok();
     }
 
+    /// <summary>
+    /// Unassign a product from a brand. 
+    /// </summary>
+    /// <param name="productId">The ID of the product.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpPut("unassign")]
