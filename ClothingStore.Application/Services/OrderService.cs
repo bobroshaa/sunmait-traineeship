@@ -142,11 +142,17 @@ public class OrderService : IOrderService
 
     private void ValidateOrderStatusChanging(Status currentStatus, Status newStatus)
     {
-        if (newStatus - currentStatus != 1)
+        switch (currentStatus)
         {
+            case Status.InReview:
+                if (newStatus == Status.InDelivery) return;
+                break;
+            case Status.InDelivery:
+                if (newStatus == Status.Completed) return;
+                break;
+        }
             throw new IncorrectParamsException(string.Format(ExceptionMessages.IncorrectStatusChanging,
                 Enum.GetName(currentStatus), Enum.GetName(newStatus)));
-        }
     }
 
     private void ValidateProducts(List<int> productsIds, List<int> existingProductsIds)
