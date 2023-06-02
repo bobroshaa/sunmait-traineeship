@@ -69,7 +69,7 @@ public class OrderService : IOrderService
     public async Task Update(int id, Status orderStatus)
     {
         var order = await GetOrderById(id);
-        ValidateOrderStatus(orderStatus, order.CurrentStatus);
+        ValidateOrderStatus(order.CurrentStatus, orderStatus);
         _orderRepository.Update(order, orderStatus);
         await _orderRepository.Save();
     }
