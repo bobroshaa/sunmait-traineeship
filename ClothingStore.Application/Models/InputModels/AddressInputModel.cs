@@ -24,6 +24,7 @@ public class AddressInputModel
     [StringLength(50, ErrorMessage = "The AddressLine1 field must not exceed 50 characters.")]
     public string AddressLine1 { get; set; }
     
+    [Required(ErrorMessage = "The AddressLine2 field is required.")]
     [StringLength(20, ErrorMessage = "The AddressLine2 field must not exceed 20 characters.")]
-    public string? AddressLine2 { get; set; }
+    public string AddressLine2 { get; set; }
 }

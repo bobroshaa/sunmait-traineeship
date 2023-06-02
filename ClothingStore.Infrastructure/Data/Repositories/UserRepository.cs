@@ -59,11 +59,11 @@ public class UserRepository : IUserRepository
 
     public async Task<bool> DoesEmailExist(string email)
     {
-        return !await _dbContext.Users.AnyAsync(u => u.Email == email && u.IsActive);
+        return await _dbContext.Users.AnyAsync(u => u.Email == email && u.IsActive);
     }
 
     public async Task<bool> DoesPhoneNumberExist(string phone)
     {
-        return !await _dbContext.Users.AnyAsync(u => u.Phone == phone && u.IsActive);
+        return await _dbContext.Users.AnyAsync(u => u.Phone == phone && u.IsActive);
     }
 }
