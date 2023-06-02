@@ -23,12 +23,7 @@ public class CategoryService : ICategoryService
 
     public async Task<CategoryViewModel?> GetById(int id)
     {
-        var category = await _categoryRepository.GetById(id);
-        if (category is null)
-        {
-            throw new EntityNotFoundException(string.Format(ExceptionMessages.CategoryNotFound, id));
-        }
-
+        var category = await GetCategoryById(id);
         return _mapper.Map<CategoryViewModel>(category);
     }
 
@@ -41,46 +36,50 @@ public class CategoryService : ICategoryService
 
     public async Task Update(int id, CategoryInputModel categoryInputModel)
     {
-        var category = await _categoryRepository.GetById(id);
-        if (category is null)
-        {
-            throw new EntityNotFoundException(string.Format(ExceptionMessages.CategoryNotFound, id));
-        }
-
+        var category = await GetCategoryById(id);
         await _categoryRepository.Update(category, _mapper.Map<Category>(categoryInputModel));
     }
 
     public async Task Delete(int id)
     {
+        var category = await GetCategoryById(id);
+        await _categoryRepository.Delete(category);
+    }
+
+    public async Task LinkCategoryToSection(int sectionId, int categoryId)
+    {
+        await ValidateSection(sectionId);
+        await GetCategoryById(categoryId);
+        await ValidateSectionCategoryExistence(sectionId, categoryId);
+        await _categoryRepository.LinkCategoryToSection(new SectionCategory
+            { SectionID = sectionId, CategoryID = categoryId });
+    }
+
+    private async Task<Category> GetCategoryById(int id)
+    {
         var category = await _categoryRepository.GetById(id);
         if (category is null)
         {
             throw new EntityNotFoundException(string.Format(ExceptionMessages.CategoryNotFound, id));
         }
 
-        await _categoryRepository.Delete(category);
+        return category;
     }
 
-    public async Task LinkCategoryToSection(int sectionId, int categoryId)
+    private async Task ValidateSection(int id)
     {
-        var section = await _sectionRepository.GetById(sectionId);
+        var section = await _sectionRepository.GetById(id);
         if (section is null)
         {
-            throw new EntityNotFoundException(string.Format(ExceptionMessages.SectionNotFound, sectionId));
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.SectionNotFound, id));
         }
+    }
 
-        var category = await _categoryRepository.GetById(categoryId);
-        if (category is null)
-        {
-            throw new EntityNotFoundException(string.Format(ExceptionMessages.CategoryNotFound, categoryId));
-        }
-
+    private async Task ValidateSectionCategoryExistence(int sectionId, int categoryId)
+    {
         if (await _categoryRepository.DoesSectionCategoryExist(sectionId, categoryId))
         {
             throw new IncorrectParamsException(string.Format(ExceptionMessages.CategoryLinked, categoryId, sectionId));
         }
-
-        await _categoryRepository.LinkCategoryToSection(new SectionCategory
-            { SectionID = sectionId, CategoryID = categoryId });
     }
 }

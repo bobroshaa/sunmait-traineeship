@@ -33,30 +33,16 @@ public class ProductService : IProductService
 
     public async Task<ProductViewModel?> GetById(int id)
     {
-        var product = await _productRepository.GetById(id);
-        if (product is null)
-        {
-            throw new EntityNotFoundException(string.Format(ExceptionMessages.ProductNotFound, id));
-        }
-
+        var product = await GetProductById(id);
         return _mapper.Map<ProductViewModel>(product);
     }
 
     public async Task<int> Add(ProductInputModel productInputModel)
     {
-        var sectionCategory = await _categoryRepository.GetSectionCategoryById(productInputModel.SectionCategoryID);
-        if (sectionCategory is null)
-        {
-            throw new IncorrectParamsException(string.Format(ExceptionMessages.SectionCategoryNotFound, productInputModel.SectionCategoryID));
-        }
-
+        await ValidateSectionCategory(productInputModel.SectionCategoryID);
         if (productInputModel.BrandID is not null)
         {
-            var brand = await _brandRepository.GetById((int)productInputModel.BrandID);
-            if (brand is null)
-            {
-                throw new EntityNotFoundException(string.Format(ExceptionMessages.BrandNotFound, (int)productInputModel.BrandID));
-            }
+            await ValidateBrand((int)productInputModel.BrandID);
         }
 
         var product = _mapper.Map<Product>(productInputModel);
@@ -66,25 +52,11 @@ public class ProductService : IProductService
 
     public async Task Update(int id, ProductInputModel productInputModel)
     {
-        var product = await _productRepository.GetById(id);
-        if (product is null)
-        {
-            throw new EntityNotFoundException(string.Format(ExceptionMessages.ProductNotFound, id));
-        }
-
-        var sectionCategory = await _categoryRepository.GetById(productInputModel.SectionCategoryID);
-        if (sectionCategory is null)
-        {
-            throw new IncorrectParamsException(string.Format(ExceptionMessages.SectionCategoryNotFound, productInputModel.SectionCategoryID));
-        }
-
+        var product = await GetProductById(id);
+        await ValidateSectionCategory(productInputModel.SectionCategoryID);
         if (productInputModel.BrandID is not null)
         {
-            var brand = await _brandRepository.GetById((int)productInputModel.BrandID);
-            if (brand is null)
-            {
-                throw new EntityNotFoundException(string.Format(ExceptionMessages.BrandNotFound, (int)productInputModel.BrandID));
-            }
+            await ValidateBrand((int)productInputModel.BrandID);
         }
 
         await _productRepository.Update(product, _mapper.Map<Product>(productInputModel));
@@ -92,70 +64,83 @@ public class ProductService : IProductService
 
     public async Task Delete(int id)
     {
-        var product = await _productRepository.GetById(id);
-        if (product is null)
-        {
-            throw new EntityNotFoundException(string.Format(ExceptionMessages.ProductNotFound, id));
-        }
-
+        var product = await GetProductById(id);
         await _productRepository.Delete(product);
     }
 
     public async Task<List<ProductViewModel>> GetProductsBySectionAndCategory(int sectionId, int categoryId)
     {
-        var section = await _sectionRepository.GetById(sectionId);
-        if (section is null)
-        {
-            throw new EntityNotFoundException(string.Format(ExceptionMessages.SectionNotFound, sectionId));
-        }
-
-        var category = await _categoryRepository.GetById(categoryId);
-        if (category is null)
-        {
-            throw new EntityNotFoundException(string.Format(ExceptionMessages.CategoryNotFound, categoryId));
-        }
-
+        await ValidateSection(sectionId);
+        await ValidateCategory(categoryId);
         return _mapper.Map<List<ProductViewModel>>(
             await _productRepository.GetProductsBySectionAndCategory(sectionId, categoryId));
     }
 
     public async Task<List<ProductViewModel>> GetProductsByBrand(int brandId)
     {
-        var brand = await _brandRepository.GetById(brandId);
-        if (brand is null)
-        {
-            throw new EntityNotFoundException(string.Format(ExceptionMessages.BrandNotFound, brandId));
-        }
-
+        await ValidateBrand(brandId);
         return _mapper.Map<List<ProductViewModel>>(
             await _productRepository.GetProductsByBrand(brandId));
     }
-    
+
     public async Task AssignToBrand(int productId, int brandId)
     {
-        var product = await _productRepository.GetById(productId);
-        if (product is null)
-        {
-            throw new EntityNotFoundException(string.Format(ExceptionMessages.ProductNotFound, productId));
-        }
-        
-        var brand = await _brandRepository.GetById(brandId);
-        if (brand is null)
-        {
-            throw new EntityNotFoundException(string.Format(ExceptionMessages.BrandNotFound, brandId));
-        }
-
+        var product = await GetProductById(productId);
+        await ValidateBrand(brandId);
         await _productRepository.AssignToBrand(product, brandId);
     }
 
     public async Task UnassignFromBrand(int productId)
     {
-        var product = await _productRepository.GetById(productId);
+        var product = await GetProductById(productId);
+        await _productRepository.UnassignFromBrand(product);
+    }
+
+    private async Task<Product> GetProductById(int id)
+    {
+        var product = await _productRepository.GetById(id);
         if (product is null)
         {
-            throw new EntityNotFoundException(string.Format(ExceptionMessages.ProductNotFound, productId));
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.ProductNotFound, id));
         }
-        
-        await _productRepository.UnassignFromBrand(product);
+
+        return product;
+    }
+
+    private async Task ValidateSectionCategory(int sectionCategoryId)
+    {
+        var sectionCategory = await _categoryRepository.GetSectionCategoryById(sectionCategoryId);
+        if (sectionCategory is null)
+        {
+            throw new IncorrectParamsException(string.Format(ExceptionMessages.SectionCategoryNotFound,
+                sectionCategoryId));
+        }
+    }
+
+    private async Task ValidateBrand(int brandId)
+    {
+        var brand = await _brandRepository.GetById(brandId);
+        if (brand is null)
+        {
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.BrandNotFound, brandId));
+        }
+    }
+
+    private async Task ValidateCategory(int id)
+    {
+        var category = await _categoryRepository.GetById(id);
+        if (category is null)
+        {
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.CategoryNotFound, id));
+        }
+    }
+
+    private async Task ValidateSection(int id)
+    {
+        var section = await _sectionRepository.GetById(id);
+        if (section is null)
+        {
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.SectionNotFound, id));
+        }
     }
 }

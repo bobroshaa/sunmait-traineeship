@@ -29,25 +29,16 @@ public class UserService : IUserService
 
     public async Task<UserViewModel?> GetById(int id)
     {
-        var user = await _userRepository.GetById(id);
-        if (user is null)
-        {
-            throw new EntityNotFoundException(string.Format(ExceptionMessages.UserNotFound, id));
-        }
-
+        var user = await GetUserById(id);
         return _mapper.Map<UserViewModel>(user);
     }
 
     public async Task<int> Add(UserInputModel userInputModel)
     {
-        if (await _userRepository.DoesEmailExist(userInputModel.Email))
+        await ValidateEmail(userInputModel.Email);
+        if (userInputModel.Phone is not null)
         {
-            throw new NotUniqueException(string.Format(ExceptionMessages.EmailIsNotUnique, userInputModel.Email));
-        }
-
-        if (userInputModel.Phone is not null && await _userRepository.DoesPhoneNumberExist(userInputModel.Phone))
-        {
-            throw new NotUniqueException(string.Format(ExceptionMessages.PhoneNumberIsNotUnique, userInputModel.Phone));
+            await ValidatePhoneNumber(userInputModel.Phone);
         }
 
         var user = _mapper.Map<UserAccount>(userInputModel);
@@ -59,20 +50,11 @@ public class UserService : IUserService
 
     public async Task Update(int id, UserInputModel userInputModel)
     {
-        var user = await _userRepository.GetById(id);
-        if (user is null)
+        var user = await GetUserById(id);
+        await ValidateEmail(userInputModel.Email);
+        if (userInputModel.Phone is not null)
         {
-            throw new EntityNotFoundException(string.Format(ExceptionMessages.UserNotFound, id));
-        }
-
-        if (await _userRepository.DoesEmailExist(userInputModel.Email))
-        {
-            throw new NotUniqueException(string.Format(ExceptionMessages.EmailIsNotUnique, userInputModel.Email));
-        }
-
-        if (userInputModel.Phone is not null && await _userRepository.DoesPhoneNumberExist(userInputModel.Phone))
-        {
-            throw new NotUniqueException(string.Format(ExceptionMessages.PhoneNumberIsNotUnique, userInputModel.Phone));
+            await ValidatePhoneNumber(userInputModel.Phone);
         }
 
         await _userRepository.Update(user, _mapper.Map<UserAccount>(userInputModel));
@@ -80,23 +62,13 @@ public class UserService : IUserService
 
     public async Task Delete(int id)
     {
-        var user = await _userRepository.GetById(id);
-        if (user is null)
-        {
-            throw new EntityNotFoundException(string.Format(ExceptionMessages.UserNotFound, id));
-        }
-
+        var user = await GetUserById(id);
         await _userRepository.Delete(user);
     }
 
     public async Task UpdateAddress(int userId, AddressInputModel addressInputModel)
     {
-        var user = await _userRepository.GetById(userId);
-        if (user is null)
-        {
-            throw new EntityNotFoundException(string.Format(ExceptionMessages.UserNotFound, userId));
-        }
-
+        await GetUserById(userId);
         var mappedAddress = _mapper.Map<Address>(addressInputModel);
         mappedAddress.UserID = userId;
         var address = await _userRepository.GetAddressByUserId(userId);
@@ -112,12 +84,7 @@ public class UserService : IUserService
 
     public async Task UpdateRole(int id, Role role)
     {
-        var user = await _userRepository.GetById(id);
-        if (user is null)
-        {
-            throw new EntityNotFoundException(string.Format(ExceptionMessages.UserNotFound, id));
-        }
-
+        var user = await GetUserById(id);
         await _userRepository.UpdateRole(user, role);
     }
 
@@ -125,5 +92,32 @@ public class UserService : IUserService
     {
         var hashValue = SHA256.HashData(Encoding.UTF8.GetBytes(str));
         return Convert.ToHexString(hashValue);
+    }
+
+    private async Task<UserAccount> GetUserById(int id)
+    {
+        var user = await _userRepository.GetById(id);
+        if (user is null)
+        {
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.UserNotFound, id));
+        }
+
+        return user;
+    }
+
+    private async Task ValidateEmail(string email)
+    {
+        if (await _userRepository.DoesEmailExist(email))
+        {
+            throw new NotUniqueException(string.Format(ExceptionMessages.EmailIsNotUnique, email));
+        }
+    }
+
+    private async Task ValidatePhoneNumber(string phoneNumber)
+    {
+        if (await _userRepository.DoesPhoneNumberExist(phoneNumber))
+        {
+            throw new NotUniqueException(string.Format(ExceptionMessages.PhoneNumberIsNotUnique, phoneNumber));
+        }
     }
 }

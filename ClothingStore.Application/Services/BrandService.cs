@@ -26,22 +26,13 @@ public class BrandService : IBrandService
 
     public async Task<BrandViewModel?> GetById(int id)
     {
-        var brand = await _brandRepository.GetById(id);
-        if (brand is null)
-        {
-            throw new EntityNotFoundException(string.Format(ExceptionMessages.BrandNotFound, id));
-        }
-
+        var brand = await GetBrandById(id);
         return _mapper.Map<BrandViewModel>(brand);
     }
 
     public async Task<int> Add(BrandInputModel brandInputModel)
     {
-        if (await _brandRepository.DoesBrandExist(brandInputModel.Name))
-        {
-            throw new NotUniqueException(string.Format(ExceptionMessages.BrandAlreadyExists, brandInputModel.Name));
-        }
-
+        await ValidateBrand(brandInputModel.Name);
         var brand = _mapper.Map<Brand>(brandInputModel);
         await _brandRepository.Add(brand);
         return brand.ID;
@@ -49,21 +40,17 @@ public class BrandService : IBrandService
 
     public async Task Update(int id, BrandInputModel brandInputModel)
     {
-        var brand = await _brandRepository.GetById(id);
-        if (brand is null)
-        {
-            throw new EntityNotFoundException(string.Format(ExceptionMessages.BrandNotFound, id));
-        }
-
-        if (await _brandRepository.DoesBrandExist(brandInputModel.Name))
-        {
-            throw new NotUniqueException(string.Format(ExceptionMessages.BrandAlreadyExists, brandInputModel.Name));
-        }
-
+        var brand = await GetBrandById(id);
         await _brandRepository.Update(brand, _mapper.Map<Brand>(brandInputModel));
     }
 
     public async Task Delete(int id)
+    {
+        var brand = await GetBrandById(id);
+        await _brandRepository.Delete(brand);
+    }
+
+    private async Task<Brand> GetBrandById(int id)
     {
         var brand = await _brandRepository.GetById(id);
         if (brand is null)
@@ -71,6 +58,14 @@ public class BrandService : IBrandService
             throw new EntityNotFoundException(string.Format(ExceptionMessages.BrandNotFound, id));
         }
 
-        await _brandRepository.Delete(brand);
+        return brand;
+    }
+    
+    private async Task ValidateBrand(string name)
+    {
+        if (await _brandRepository.DoesBrandExist(name))
+        {
+            throw new NotUniqueException(string.Format(ExceptionMessages.BrandAlreadyExists, name));
+        }
     }
 }

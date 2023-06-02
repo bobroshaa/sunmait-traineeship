@@ -32,23 +32,13 @@ public class OrderService : IOrderService
 
     public async Task<List<OrderItemViewModel>> GetOrderItemsByOrderId(int orderId)
     {
-        var order = await _orderRepository.GetById(orderId);
-        if (order is null)
-        {
-            throw new EntityNotFoundException(string.Format(ExceptionMessages.OrderNotFound, orderId));
-        }
-
+        await GetOrderById(orderId);
         return _mapper.Map<List<OrderItemViewModel>>(await _orderRepository.GetAllByOrderId(orderId));
     }
 
     public async Task<OrderViewModel?> GetById(int id)
     {
-        var order = await _orderRepository.GetById(id);
-        if (order is null)
-        {
-            throw new EntityNotFoundException(string.Format(ExceptionMessages.OrderNotFound, id));
-        }
-
+        var order = await GetOrderById(id);
         return _mapper.Map<OrderViewModel>(order);
     }
 
@@ -57,28 +47,19 @@ public class OrderService : IOrderService
         var order = _mapper.Map<CustomerOrder>(orderInputModel);
         order.CurrentStatus = Status.InReview;
         var productsIds = orderInputModel.Products.Select(p => p.ProductID).ToList();
-        var user = await _userRepository.GetById(order.UserID);
-        if (user is null)
-        {
-            throw new EntityNotFoundException(string.Format(ExceptionMessages.UserNotFound, order.UserID));
-        }
-
+        await ValidateUser(order.UserID);
         var products = await _productRepository.GetProductsByIds(productsIds);
         if (products.Count < productsIds.Count)
         {
             // TODO: Find id of non-existing product
+            // TODO: Add validation in private method
             throw new EntityNotFoundException(ExceptionMessages.ProductNotFound);
         }
 
         order.OrderProducts = new List<OrderProduct>();
         foreach (var item in orderInputModel.Products)
         {
-            if (item.Quantity > products[item.ProductID].Quantity)
-            {
-                throw new IncorrectParamsException(string.Format(ExceptionMessages.ProductQuantityIsNotAvailable,
-                    item.Quantity, products[item.ProductID].Quantity));
-            }
-
+            ValidateProductQuantity(item.Quantity, products[item.ProductID].Quantity);
             order.OrderProducts.Add(_mapper.Map<OrderProduct>(item));
             products[item.ProductID].Quantity -= item.Quantity;
         }
@@ -90,23 +71,20 @@ public class OrderService : IOrderService
 
     public async Task Update(int id, Status orderStatus)
     {
-        var order = await _orderRepository.GetById(id);
-        if (order is null)
-        {
-            throw new EntityNotFoundException(string.Format(ExceptionMessages.OrderNotFound, id));
-        }
-
-        if (orderStatus - order.CurrentStatus != 1)
-        {
-            throw new IncorrectParamsException(string.Format(ExceptionMessages.IncorrectStatus,
-                Enum.GetName(order.CurrentStatus), Enum.GetName(orderStatus)));
-        }
-
+        var order = await GetOrderById(id);
+        ValidateOrderStatus(orderStatus, order.CurrentStatus);
         _orderRepository.Update(order, orderStatus);
         await _orderRepository.Save();
     }
 
     public async Task Delete(int id)
+    {
+        var order = await GetOrderById(id);
+        _orderRepository.Delete(order);
+        await _orderRepository.Save();
+    }
+
+    private async Task<CustomerOrder> GetOrderById(int id)
     {
         var order = await _orderRepository.GetById(id);
         if (order is null)
@@ -114,7 +92,33 @@ public class OrderService : IOrderService
             throw new EntityNotFoundException(string.Format(ExceptionMessages.OrderNotFound, id));
         }
 
-        _orderRepository.Delete(order);
-        await _orderRepository.Save();
+        return order;
+    }
+
+    private async Task ValidateUser(int id)
+    {
+        var user = await _userRepository.GetById(id);
+        if (user is null)
+        {
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.UserNotFound, id));
+        }
+    }
+    
+    private void ValidateProductQuantity(int requiredQuantity, int availableQuantity)
+    {
+        if (requiredQuantity > availableQuantity)
+        {
+            throw new IncorrectParamsException(string.Format(ExceptionMessages.ProductQuantityIsNotAvailable,
+                requiredQuantity, availableQuantity));
+        }
+    }
+    
+    private void ValidateOrderStatus(Status currentStatus, Status newStatus)
+    {
+        if (newStatus - currentStatus != 1)
+        {
+            throw new IncorrectParamsException(string.Format(ExceptionMessages.IncorrectStatus,
+                Enum.GetName(currentStatus), Enum.GetName(newStatus)));
+        }
     }
 }
