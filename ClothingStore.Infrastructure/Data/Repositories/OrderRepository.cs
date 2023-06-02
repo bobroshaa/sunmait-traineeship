@@ -22,7 +22,7 @@ public class OrderRepository : IOrderRepository
     public async Task<List<OrderProduct>> GetAllByOrderId(int orderId)
     {
         return await _dbContext.OrderProducts
-            .Where(op => op.OrderID == orderId && op.IsActive)
+            .Where(op => op.OrderID == orderId)
             .ToListAsync();
     }
     public async Task<CustomerOrder?> GetById(int id)
