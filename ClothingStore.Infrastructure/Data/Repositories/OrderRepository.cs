@@ -1,5 +1,4 @@
-﻿using System.Reflection.Metadata.Ecma335;
-using ClothingStore.Domain.Entities;
+﻿using ClothingStore.Domain.Entities;
 using ClothingStore.Domain.Enums;
 using ClothingStore.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -22,10 +21,12 @@ public class OrderRepository : IOrderRepository
 
     public async Task<List<OrderProduct>> GetAllByOrderId(int orderId)
     {
-        return await _dbContext.OrderProducts
+        return await _dbContext
+            .OrderProducts
             .Where(op => op.OrderID == orderId)
             .ToListAsync();
     }
+
     public async Task<CustomerOrder?> GetById(int id)
     {
         return await _dbContext.CustomerOrders.FirstOrDefaultAsync(co => co.ID == id && co.IsActive);
@@ -36,7 +37,7 @@ public class OrderRepository : IOrderRepository
         order.OrderDate = DateTime.UtcNow;
         _dbContext.CustomerOrders.Add(order);
     }
-    
+
     public void Update(CustomerOrder updatingOrder, Status orderStatus)
     {
         updatingOrder.CurrentStatus = orderStatus;
@@ -46,7 +47,7 @@ public class OrderRepository : IOrderRepository
     {
         order.IsActive = false;
     }
-    
+
     public async Task SaveChanges()
     {
         await _dbContext.SaveChangesAsync();
@@ -54,7 +55,11 @@ public class OrderRepository : IOrderRepository
 
     public async Task<List<OrderHistory>> GetOrderHistoryByOrderId(int orderId)
     {
-        return await _dbContext.OrderHistories.Where(oh => oh.OrderID == orderId).ToListAsync();
+        return await _dbContext
+            .OrderHistories
+            .Where(oh => oh.OrderID == orderId)
+            .OrderByDescending(oh => oh.Date)
+            .ToListAsync();
     }
 
     public async Task<bool> DoesOrderExist(int id)

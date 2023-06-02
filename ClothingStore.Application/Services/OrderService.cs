@@ -93,8 +93,10 @@ public class OrderService : IOrderService
     public async Task<List<OrderHistoryViewModel>> GetOrderHistoryByOrderId(int orderId)
     {
         await ValidateOrder(orderId);
-        return _mapper.Map<List<OrderHistoryViewModel>>(await _orderRepository.GetOrderHistoryByOrderId(orderId))
-            .OrderByDescending(o => o.Date).ToList();
+        
+        return _mapper
+            .Map<List<OrderHistoryViewModel>>(await _orderRepository.GetOrderHistoryByOrderId(orderId))
+            .ToList();
     }
 
     private async Task<CustomerOrder> GetOrderById(int id)
