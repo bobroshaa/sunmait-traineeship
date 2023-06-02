@@ -42,6 +42,7 @@ public class BrandService : IBrandService
     public async Task Update(int id, BrandInputModel brandInputModel)
     {
         var brand = await GetBrandById(id);
+        await ValidateBrand(brandInputModel.Name);
         brand.Name = brandInputModel.Name;
         await _brandRepository.Save();
     }
