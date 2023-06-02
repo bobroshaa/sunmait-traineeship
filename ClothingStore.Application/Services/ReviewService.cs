@@ -15,7 +15,10 @@ public class ReviewService : IReviewService
     private readonly IUserRepository _userRepository;
     private readonly IMapper _mapper;
 
-    public ReviewService(IMapper mapper, IReviewRepository reviewRepository, IProductRepository productRepository,
+    public ReviewService(
+        IMapper mapper, 
+        IReviewRepository reviewRepository, 
+        IProductRepository productRepository,
         IUserRepository userRepository)
     {
         _mapper = mapper;
@@ -27,38 +30,52 @@ public class ReviewService : IReviewService
     public async Task<ReviewViewModel?> GetById(int id)
     {
         var review = await GetReviewById(id);
-        return _mapper.Map<ReviewViewModel>(review);
+        var mappedReview = _mapper.Map<ReviewViewModel>(review);
+        
+        return mappedReview;
     }
 
     public async Task<List<ReviewViewModel>> GetReviewsByProductId(int productId)
     {
         await ValidateProduct(productId);
-        return _mapper.Map<List<ReviewViewModel>>(await _reviewRepository.GetReviewByProductId(productId));
+
+        var reviews = await _reviewRepository.GetReviewByProductId(productId);
+        var mappedReviews = _mapper.Map<List<ReviewViewModel>>(reviews);
+        
+        return mappedReviews;
     }
 
     public async Task<int> Add(ReviewInputModel reviewInputModel)
     {
         await ValidateProduct(reviewInputModel.ProductID);
         await ValidateUser(reviewInputModel.UserID);
+        
         var review = _mapper.Map<Review>(reviewInputModel);
+        
         _reviewRepository.Add(review);
+        
         await _reviewRepository.SaveChanges();
+        
         return review.ID;
     }
 
     public async Task Update(int id, ReviewInputModel reviewInputModel)
     {
         var review = await GetReviewById(id);
+        
         review.Comment = reviewInputModel.Comment;
         review.Rating = reviewInputModel.Rating;
         review.ReviewTitle = reviewInputModel.ReviewTitle;
+        
         await _reviewRepository.SaveChanges();
     }
 
     public async Task Delete(int id)
     {
         var review = await GetReviewById(id);
+        
         _reviewRepository.Delete(review);
+        
         await _reviewRepository.SaveChanges();
     }
     

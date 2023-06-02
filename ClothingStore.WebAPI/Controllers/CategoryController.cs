@@ -26,6 +26,7 @@ public class CategoryController : Controller
     public async Task<ActionResult<CategoryViewModel>> GetCategory([FromRoute] int id)
     {
         var category = await _categoryService.GetById(id);
+        
         return Ok(category);
     }
 
@@ -33,7 +34,7 @@ public class CategoryController : Controller
     /// Add a new category.
     /// </summary>
     /// <param name="categoryInputModel">The input model of the new category.</param>
-    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPost]
     public async Task<ActionResult<int>> AddCategory([FromBody] CategoryInputModel categoryInputModel)
@@ -44,7 +45,8 @@ public class CategoryController : Controller
         }
 
         var id = await _categoryService.Add(categoryInputModel);
-        return CreatedAtAction(nameof(GetCategory), new { id }, id);
+        
+        return Ok(id);
     }
 
     /// <summary>
@@ -64,6 +66,7 @@ public class CategoryController : Controller
         }
 
         await _categoryService.Update(id, categoryInputModel);
+        
         return Ok();
     }
 
@@ -77,6 +80,7 @@ public class CategoryController : Controller
     public async Task<ActionResult> DeleteCategory([FromRoute] int id)
     {
         await _categoryService.Delete(id);
+        
         return Ok();
     }
     
@@ -96,6 +100,7 @@ public class CategoryController : Controller
         }
 
         await _categoryService.LinkCategoryToSection(sectionId, categoryId);
+        
         return Ok();
     }
 }

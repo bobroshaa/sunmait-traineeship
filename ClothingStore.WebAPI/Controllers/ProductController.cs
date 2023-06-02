@@ -24,6 +24,7 @@ public class ProductController : Controller
     public async Task<ActionResult<List<ProductViewModel>>> GetAllProducts()
     {
         var products = await _productService.GetAll();
+
         return Ok(products);
     }
 
@@ -37,6 +38,7 @@ public class ProductController : Controller
     public async Task<ActionResult<ProductViewModel>> GetProduct([FromRoute] int id)
     {
         var product = await _productService.GetById(id);
+
         return Ok(product);
     }
 
@@ -44,7 +46,7 @@ public class ProductController : Controller
     /// Add a new product.
     /// </summary>
     /// <param name="productInputModel">The input model of the product.</param>
-    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPost]
     public async Task<ActionResult<int>> AddProduct([FromBody] ProductInputModel productInputModel)
@@ -55,7 +57,8 @@ public class ProductController : Controller
         }
 
         var id = await _productService.Add(productInputModel);
-        return CreatedAtAction(nameof(GetProduct), new { id }, id);
+
+        return Ok(id);
     }
 
     /// <summary>
@@ -75,6 +78,7 @@ public class ProductController : Controller
         }
 
         await _productService.Update(id, productInputModel);
+
         return Ok();
     }
 
@@ -88,6 +92,7 @@ public class ProductController : Controller
     public async Task<ActionResult> DeleteProduct([FromRoute] int id)
     {
         await _productService.Delete(id);
+
         return Ok();
     }
 
@@ -103,6 +108,7 @@ public class ProductController : Controller
         [FromRoute] int categoryId)
     {
         var products = await _productService.GetProductsBySectionAndCategory(sectionId, categoryId);
+
         return Ok(products);
     }
 
@@ -116,6 +122,7 @@ public class ProductController : Controller
     public async Task<ActionResult<List<ProductViewModel>>> GetProductsByBrand([FromRoute] int brandId)
     {
         var products = await _productService.GetProductsByBrand(brandId);
+
         return Ok(products);
     }
 }

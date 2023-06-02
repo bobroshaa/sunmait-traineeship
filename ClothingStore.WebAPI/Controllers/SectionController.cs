@@ -24,6 +24,7 @@ public class SectionController : Controller
     public async Task<ActionResult<List<SectionViewModel>>> GetAllSections()
     {
         var sections = await _sectionService.GetAll();
+        
         return Ok(sections);
     }
 
@@ -37,6 +38,7 @@ public class SectionController : Controller
     public async Task<ActionResult<SectionViewModel>> GetSection([FromRoute] int id)
     {
         var section = await _sectionService.GetById(id);
+        
         return Ok(section);
     }
 
@@ -44,7 +46,7 @@ public class SectionController : Controller
     /// Add a new section.
     /// </summary>
     /// <param name="sectionInputModel">The input model of the new section.</param>
-    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPost]
     public async Task<ActionResult<int>> AddSection([FromBody] SectionInputModel sectionInputModel)
@@ -55,7 +57,8 @@ public class SectionController : Controller
         }
 
         var id = await _sectionService.Add(sectionInputModel);
-        return CreatedAtAction(nameof(GetSection), new { id }, id);
+        
+        return Ok(id);
     }
 
     /// <summary>
@@ -76,6 +79,7 @@ public class SectionController : Controller
         }
 
         await _sectionService.Update(id, sectionInputModel);
+        
         return Ok();
     }
     
@@ -89,6 +93,7 @@ public class SectionController : Controller
     public async Task<ActionResult> DeleteSection([FromRoute] int id)
     {
         await _sectionService.Delete(id);
+        
         return Ok();
     }
 }

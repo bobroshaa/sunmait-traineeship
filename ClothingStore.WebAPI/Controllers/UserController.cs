@@ -25,6 +25,7 @@ public class UserController : Controller
     public async Task<ActionResult<List<UserViewModel>>> GetAllUsers()
     {
         var users = await _userService.GetAll();
+        
         return Ok(users);
     }
 
@@ -38,6 +39,7 @@ public class UserController : Controller
     public async Task<ActionResult<UserViewModel>> GetUser([FromRoute] int id)
     {
         var user = await _userService.GetById(id);
+        
         return Ok(user);
     }
 
@@ -45,7 +47,7 @@ public class UserController : Controller
     /// Add a new user.
     /// </summary>
     /// <param name="userInputModel">The input model of the new user.</param>
-    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPost]
     public async Task<ActionResult<int>> AddUser([FromBody] UserInputModel userInputModel)
@@ -56,7 +58,8 @@ public class UserController : Controller
         }
 
         var id = await _userService.Add(userInputModel);
-        return CreatedAtAction(nameof(GetUser), new { id }, id);
+        
+        return Ok(id);
     }
 
     /// <summary>
@@ -76,6 +79,7 @@ public class UserController : Controller
         }
 
         await _userService.Update(id, userInputModel);
+        
         return Ok();
     }
 
@@ -89,6 +93,7 @@ public class UserController : Controller
     public async Task<ActionResult> DeleteUser([FromRoute] int id)
     {
         await _userService.Delete(id);
+        
         return Ok();
     }
 
@@ -110,6 +115,7 @@ public class UserController : Controller
         }
 
         await _userService.UpdateAddress(userId, addressInputModel);
+        
         return Ok();
     }
 
@@ -125,6 +131,7 @@ public class UserController : Controller
     public async Task<ActionResult> UpdateRole([FromRoute] int userId, [FromBody] Role role)
     {
         await _userService.UpdateRole(userId, role);
+        
         return Ok();
     }
 }

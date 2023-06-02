@@ -16,7 +16,8 @@ public class UserRepository : IUserRepository
 
     public async Task<List<UserAccount>> GetAll()
     {
-        return await _dbContext.Users
+        return await _dbContext
+            .Users
             .Where(u => u.IsActive)
             .Include(u => u.Address)
             .ToListAsync();
@@ -66,7 +67,7 @@ public class UserRepository : IUserRepository
     {
         return await _dbContext.Users.AnyAsync(u => u.Phone == phone && u.IsActive);
     }
-    
+
     public async Task<bool> DoesUserExist(int id)
     {
         return await _dbContext.Users.AnyAsync(u => u.ID == id && u.IsActive);

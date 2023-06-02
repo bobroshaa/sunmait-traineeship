@@ -26,6 +26,7 @@ public class ReviewController : Controller
     public async Task<ActionResult<ReviewViewModel>> GetReview([FromRoute] int id)
     {
         var review = await _reviewService.GetById(id);
+        
         return Ok(review);
     }
 
@@ -38,6 +39,7 @@ public class ReviewController : Controller
     public async Task<ActionResult<List<ReviewViewModel>>> GetReviewsByProductId([FromRoute] int productId)
     {
         var reviews = await _reviewService.GetReviewsByProductId(productId);
+        
         return Ok(reviews);
     }
 
@@ -45,7 +47,7 @@ public class ReviewController : Controller
     /// Add a new review.
     /// </summary>
     /// <param name="reviewInputModel">The input model of the new review.</param>
-    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPost]
     public async Task<ActionResult<int>> AddReview([FromBody] ReviewInputModel reviewInputModel)
@@ -56,7 +58,8 @@ public class ReviewController : Controller
         }
 
         var id = await _reviewService.Add(reviewInputModel);
-        return CreatedAtAction(nameof(GetReview), new { id }, id);
+        
+        return Ok(id);
     }
 
     /// <summary>
@@ -76,6 +79,7 @@ public class ReviewController : Controller
         }
 
         await _reviewService.Update(id, reviewInputModel);
+        
         return Ok();
     }
 
@@ -89,6 +93,7 @@ public class ReviewController : Controller
     public async Task<ActionResult> DeleteReview([FromRoute] int id)
     {
         await _reviewService.Delete(id);
+        
         return Ok();
     }
 }

@@ -24,13 +24,18 @@ public class UserService : IUserService
 
     public async Task<List<UserViewModel>> GetAll()
     {
-        return _mapper.Map<List<UserViewModel>>(await _userRepository.GetAll());
+        var users = await _userRepository.GetAll();
+        var mappedUsers = _mapper.Map<List<UserViewModel>>(users);
+
+        return mappedUsers;
     }
 
     public async Task<UserViewModel?> GetById(int id)
     {
         var user = await GetUserById(id);
-        return _mapper.Map<UserViewModel>(user);
+        var mappedUser = _mapper.Map<UserViewModel>(user);
+
+        return mappedUser;
     }
 
     public async Task<int> Add(UserInputModel userInputModel)
@@ -42,16 +47,21 @@ public class UserService : IUserService
         }
 
         var user = _mapper.Map<UserAccount>(userInputModel);
+        
         user.Password = GetHashSha256(user.Password);
         user.Role = Role.Customer;
+        
         _userRepository.Add(user);
+        
         await _userRepository.Save();
+        
         return user.ID;
     }
 
     public async Task Update(int id, UserInputModel userInputModel)
     {
         var user = await GetUserById(id);
+        
         await ValidateEmail(userInputModel.Email);
         if (userInputModel.Phone is not null)
         {
@@ -62,13 +72,16 @@ public class UserService : IUserService
         user.Email = userInputModel.Email;
         user.FirstName = userInputModel.FirstName;
         user.LastName = userInputModel.LastName;
+        
         await _userRepository.Save();
     }
 
     public async Task Delete(int id)
     {
         var user = await GetUserById(id);
+        
         _userRepository.Delete(user);
+        
         await _userRepository.Save();
     }
 
@@ -76,12 +89,17 @@ public class UserService : IUserService
     {
         await ValidateUser(userId);
         ValidateCountry(addressInputModel.Country);
+        
         var address = await _userRepository.GetAddressByUserId(userId);
+        
         if (address is null)
         {
             var mappedAddress = _mapper.Map<Address>(addressInputModel);
+        
             mappedAddress.UserID = userId;
+            
             _userRepository.AddAddress(mappedAddress);
+            
             await _userRepository.Save();
         }
         else
@@ -92,6 +110,7 @@ public class UserService : IUserService
             address.Postcode = addressInputModel.Postcode;
             address.AddressLine1 = addressInputModel.AddressLine1;
             address.AddressLine2 = addressInputModel.AddressLine2;
+            
             await _userRepository.Save();
         }
     }
@@ -99,14 +118,18 @@ public class UserService : IUserService
     public async Task UpdateRole(int id, Role role)
     {
         var user = await GetUserById(id);
+       
         ValidateRole(role);
+        
         _userRepository.UpdateRole(user, role);
+        
         await _userRepository.Save();
     }
 
     private string GetHashSha256(string str)
     {
         var hashValue = SHA256.HashData(Encoding.UTF8.GetBytes(str));
+    
         return Convert.ToHexString(hashValue);
     }
 

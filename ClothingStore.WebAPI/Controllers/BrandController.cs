@@ -10,12 +10,12 @@ namespace ClothingStore.WebAPI.Controllers;
 public class BrandController : Controller
 {
     private readonly IBrandService _brandService;
-    private readonly IProductService _productServise;
+    private readonly IProductService _productService;
 
     public BrandController(IBrandService brandService, IProductService productService)
     {
         _brandService = brandService;
-        _productServise = productService;
+        _productService = productService;
     }
     
     /// <summary>
@@ -26,6 +26,7 @@ public class BrandController : Controller
     public async Task<ActionResult<List<BrandViewModel>>> GetAllBrands()
     {
         var brands = await _brandService.GetAll();
+        
         return Ok(brands);
     }
     
@@ -40,6 +41,7 @@ public class BrandController : Controller
     public async Task<ActionResult<BrandViewModel>> GetBrand([FromRoute] int id)
     {
         var brand = await _brandService.GetById(id);
+        
         return Ok(brand);
     }
 
@@ -47,7 +49,7 @@ public class BrandController : Controller
     /// Add a new brand.
     /// </summary>
     /// <param name="brandInputModel">The input model of the new brand.</param>
-    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPost]
     public async Task<ActionResult<int>> AddBrand([FromBody] BrandInputModel brandInputModel)
@@ -58,7 +60,8 @@ public class BrandController : Controller
         }
 
         var id = await _brandService.Add(brandInputModel);
-        return CreatedAtAction(nameof(GetBrand), new { id }, id);
+        
+        return Ok(id);
     }
 
     /// <summary>
@@ -78,6 +81,7 @@ public class BrandController : Controller
         }
 
         await _brandService.Update(id, brandInputModel);
+        
         return Ok();
     }
 
@@ -91,6 +95,7 @@ public class BrandController : Controller
     public async Task<ActionResult> DeleteBrand([FromRoute] int id)
     {
         await _brandService.Delete(id);
+        
         return Ok();
     }
 
@@ -104,7 +109,8 @@ public class BrandController : Controller
     [HttpPut("assign")]
     public async Task<ActionResult> AssignToBrand([FromQuery] int productId, [FromQuery] int brandId)
     {
-        await _productServise.AssignToBrand(productId, brandId);
+        await _productService.AssignToBrand(productId, brandId);
+        
         return Ok();
     }
 
@@ -117,7 +123,8 @@ public class BrandController : Controller
     [HttpPut("unassign")]
     public async Task<ActionResult> UnassignFromBrand([FromQuery] int productId)
     {
-        await _productServise.UnassignFromBrand(productId);
+        await _productService.UnassignFromBrand(productId);
+        
         return Ok();
     }
 }

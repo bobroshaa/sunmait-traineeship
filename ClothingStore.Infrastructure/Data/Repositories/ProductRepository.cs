@@ -42,8 +42,10 @@ public class ProductRepository : IProductRepository
 
     public async Task<List<Product>> GetProductsBySectionAndCategory(int sectionId, int categoryId)
     {
-        return await _dbContext.Products.Where(p =>
-                p.IsActive && p.SectionCategory.CategoryID == categoryId && p.SectionCategory.SectionID == sectionId)
+        return await _dbContext
+            .Products
+            .Where(p => p.IsActive && p.SectionCategory.CategoryID == categoryId &&
+                        p.SectionCategory.SectionID == sectionId)
             .ToListAsync();
     }
 
@@ -54,7 +56,8 @@ public class ProductRepository : IProductRepository
 
     public async Task<Dictionary<int, Product>> GetProductsByIds(List<int> productIds)
     {
-        var products = await _dbContext.Products
+        var products = await _dbContext
+            .Products
             .Where(p => productIds.Contains(p.ID))
             .ToListAsync();
         return products.ToDictionary(keySelector: p => p.ID, elementSelector: p => p);

@@ -21,34 +21,46 @@ public class SectionService : ISectionService
     
     public async Task<List<SectionViewModel>> GetAll()
     {
-        return _mapper.Map<List<SectionViewModel>>(await _sectionRepository.GetAll());
+        var sections = await _sectionRepository.GetAll();
+        var mappedSections = _mapper.Map<List<SectionViewModel>>(sections);
+
+        return mappedSections;
     }
 
     public async Task<SectionViewModel?> GetById(int id)
     {
         var section = await GetSectionById(id);
-        return _mapper.Map<SectionViewModel>(section);
+        var mappedSection = _mapper.Map<SectionViewModel>(section);
+
+        return mappedSection;
     }
     
     public async Task<int> Add(SectionInputModel sectionInputModel)
     {
         var section = _mapper.Map<Section>(sectionInputModel);
+        
         _sectionRepository.Add(section);
+        
         await _sectionRepository.SaveChanges();
+        
         return section.ID;
     }
 
     public async Task Update(int id, SectionInputModel sectionInputModel)
     {
         var section = await GetSectionById(id);
+      
         section.Name = sectionInputModel.Name;
+        
         await _sectionRepository.SaveChanges();
     }
     
     public async Task Delete(int id)
     {
         var section = await GetSectionById(id);
+        
         _sectionRepository.Delete(section);
+        
         await _sectionRepository.SaveChanges();
     }
     

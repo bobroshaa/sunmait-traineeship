@@ -26,6 +26,7 @@ public class OrderController : Controller
     public async Task<ActionResult<List<OrderViewModel>>> GetAllOrders()
     {
         var orders = await _orderService.GetAll();
+        
         return Ok(orders);
     }
 
@@ -39,6 +40,7 @@ public class OrderController : Controller
     public async Task<ActionResult<List<OrderItemViewModel>>> GetOrderItemsByOrder(int orderId)
     {
         var orderItems = await _orderService.GetOrderItemsByOrderId(orderId);
+        
         return Ok(orderItems);
     }
 
@@ -52,6 +54,7 @@ public class OrderController : Controller
     public async Task<ActionResult<OrderViewModel>> GetOrder([FromRoute] int id)
     {
         var order = await _orderService.GetById(id);
+        
         return Ok(order);
     }
 
@@ -59,7 +62,7 @@ public class OrderController : Controller
     /// Add a new order with items.
     /// </summary>
     /// <param name="orderInputModel">The input model of the new order.</param>
-    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPost]
     public async Task<ActionResult<int>> AddOrder([FromBody] OrderInputModel orderInputModel)
@@ -70,7 +73,8 @@ public class OrderController : Controller
         }
 
         var id = await _orderService.Add(orderInputModel);
-        return CreatedAtAction(nameof(GetOrder), new { id }, id);
+        
+        return Ok(id);
     }
 
     /// <summary>
@@ -90,6 +94,7 @@ public class OrderController : Controller
         }
 
         await _orderService.Update(id, orderStatus);
+        
         return Ok();
     }
 
@@ -103,6 +108,7 @@ public class OrderController : Controller
     public async Task<ActionResult> DeleteOrder([FromRoute] int id)
     {
         await _orderService.Delete(id);
+        
         return Ok();
     }
     
@@ -116,6 +122,7 @@ public class OrderController : Controller
     public async Task<ActionResult<List<OrderHistory>>> GetOrderHistory([FromRoute] int id)
     {
         var order = await _orderService.GetOrderHistoryByOrderId(id);
+        
         return Ok(order);
     }
 }

@@ -16,7 +16,10 @@ public class OrderService : IOrderService
     private readonly IUserRepository _userRepository;
     private readonly IMapper _mapper;
 
-    public OrderService(IMapper mapper, IOrderRepository orderRepository, IProductRepository productRepository,
+    public OrderService(
+        IMapper mapper, 
+        IOrderRepository orderRepository, 
+        IProductRepository productRepository,
         IUserRepository userRepository)
     {
         _mapper = mapper;
@@ -27,66 +30,92 @@ public class OrderService : IOrderService
 
     public async Task<List<OrderViewModel>> GetAll()
     {
-        return _mapper.Map<List<OrderViewModel>>(await _orderRepository.GetAll());
+        var orders = await _orderRepository.GetAll();
+        var mappedOrders = _mapper.Map<List<OrderViewModel>>(orders);
+
+        return mappedOrders;
     }
 
     public async Task<List<OrderItemViewModel>> GetOrderItemsByOrderId(int orderId)
     {
         await ValidateOrder(orderId);
-        return _mapper.Map<List<OrderItemViewModel>>(await _orderRepository.GetAllByOrderId(orderId));
+
+        var orderItems = await _orderRepository.GetAllByOrderId(orderId);
+        var mappedOrderItems = _mapper.Map<List<OrderItemViewModel>>(orderItems);
+        
+        return mappedOrderItems;
     }
 
     public async Task<OrderViewModel?> GetById(int id)
     {
         var order = await GetOrderById(id);
-        return _mapper.Map<OrderViewModel>(order);
+        var mappedOrder = _mapper.Map<OrderViewModel>(order);
+        
+        return mappedOrder;
     }
 
     public async Task<int> Add(OrderInputModel orderInputModel)
     {
         var order = _mapper.Map<CustomerOrder>(orderInputModel);
-        order.CurrentStatus = Status.InReview;
-        await ValidateUser(order.UserID);
+        
         var productsIds = orderInputModel.Products.Select(p => p.ProductID).ToList();
+        
         var productsDictionary = await _productRepository.GetProductsByIds(productsIds);
+        
         ValidateProducts(productsIds, productsDictionary.Keys.ToList());
+        await ValidateUser(order.UserID);
+        
         order.OrderProducts = new List<OrderProduct>();
+        
         foreach (var item in orderInputModel.Products)
         {
             if (productsDictionary.TryGetValue(item.ProductID, out var productToUpdate))
             {
                 ValidateProductQuantity(item.ProductID, item.Quantity, productToUpdate.Quantity);
+                
                 var mappedItem = _mapper.Map<OrderProduct>(item);
+                
                 mappedItem.Price = productToUpdate.Price;
                 mappedItem.OrderID = order.ID;
+                
                 order.OrderProducts.Add(mappedItem);
+                
                 productToUpdate.Quantity -= item.Quantity;
             }
             else
             {
-                throw new EntityNotFoundException(string.Format(ExceptionMessages.ProductNotFound,
-                    item.ProductID));
+                throw new EntityNotFoundException(
+                    string.Format(ExceptionMessages.ProductNotFound, item.ProductID));
             }
         }
 
+        order.CurrentStatus = Status.InReview;
+
         _orderRepository.Add(order);
+
         await _orderRepository.SaveChanges();
+        
         return order.ID;
     }
 
     public async Task Update(int id, Status orderStatus)
     {
         var order = await GetOrderById(id);
+        
         ValidateOrderStatus(orderStatus);
         ValidateOrderStatusChanging(order.CurrentStatus, orderStatus);
+        
         _orderRepository.Update(order, orderStatus);
+        
         await _orderRepository.SaveChanges();
     }
 
     public async Task Delete(int id)
     {
         var order = await GetOrderById(id);
+        
         _orderRepository.Delete(order);
+        
         await _orderRepository.SaveChanges();
     }
 
@@ -94,9 +123,10 @@ public class OrderService : IOrderService
     {
         await ValidateOrder(orderId);
         
-        return _mapper
-            .Map<List<OrderHistoryViewModel>>(await _orderRepository.GetOrderHistoryByOrderId(orderId))
-            .ToList();
+        var orderHistory = await _orderRepository.GetOrderHistoryByOrderId(orderId);
+        var mappedOrderHistory = _mapper.Map<List<OrderHistoryViewModel>>(orderHistory);
+
+        return mappedOrderHistory;
     }
 
     private async Task<CustomerOrder> GetOrderById(int id)
@@ -130,8 +160,8 @@ public class OrderService : IOrderService
     {
         if (requiredQuantity > availableQuantity)
         {
-            throw new IncorrectParamsException(string.Format(ExceptionMessages.ProductQuantityIsNotAvailable,
-                requiredQuantity, productId, availableQuantity));
+            throw new IncorrectParamsException(
+                string.Format(ExceptionMessages.ProductQuantityIsNotAvailable, requiredQuantity, productId, availableQuantity));
         }
     }
 
@@ -155,8 +185,8 @@ public class OrderService : IOrderService
                 break;
         }
 
-        throw new IncorrectParamsException(string.Format(ExceptionMessages.IncorrectStatusChanging,
-            Enum.GetName(currentStatus), Enum.GetName(newStatus)));
+        throw new IncorrectParamsException(
+            string.Format(ExceptionMessages.IncorrectStatusChanging, Enum.GetName(currentStatus), Enum.GetName(newStatus)));
     }
 
     private void ValidateProducts(List<int> productsIds, List<int> existingProductsIds)

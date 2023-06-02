@@ -16,8 +16,12 @@ public class ProductService : IProductService
     private readonly IBrandRepository _brandRepository;
     private readonly IMapper _mapper;
 
-    public ProductService(IMapper mapper, IProductRepository productRepository, ISectionRepository sectionRepository,
-        ICategoryRepository categoryRepository, IBrandRepository brandRepository)
+    public ProductService(
+        IMapper mapper,
+        IProductRepository productRepository,
+        ISectionRepository sectionRepository,
+        ICategoryRepository categoryRepository,
+        IBrandRepository brandRepository)
     {
         _mapper = mapper;
         _productRepository = productRepository;
@@ -28,13 +32,18 @@ public class ProductService : IProductService
 
     public async Task<List<ProductViewModel>> GetAll()
     {
-        return _mapper.Map<List<ProductViewModel>>(await _productRepository.GetAll());
+        var products = await _productRepository.GetAll();
+        var mappedProducts = _mapper.Map<List<ProductViewModel>>(products);
+        
+        return mappedProducts;
     }
 
     public async Task<ProductViewModel?> GetById(int id)
     {
         var product = await GetProductById(id);
-        return _mapper.Map<ProductViewModel>(product);
+        var mappedProduct = _mapper.Map<ProductViewModel>(product);
+        
+        return mappedProduct;
     }
 
     public async Task<int> Add(ProductInputModel productInputModel)
@@ -46,14 +55,18 @@ public class ProductService : IProductService
         }
 
         var product = _mapper.Map<Product>(productInputModel);
+
         _productRepository.Add(product);
+
         await _productRepository.SaveChanges();
+
         return product.ID;
     }
 
     public async Task Update(int id, ProductInputModel productInputModel)
     {
         var product = await GetProductById(id);
+
         await ValidateSectionCategory(productInputModel.SectionCategoryID);
         if (productInputModel.BrandID is not null)
         {
@@ -67,13 +80,16 @@ public class ProductService : IProductService
         product.ImageURL = productInputModel.ImageURL;
         product.SectionCategoryID = productInputModel.SectionCategoryID;
         product.BrandID = productInputModel.BrandID;
+
         await _productRepository.SaveChanges();
     }
 
     public async Task Delete(int id)
     {
         var product = await GetProductById(id);
+
         _productRepository.Delete(product);
+
         await _productRepository.SaveChanges();
     }
 
@@ -81,29 +97,40 @@ public class ProductService : IProductService
     {
         await ValidateSection(sectionId);
         await ValidateCategory(categoryId);
-        return _mapper.Map<List<ProductViewModel>>(
-            await _productRepository.GetProductsBySectionAndCategory(sectionId, categoryId));
+
+        var products = await _productRepository.GetProductsBySectionAndCategory(sectionId, categoryId);
+        var mappedProducts = _mapper.Map<List<ProductViewModel>>(products);
+        
+        return mappedProducts;
     }
 
     public async Task<List<ProductViewModel>> GetProductsByBrand(int brandId)
     {
         await ValidateBrand(brandId);
-        return _mapper.Map<List<ProductViewModel>>(
-            await _productRepository.GetProductsByBrand(brandId));
+
+        var products = await _productRepository.GetProductsByBrand(brandId);
+        var mappedProducts = _mapper.Map<List<ProductViewModel>>(products);
+
+        return mappedProducts;
     }
 
     public async Task AssignToBrand(int productId, int brandId)
     {
         var product = await GetProductById(productId);
+
         await ValidateBrand(brandId);
+
         _productRepository.AssignToBrand(product, brandId);
+
         await _productRepository.SaveChanges();
     }
 
     public async Task UnassignFromBrand(int productId)
     {
         var product = await GetProductById(productId);
+
         _productRepository.UnassignFromBrand(product);
+
         await _productRepository.SaveChanges();
     }
 
@@ -122,8 +149,8 @@ public class ProductService : IProductService
     {
         if (!await _categoryRepository.DoesSectionCategoryExist(sectionCategoryId))
         {
-            throw new IncorrectParamsException(string.Format(ExceptionMessages.SectionCategoryNotFound,
-                sectionCategoryId));
+            throw new IncorrectParamsException(
+                string.Format(ExceptionMessages.SectionCategoryNotFound, sectionCategoryId));
         }
     }
 

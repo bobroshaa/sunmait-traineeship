@@ -14,7 +14,10 @@ public class CategoryService : ICategoryService
     private readonly ISectionRepository _sectionRepository;
     private readonly IMapper _mapper;
 
-    public CategoryService(IMapper mapper, ICategoryRepository categoryRepository, ISectionRepository sectionRepository)
+    public CategoryService(
+        IMapper mapper,
+        ICategoryRepository categoryRepository,
+        ISectionRepository sectionRepository)
     {
         _mapper = mapper;
         _categoryRepository = categoryRepository;
@@ -24,29 +27,38 @@ public class CategoryService : ICategoryService
     public async Task<CategoryViewModel?> GetById(int id)
     {
         var category = await GetCategoryById(id);
-        return _mapper.Map<CategoryViewModel>(category);
+        var mappedCategory = _mapper.Map<CategoryViewModel>(category);
+        
+        return mappedCategory;
     }
 
     public async Task<int> Add(CategoryInputModel categoryInputModel)
     {
         var category = _mapper.Map<Category>(categoryInputModel);
+
         _categoryRepository.Add(category);
+
         await _categoryRepository.SaveChanges();
+
         return category.ID;
     }
 
     public async Task Update(int id, CategoryInputModel categoryInputModel)
     {
         var category = await GetCategoryById(id);
+
         category.Name = categoryInputModel.Name;
         category.ParentCategoryID = categoryInputModel.ParentCategoryID;
+
         await _categoryRepository.SaveChanges();
     }
 
     public async Task Delete(int id)
     {
         var category = await GetCategoryById(id);
+
         _categoryRepository.Delete(category);
+
         await _categoryRepository.SaveChanges();
     }
 
@@ -55,8 +67,11 @@ public class CategoryService : ICategoryService
         await ValidateSection(sectionId);
         await ValidateCategory(categoryId);
         await ValidateSectionCategoryExistence(sectionId, categoryId);
-        _categoryRepository.LinkCategoryToSection(new SectionCategory
-            { SectionID = sectionId, CategoryID = categoryId });
+
+        var sectionCategory = new SectionCategory { SectionID = sectionId, CategoryID = categoryId };
+
+        _categoryRepository.LinkCategoryToSection(sectionCategory);
+
         await _categoryRepository.SaveChanges();
     }
 
@@ -70,7 +85,7 @@ public class CategoryService : ICategoryService
 
         return category;
     }
-    
+
     private async Task ValidateCategory(int id)
     {
         if (!await _categoryRepository.DoesCategoryExist(id))
