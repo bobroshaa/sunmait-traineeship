@@ -5,9 +5,8 @@ public static class ExceptionMessages
     public static readonly string BrandNotFound = "Brand with id {0} does not exist.";
     public static readonly string ProductNotFound = "Product with id {0} does not exist.";
     public static readonly string OrderNotFound = "Order with id {0} does not exist.";
-    public static readonly string OrderItemNotFound = "Order item with id {0} does not exist";
     public static readonly string CategoryNotFound = "Category with id {0} does not exist.";
-    public static readonly string ProductQuantityIsNotAvailable = "Quantity of product with id {0} is not available. Available quantity {1}.";
+    public static readonly string ProductQuantityIsNotAvailable = "Quantity {0} of product with id {1} is not available. Available quantity {2}.";
     public static readonly string SectionNotFound = "Section with id {0} does not exist.";
     public static readonly string BrandAlreadyExists = "Brand with name {0} already exists.";
     public static readonly string UserNotFound = "User with id {0} does not exist.";

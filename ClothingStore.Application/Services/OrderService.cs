@@ -55,7 +55,7 @@ public class OrderService : IOrderService
         {
             if (productsDictionary.TryGetValue(item.ProductID, out var productToUpdate))
             {
-                ValidateProductQuantity(item.Quantity, productToUpdate.Quantity);
+                ValidateProductQuantity(item.ProductID, item.Quantity, productToUpdate.Quantity);
                 var mappedItem = _mapper.Map<OrderProduct>(item);
                 mappedItem.Price = productToUpdate.Price;
                 mappedItem.OrderID = order.ID;
@@ -114,7 +114,7 @@ public class OrderService : IOrderService
             throw new EntityNotFoundException(string.Format(ExceptionMessages.UserNotFound, id));
         }
     }
-    
+
     private async Task ValidateOrder(int id)
     {
         if (!await _orderRepository.DoesOrderExist(id))
@@ -123,12 +123,12 @@ public class OrderService : IOrderService
         }
     }
 
-    private void ValidateProductQuantity(int requiredQuantity, int availableQuantity)
+    private void ValidateProductQuantity(int productId, int requiredQuantity, int availableQuantity)
     {
         if (requiredQuantity > availableQuantity)
         {
             throw new IncorrectParamsException(string.Format(ExceptionMessages.ProductQuantityIsNotAvailable,
-                requiredQuantity, availableQuantity));
+                requiredQuantity, productId, availableQuantity));
         }
     }
 
@@ -139,7 +139,7 @@ public class OrderService : IOrderService
             throw new IncorrectParamsException(string.Format(ExceptionMessages.StatusNotFound, status));
         }
     }
-    
+
     private void ValidateOrderStatusChanging(Status currentStatus, Status newStatus)
     {
         if (newStatus - currentStatus != 1)
