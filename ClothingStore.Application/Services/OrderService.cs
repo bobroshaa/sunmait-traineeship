@@ -48,17 +48,25 @@ public class OrderService : IOrderService
         order.CurrentStatus = Status.InReview;
         await ValidateUser(order.UserID);
         var productsIds = orderInputModel.Products.Select(p => p.ProductID).ToList();
-        var products = await _productRepository.GetProductsByIds(productsIds);
-        ValidateProducts(productsIds, products.Keys.ToList());
+        var productsDictionary = await _productRepository.GetProductsByIds(productsIds);
+        ValidateProducts(productsIds, productsDictionary.Keys.ToList());
         order.OrderProducts = new List<OrderProduct>();
         foreach (var item in orderInputModel.Products)
         {
-            ValidateProductQuantity(item.Quantity, products[item.ProductID].Quantity);
-            var mappedItem = _mapper.Map<OrderProduct>(item);
-            mappedItem.Price = products[item.ProductID].Price;
-            mappedItem.OrderID = order.ID;
-            order.OrderProducts.Add(mappedItem);
-            products[item.ProductID].Quantity -= item.Quantity;
+            if (productsDictionary.TryGetValue(item.ProductID, out var productToUpdate))
+            {
+                ValidateProductQuantity(item.Quantity, productToUpdate.Quantity);
+                var mappedItem = _mapper.Map<OrderProduct>(item);
+                mappedItem.Price = productToUpdate.Price;
+                mappedItem.OrderID = order.ID;
+                order.OrderProducts.Add(mappedItem);
+                productToUpdate.Quantity -= item.Quantity;
+            }
+            else
+            {
+                throw new EntityNotFoundException(string.Format(ExceptionMessages.ProductNotFound,
+                    item.ProductID));
+            }
         }
 
         _orderRepository.Add(order);
