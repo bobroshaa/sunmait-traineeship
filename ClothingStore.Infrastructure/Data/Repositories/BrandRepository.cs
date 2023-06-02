@@ -42,4 +42,9 @@ public class BrandRepository : IBrandRepository
     {
         return await _dbContext.Brands.AnyAsync(b => b.Name == name && b.IsActive);
     }
+    
+    public async Task<bool> DoesBrandExist(int id)
+    {
+        return await _dbContext.Brands.AnyAsync(b => b.ID == id && b.IsActive);
+    }
 }

@@ -14,4 +14,5 @@ public interface IProductRepository
     Task<Dictionary<int, Product>> GetProductsByIds(List<int> productIds);
     void AssignToBrand(Product product, int brandId);
     void UnassignFromBrand(Product product);
+    Task<bool> DoesProductExist(int id);
 }

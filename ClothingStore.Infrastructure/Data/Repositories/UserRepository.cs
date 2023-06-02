@@ -66,4 +66,9 @@ public class UserRepository : IUserRepository
     {
         return await _dbContext.Users.AnyAsync(u => u.Phone == phone && u.IsActive);
     }
+    
+    public async Task<bool> DoesUserExist(int id)
+    {
+        return await _dbContext.Users.AnyAsync(u => u.ID == id && u.IsActive);
+    }
 }

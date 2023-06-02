@@ -1,4 +1,5 @@
-﻿using ClothingStore.Domain.Entities;
+﻿using System.Reflection.Metadata.Ecma335;
+using ClothingStore.Domain.Entities;
 using ClothingStore.Domain.Enums;
 using ClothingStore.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -54,5 +55,10 @@ public class OrderRepository : IOrderRepository
     public async Task<List<OrderHistory>> GetOrderHistoryByOrderId(int orderId)
     {
         return await _dbContext.OrderHistories.Where(oh => oh.OrderID == orderId).ToListAsync();
+    }
+
+    public async Task<bool> DoesOrderExist(int id)
+    {
+        return await _dbContext.CustomerOrders.AnyAsync(o => o.ID == id && o.IsActive);
     }
 }

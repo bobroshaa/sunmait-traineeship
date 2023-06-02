@@ -37,4 +37,9 @@ public class SectionRepository : ISectionRepository
     {
         section.IsActive = false;
     }
+
+    public async Task<bool> DoesSectionExist(int id)
+    {
+        return await _dbContext.Sections.AnyAsync(s => s.ID == id && s.IsActive);
+    }
 }

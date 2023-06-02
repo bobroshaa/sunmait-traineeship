@@ -76,8 +76,7 @@ public class ReviewService : IReviewService
     
     private async Task ValidateProduct(int id)
     {
-        var product = await _productRepository.GetById(id);
-        if (product is null)
+        if (!await _productRepository.DoesProductExist(id))
         {
             throw new EntityNotFoundException(string.Format(ExceptionMessages.ProductNotFound, id));
         }
@@ -85,8 +84,7 @@ public class ReviewService : IReviewService
     
     private async Task ValidateUser(int id)
     {
-        var user = await _userRepository.GetById(id);
-        if (user is null)
+        if (!await _userRepository.DoesUserExist(id))
         {
             throw new EntityNotFoundException(string.Format(ExceptionMessages.UserNotFound, id));
         }

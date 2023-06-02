@@ -13,4 +13,5 @@ public interface IOrderRepository
     void Delete(CustomerOrder order);
     Task Save();
     Task<List<OrderHistory>> GetOrderHistoryByOrderId(int orderId);
+    Task<bool> DoesOrderExist(int id);
 }

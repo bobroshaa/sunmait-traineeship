@@ -15,4 +15,5 @@ public interface IUserRepository
     Task<Address?> GetAddressByUserId(int userId);
     Task<bool> DoesEmailExist(string email);
     Task<bool> DoesPhoneNumberExist(string phone);
+    Task<bool> DoesUserExist(int id);
 }

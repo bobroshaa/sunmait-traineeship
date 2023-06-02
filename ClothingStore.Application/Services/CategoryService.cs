@@ -53,7 +53,7 @@ public class CategoryService : ICategoryService
     public async Task LinkCategoryToSection(int sectionId, int categoryId)
     {
         await ValidateSection(sectionId);
-        await GetCategoryById(categoryId);
+        await ValidateCategory(categoryId);
         await ValidateSectionCategoryExistence(sectionId, categoryId);
         _categoryRepository.LinkCategoryToSection(new SectionCategory
             { SectionID = sectionId, CategoryID = categoryId });
@@ -70,11 +70,18 @@ public class CategoryService : ICategoryService
 
         return category;
     }
+    
+    private async Task ValidateCategory(int id)
+    {
+        if (!await _categoryRepository.DoesCategoryExist(id))
+        {
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.CategoryNotFound, id));
+        }
+    }
 
     private async Task ValidateSection(int id)
     {
-        var section = await _sectionRepository.GetById(id);
-        if (section is null)
+        if (!await _sectionRepository.DoesSectionExist(id))
         {
             throw new EntityNotFoundException(string.Format(ExceptionMessages.SectionNotFound, id));
         }

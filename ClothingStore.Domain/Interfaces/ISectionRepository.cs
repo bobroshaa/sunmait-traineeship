@@ -9,4 +9,5 @@ public interface ISectionRepository
     void Add(Section section);
     Task Save();
     void Delete(Section section);
+    Task<bool> DoesSectionExist(int id);
 }

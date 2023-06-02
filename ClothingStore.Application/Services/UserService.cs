@@ -74,7 +74,7 @@ public class UserService : IUserService
 
     public async Task UpdateAddress(int userId, AddressInputModel addressInputModel)
     {
-        await GetUserById(userId);
+        await ValidateUser(userId);
         ValidateCountry(addressInputModel.Country);
         var address = await _userRepository.GetAddressByUserId(userId);
         if (address is null)
@@ -150,6 +150,14 @@ public class UserService : IUserService
         if (await _userRepository.DoesPhoneNumberExist(phoneNumber))
         {
             throw new NotUniqueException(string.Format(ExceptionMessages.PhoneNumberIsNotUnique, phoneNumber));
+        }
+    }
+    
+    private async Task ValidateUser(int id)
+    {
+        if (!await _userRepository.DoesUserExist(id))
+        {
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.UserNotFound, id));
         }
     }
 }

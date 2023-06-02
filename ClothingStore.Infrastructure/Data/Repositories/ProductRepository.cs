@@ -87,4 +87,9 @@ public class ProductRepository : IProductRepository
     {
         product.BrandID = null;
     }
+
+    public async Task<bool> DoesProductExist(int id)
+    {
+        return await _dbContext.Products.AnyAsync(p => p.ID == id && p.IsActive);
+    }
 }

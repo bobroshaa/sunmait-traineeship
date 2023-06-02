@@ -120,8 +120,7 @@ public class ProductService : IProductService
 
     private async Task ValidateSectionCategory(int sectionCategoryId)
     {
-        var sectionCategory = await _categoryRepository.GetSectionCategoryById(sectionCategoryId);
-        if (sectionCategory is null)
+        if (!await _categoryRepository.DoesSectionCategoryExist(sectionCategoryId))
         {
             throw new IncorrectParamsException(string.Format(ExceptionMessages.SectionCategoryNotFound,
                 sectionCategoryId));
@@ -130,8 +129,7 @@ public class ProductService : IProductService
 
     private async Task ValidateBrand(int brandId)
     {
-        var brand = await _brandRepository.GetById(brandId);
-        if (brand is null)
+        if (!await _brandRepository.DoesBrandExist(brandId))
         {
             throw new EntityNotFoundException(string.Format(ExceptionMessages.BrandNotFound, brandId));
         }
@@ -139,8 +137,7 @@ public class ProductService : IProductService
 
     private async Task ValidateCategory(int id)
     {
-        var category = await _categoryRepository.GetById(id);
-        if (category is null)
+        if (!await _categoryRepository.DoesCategoryExist(id))
         {
             throw new EntityNotFoundException(string.Format(ExceptionMessages.CategoryNotFound, id));
         }
@@ -148,8 +145,7 @@ public class ProductService : IProductService
 
     private async Task ValidateSection(int id)
     {
-        var section = await _sectionRepository.GetById(id);
-        if (section is null)
+        if (!await _sectionRepository.DoesSectionExist(id))
         {
             throw new EntityNotFoundException(string.Format(ExceptionMessages.SectionNotFound, id));
         }

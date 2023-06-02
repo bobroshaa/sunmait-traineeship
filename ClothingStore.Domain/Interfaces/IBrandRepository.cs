@@ -10,4 +10,5 @@ public interface IBrandRepository
     Task Save();
     void Delete(Brand brand);
     Task<bool> DoesBrandExist(string name);
+    Task<bool> DoesBrandExist(int id);
 }

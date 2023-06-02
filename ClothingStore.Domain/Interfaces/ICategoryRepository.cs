@@ -11,4 +11,6 @@ public interface ICategoryRepository
     void LinkCategoryToSection(SectionCategory sectionCategory);
     Task<bool> DoesSectionCategoryExist(int sectionId, int categoryId);
     Task<SectionCategory?> GetSectionCategoryById(int id);
+    Task<bool> DoesCategoryExist(int id);
+    Task<bool> DoesSectionCategoryExist(int id);
 }

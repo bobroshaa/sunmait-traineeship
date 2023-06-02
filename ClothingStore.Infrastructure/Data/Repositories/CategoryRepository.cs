@@ -48,4 +48,14 @@ public class CategoryRepository : ICategoryRepository
     {
         return await _dbContext.SectionCategories.FirstOrDefaultAsync(sc => sc.ID == id);
     }
+    
+    public async Task<bool> DoesCategoryExist(int id)
+    {
+        return await _dbContext.Categories.AnyAsync(c => c.ID == id && c.IsActive);
+    }
+
+    public async Task<bool> DoesSectionCategoryExist(int id)
+    {
+        return await _dbContext.SectionCategories.AnyAsync(sc => sc.ID == id);
+    }
 }

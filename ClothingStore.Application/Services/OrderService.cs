@@ -1,5 +1,4 @@
-﻿using System.Security.Principal;
-using AutoMapper;
+﻿using AutoMapper;
 using ClothingStore.Application.Exceptions;
 using ClothingStore.Application.Interfaces;
 using ClothingStore.Application.Models.InputModels;
@@ -33,7 +32,7 @@ public class OrderService : IOrderService
 
     public async Task<List<OrderItemViewModel>> GetOrderItemsByOrderId(int orderId)
     {
-        await GetOrderById(orderId);
+        await ValidateOrder(orderId);
         return _mapper.Map<List<OrderItemViewModel>>(await _orderRepository.GetAllByOrderId(orderId));
     }
 
@@ -85,7 +84,7 @@ public class OrderService : IOrderService
 
     public async Task<List<OrderHistoryViewModel>> GetOrderHistoryByOrderId(int orderId)
     {
-        await GetOrderById(orderId);
+        await ValidateOrder(orderId);
         return _mapper.Map<List<OrderHistoryViewModel>>(await _orderRepository.GetOrderHistoryByOrderId(orderId));
     }
 
@@ -102,10 +101,17 @@ public class OrderService : IOrderService
 
     private async Task ValidateUser(int id)
     {
-        var user = await _userRepository.GetById(id);
-        if (user is null)
+        if (!await _userRepository.DoesUserExist(id))
         {
             throw new EntityNotFoundException(string.Format(ExceptionMessages.UserNotFound, id));
+        }
+    }
+    
+    private async Task ValidateOrder(int id)
+    {
+        if (!await _orderRepository.DoesOrderExist(id))
+        {
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.OrderNotFound, id));
         }
     }
 
