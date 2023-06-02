@@ -112,7 +112,7 @@ public class OrderController : Controller
     /// <param name="id">The ID of the order.</param>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderViewModel))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [HttpGet("{id}/history")]
+    [HttpGet("{id}/histories")]
     public async Task<ActionResult<List<OrderHistory>>> GetOrderHistory([FromRoute] int id)
     {
         var order = await _orderService.GetOrderHistoryByOrderId(id);
