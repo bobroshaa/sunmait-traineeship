@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Security.Principal;
+using AutoMapper;
 using ClothingStore.Application.Exceptions;
 using ClothingStore.Application.Interfaces;
 using ClothingStore.Application.Models.InputModels;
@@ -69,7 +70,8 @@ public class OrderService : IOrderService
     public async Task Update(int id, Status orderStatus)
     {
         var order = await GetOrderById(id);
-        ValidateOrderStatus(order.CurrentStatus, orderStatus);
+        ValidateOrderStatus(orderStatus);
+        ValidateOrderStatusChanging(order.CurrentStatus, orderStatus);
         _orderRepository.Update(order, orderStatus);
         await _orderRepository.Save();
     }
@@ -116,11 +118,19 @@ public class OrderService : IOrderService
         }
     }
 
-    private void ValidateOrderStatus(Status currentStatus, Status newStatus)
+    private void ValidateOrderStatus(Status status)
+    {
+        if (!Enum.IsDefined(status))
+        {
+            throw new IncorrectParamsException(string.Format(ExceptionMessages.StatusNotFound, status));
+        }
+    }
+    
+    private void ValidateOrderStatusChanging(Status currentStatus, Status newStatus)
     {
         if (newStatus - currentStatus != 1)
         {
-            throw new IncorrectParamsException(string.Format(ExceptionMessages.IncorrectStatus,
+            throw new IncorrectParamsException(string.Format(ExceptionMessages.IncorrectStatusChanging,
                 Enum.GetName(currentStatus), Enum.GetName(newStatus)));
         }
     }

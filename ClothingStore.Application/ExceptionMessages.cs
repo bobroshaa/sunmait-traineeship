@@ -16,5 +16,8 @@ public static class ExceptionMessages
     public static readonly string EmailIsNotUnique = "Email {0} is already occupied.";
     public static readonly string PhoneNumberIsNotUnique = "Phone number {0} is already occupied.";
     public static readonly string SectionCategoryNotFound = "The relation with id {0} between category and section does not exist.";
-    public static readonly string IncorrectStatus = "Status {0} can't be changed to status {1}";
+    public static readonly string IncorrectStatusChanging = "Status {0} can't be changed to status {1}.";
+    public static readonly string StatusNotFound = "Status {0} does not exist.";
+    public static readonly string RoleNotFound = "Role {0} does not exist.";
+    public static readonly string CountryNotFound = "Country {0} does not exist.";
 }

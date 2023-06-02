@@ -75,6 +75,7 @@ public class UserService : IUserService
     public async Task UpdateAddress(int userId, AddressInputModel addressInputModel)
     {
         await GetUserById(userId);
+        ValidateCountry(addressInputModel.Country);
         var address = await _userRepository.GetAddressByUserId(userId);
         if (address is null)
         {
@@ -98,6 +99,7 @@ public class UserService : IUserService
     public async Task UpdateRole(int id, Role role)
     {
         var user = await GetUserById(id);
+        ValidateRole(role);
         _userRepository.UpdateRole(user, role);
         await _userRepository.Save();
     }
@@ -124,6 +126,22 @@ public class UserService : IUserService
         if (await _userRepository.DoesEmailExist(email))
         {
             throw new NotUniqueException(string.Format(ExceptionMessages.EmailIsNotUnique, email));
+        }
+    }
+    
+    private void ValidateRole(Role role)
+    {
+        if (!Enum.IsDefined(role))
+        {
+            throw new IncorrectParamsException(string.Format(ExceptionMessages.RoleNotFound, role));
+        }
+    }
+    
+    private void ValidateCountry(Country country)
+    {
+        if (!Enum.IsDefined(country))
+        {
+            throw new IncorrectParamsException(string.Format(ExceptionMessages.CountryNotFound, country));
         }
     }
 
