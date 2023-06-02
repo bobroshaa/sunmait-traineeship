@@ -15,21 +15,12 @@ public class ProductRepository : IProductRepository
 
     public async Task<List<Product>> GetAll()
     {
-        return await _dbContext.Products
-            .Where(p => p.IsActive)
-            .Include(p => p.Brand)
-            .Include(p => p.SectionCategory.Category)
-            .Include(p => p.SectionCategory.Section)
-            .ToListAsync();
+        return await _dbContext.Products.Where(p => p.IsActive).ToListAsync();
     }
 
     public async Task<Product?> GetById(int id)
     {
-        var product = await _dbContext.Products
-            .Include(p => p.Brand)
-            .Include(p => p.SectionCategory.Category)
-            .Include(p => p.SectionCategory.Section)
-            .FirstOrDefaultAsync(p => p.ID == id && p.IsActive);
+        var product = await _dbContext.Products.FirstOrDefaultAsync(p => p.ID == id && p.IsActive);
         return product;
     }
 
@@ -51,23 +42,14 @@ public class ProductRepository : IProductRepository
 
     public async Task<List<Product>> GetProductsBySectionAndCategory(int sectionId, int categoryId)
     {
-        return await _dbContext.Products
-            .Include(p => p.Brand)
-            .Include(p => p.SectionCategory.Category)
-            .Include(p => p.SectionCategory.Section)
-            .Where(p => p.IsActive && p.SectionCategory.CategoryID == categoryId &&
-                        p.SectionCategory.SectionID == sectionId)
+        return await _dbContext.Products.Where(p =>
+                p.IsActive && p.SectionCategory.CategoryID == categoryId && p.SectionCategory.SectionID == sectionId)
             .ToListAsync();
     }
-    
+
     public async Task<List<Product>> GetProductsByBrand(int brandId)
     {
-        return await _dbContext.Products
-            .Include(p => p.Brand)
-            .Include(p => p.SectionCategory.Category)
-            .Include(p => p.SectionCategory.Section)
-            .Where(p => p.IsActive && p.BrandID == brandId)
-            .ToListAsync();
+        return await _dbContext.Products.Where(p => p.IsActive && p.BrandID == brandId).ToListAsync();
     }
 
     public async Task<Dictionary<int, Product>> GetProductsByIds(List<int> productIds)
@@ -77,7 +59,7 @@ public class ProductRepository : IProductRepository
             .ToListAsync();
         return products.ToDictionary(keySelector: p => p.ID, elementSelector: p => p);
     }
-    
+
     public void AssignToBrand(Product product, int brandId)
     {
         product.BrandID = brandId;

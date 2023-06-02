@@ -9,7 +9,6 @@ public class ProductViewModel
     public DateTime AddDate { get; set; }
     public int Quantity { get; set; }
     public string ImageURL { get; set; }
-    public string SectionName { get; set; }
-    public string CategoryName { get; set; }
-    public string BrandName { get; set; }
+    public int SectionCategoryId { get; set; }
+    public int? BrandId { get; set; }
 }
