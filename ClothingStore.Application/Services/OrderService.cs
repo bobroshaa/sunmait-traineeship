@@ -93,7 +93,8 @@ public class OrderService : IOrderService
     public async Task<List<OrderHistoryViewModel>> GetOrderHistoryByOrderId(int orderId)
     {
         await ValidateOrder(orderId);
-        return _mapper.Map<List<OrderHistoryViewModel>>(await _orderRepository.GetOrderHistoryByOrderId(orderId));
+        return _mapper.Map<List<OrderHistoryViewModel>>(await _orderRepository.GetOrderHistoryByOrderId(orderId))
+            .OrderByDescending(o => o.Date).ToList();
     }
 
     private async Task<CustomerOrder> GetOrderById(int id)
@@ -151,8 +152,9 @@ public class OrderService : IOrderService
                 if (newStatus == Status.Completed) return;
                 break;
         }
-            throw new IncorrectParamsException(string.Format(ExceptionMessages.IncorrectStatusChanging,
-                Enum.GetName(currentStatus), Enum.GetName(newStatus)));
+
+        throw new IncorrectParamsException(string.Format(ExceptionMessages.IncorrectStatusChanging,
+            Enum.GetName(currentStatus), Enum.GetName(newStatus)));
     }
 
     private void ValidateProducts(List<int> productsIds, List<int> existingProductsIds)
