@@ -1,6 +1,7 @@
 ﻿using ClothingStore.Application.Interfaces;
 using ClothingStore.Application.Models.InputModels;
 using ClothingStore.Application.Models.ViewModels;
+using ClothingStore.Domain.Entities;
 using ClothingStore.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 
@@ -103,5 +104,18 @@ public class OrderController : Controller
     {
         await _orderService.Delete(id);
         return Ok();
+    }
+    
+    /// <summary>
+    /// Get order history order by his ID.
+    /// </summary>
+    /// <param name="id">The ID of the order.</param>
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderViewModel))]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [HttpGet("{id}/history")]
+    public async Task<ActionResult<List<OrderHistory>>> GetOrderHistory([FromRoute] int id)
+    {
+        var order = await _orderService.GetOrderHistoryByOrderId(id);
+        return Ok(order);
     }
 }

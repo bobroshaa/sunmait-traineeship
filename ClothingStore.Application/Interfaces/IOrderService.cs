@@ -1,5 +1,6 @@
 ﻿using ClothingStore.Application.Models.InputModels;
 using ClothingStore.Application.Models.ViewModels;
+using ClothingStore.Domain.Entities;
 using ClothingStore.Domain.Enums;
 
 namespace ClothingStore.Application.Interfaces;
@@ -12,4 +13,5 @@ public interface IOrderService
     Task<int> Add(OrderInputModel order);
     Task Update(int id, Status orderStatus);
     Task Delete(int id);
+    Task<List<OrderHistoryViewModel>> GetOrderHistoryByOrderId(int orderId);
 }

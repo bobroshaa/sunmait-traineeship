@@ -50,4 +50,9 @@ public class OrderRepository : IOrderRepository
     {
         await _dbContext.SaveChangesAsync();
     }
+
+    public async Task<List<OrderHistory>> GetOrderHistoryByOrderId(int orderId)
+    {
+        return await _dbContext.OrderHistories.Where(oh => oh.OrderID == orderId).ToListAsync();
+    }
 }

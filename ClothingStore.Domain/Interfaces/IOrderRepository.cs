@@ -12,4 +12,5 @@ public interface IOrderRepository
     void Update(CustomerOrder updatingOrder, Status orderStatus);
     void Delete(CustomerOrder order);
     Task Save();
+    Task<List<OrderHistory>> GetOrderHistoryByOrderId(int orderId);
 }

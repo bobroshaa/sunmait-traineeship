@@ -84,6 +84,12 @@ public class OrderService : IOrderService
         await _orderRepository.Save();
     }
 
+    public async Task<List<OrderHistoryViewModel>> GetOrderHistoryByOrderId(int orderId)
+    {
+        await GetOrderById(orderId);
+        return _mapper.Map<List<OrderHistoryViewModel>>(await _orderRepository.GetOrderHistoryByOrderId(orderId));
+    }
+
     private async Task<CustomerOrder> GetOrderById(int id)
     {
         var order = await _orderRepository.GetById(id);
