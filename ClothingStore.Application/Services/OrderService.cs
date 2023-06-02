@@ -46,21 +46,18 @@ public class OrderService : IOrderService
     {
         var order = _mapper.Map<CustomerOrder>(orderInputModel);
         order.CurrentStatus = Status.InReview;
-        var productsIds = orderInputModel.Products.Select(p => p.ProductID).ToList();
         await ValidateUser(order.UserID);
+        var productsIds = orderInputModel.Products.Select(p => p.ProductID).ToList();
         var products = await _productRepository.GetProductsByIds(productsIds);
-        if (products.Count < productsIds.Count)
-        {
-            // TODO: Find id of non-existing product
-            // TODO: Add validation in private method
-            throw new EntityNotFoundException(ExceptionMessages.ProductNotFound);
-        }
-
+        ValidateProducts(productsIds, products.Keys.ToList());
         order.OrderProducts = new List<OrderProduct>();
         foreach (var item in orderInputModel.Products)
         {
             ValidateProductQuantity(item.Quantity, products[item.ProductID].Quantity);
-            order.OrderProducts.Add(_mapper.Map<OrderProduct>(item));
+            var mappedItem = _mapper.Map<OrderProduct>(item);
+            mappedItem.Price = products[item.ProductID].Price;
+            mappedItem.OrderID = order.ID;
+            order.OrderProducts.Add(mappedItem);
             products[item.ProductID].Quantity -= item.Quantity;
         }
 
@@ -109,7 +106,7 @@ public class OrderService : IOrderService
             throw new EntityNotFoundException(string.Format(ExceptionMessages.UserNotFound, id));
         }
     }
-    
+
     private void ValidateProductQuantity(int requiredQuantity, int availableQuantity)
     {
         if (requiredQuantity > availableQuantity)
@@ -118,13 +115,22 @@ public class OrderService : IOrderService
                 requiredQuantity, availableQuantity));
         }
     }
-    
+
     private void ValidateOrderStatus(Status currentStatus, Status newStatus)
     {
         if (newStatus - currentStatus != 1)
         {
             throw new IncorrectParamsException(string.Format(ExceptionMessages.IncorrectStatus,
                 Enum.GetName(currentStatus), Enum.GetName(newStatus)));
+        }
+    }
+
+    private void ValidateProducts(List<int> productsIds, List<int> existingProductsIds)
+    {
+        var missingProductIds = productsIds.Except(existingProductsIds).ToList();
+        if (missingProductIds.Count > 0)
+        {
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.ProductNotFound, missingProductIds[0]));
         }
     }
 }
