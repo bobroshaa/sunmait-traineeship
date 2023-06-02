@@ -23,25 +23,19 @@ public class ReviewRepository : IReviewRepository
         return await _dbContext.Reviews.FirstOrDefaultAsync(r => r.ID == id && r.IsActive);
     }
 
-    public async Task Add(Review review)
+    public void Add(Review review)
     {
         review.AddDate = DateTime.UtcNow;
         _dbContext.Reviews.Add(review);
-        await _dbContext.SaveChangesAsync();
     }
 
-    public async Task Update(Review updatingReview, Review review)
+    public async Task Save()
     {
-        updatingReview.Comment = review.Comment;
-        updatingReview.Rating = review.Rating;
-        updatingReview.ReviewTitle = review.ReviewTitle;
-
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task Delete(Review review)
+    public void Delete(Review review)
     {
         review.IsActive = false;
-        await _dbContext.SaveChangesAsync();
     }
 }

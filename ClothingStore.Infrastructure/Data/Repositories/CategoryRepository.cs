@@ -19,29 +19,24 @@ public class CategoryRepository : ICategoryRepository
         return await _dbContext.Categories.FirstOrDefaultAsync(b => b.ID == id && b.IsActive);
     }
 
-    public async Task Add(Category category)
+    public void Add(Category category)
     {
         _dbContext.Categories.Add(category);
-        await _dbContext.SaveChangesAsync();
     }
 
-    public async Task Update(Category updatingCategory, Category category)
+    public async Task Save()
     {
-        updatingCategory.Name = category.Name;
-        updatingCategory.ParentCategoryID = category.ParentCategoryID;
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task Delete(Category category)
+    public void Delete(Category category)
     {
         category.IsActive = false;
-        await _dbContext.SaveChangesAsync();
     }
 
-    public async Task LinkCategoryToSection(SectionCategory sectionCategory)
+    public void LinkCategoryToSection(SectionCategory sectionCategory)
     {
         _dbContext.SectionCategories.Add(sectionCategory);
-        await _dbContext.SaveChangesAsync();
     }
     
     public async Task<bool> DoesSectionCategoryExist(int sectionId, int categoryId)

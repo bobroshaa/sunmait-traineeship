@@ -23,22 +23,19 @@ public class BrandRepository : IBrandRepository
         return await _dbContext.Brands.FirstOrDefaultAsync(b => b.ID == id && b.IsActive);
     }
 
-    public async Task Add(Brand brand)
+    public void Add(Brand brand)
     {
         _dbContext.Brands.Add(brand);
-        await _dbContext.SaveChangesAsync();
     }
 
-    public async Task Update(Brand updatingBrand, Brand brand)
+    public async Task Save()
     {
-        updatingBrand.Name = brand.Name;
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task Delete(Brand brand)
+    public void Delete(Brand brand)
     {
         brand.IsActive = false;
-        await _dbContext.SaveChangesAsync();
     }
 
     public async Task<bool> DoesBrandExist(string name)

@@ -41,20 +41,26 @@ public class ReviewService : IReviewService
         await ValidateProduct(reviewInputModel.ProductID);
         await ValidateUser(reviewInputModel.UserID);
         var review = _mapper.Map<Review>(reviewInputModel);
-        await _reviewRepository.Add(review);
+        _reviewRepository.Add(review);
+        await _reviewRepository.Save();
         return review.ID;
     }
 
     public async Task Update(int id, ReviewInputModel reviewInputModel)
     {
         var review = await GetReviewById(id);
-        await _reviewRepository.Update(review, _mapper.Map<Review>(reviewInputModel));
+        review.Comment = reviewInputModel.Comment;
+        review.Rating = reviewInputModel.Rating;
+        review.ReviewTitle = reviewInputModel.ReviewTitle;
+        
+        await _reviewRepository.Save();
     }
 
     public async Task Delete(int id)
     {
         var review = await GetReviewById(id);
-        await _reviewRepository.Delete(review);
+        _reviewRepository.Delete(review);
+        await _reviewRepository.Save();
     }
     
     private async Task<Review> GetReviewById(int id)

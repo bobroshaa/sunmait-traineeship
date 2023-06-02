@@ -23,21 +23,18 @@ public class SectionRepository : ISectionRepository
         return await _dbContext.Sections.FirstOrDefaultAsync(s => s.ID == id && s.IsActive);
     }
     
-    public async Task Add(Section section)
+    public void Add(Section section)
     {
         _dbContext.Sections.Add(section);
-        await _dbContext.SaveChangesAsync();
     }
 
-    public async Task Update(Section updatingSection, Section section)
+    public async Task Save()
     {
-        updatingSection.Name = section.Name;
         await _dbContext.SaveChangesAsync();
     }
     
-    public async Task Delete(Section section)
+    public void Delete(Section section)
     {
         section.IsActive = false;
-        await _dbContext.SaveChangesAsync();
     }
 }

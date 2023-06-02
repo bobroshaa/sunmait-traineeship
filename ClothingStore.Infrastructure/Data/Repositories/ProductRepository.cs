@@ -33,30 +33,20 @@ public class ProductRepository : IProductRepository
         return product;
     }
 
-    public async Task Add(Product product)
+    public void Add(Product product)
     {
         product.AddDate = DateTime.UtcNow;
         _dbContext.Products.Add(product);
-        await _dbContext.SaveChangesAsync();
     }
 
-    public async Task Update(Product updatingProduct, Product product)
+    public async Task Save()
     {
-        updatingProduct.Name = product.Name;
-        updatingProduct.Price = product.Price;
-        updatingProduct.Quantity = product.Quantity;
-        updatingProduct.Description = product.Description;
-        updatingProduct.ImageURL = product.ImageURL;
-        updatingProduct.SectionCategoryID = product.SectionCategoryID;
-        updatingProduct.BrandID = product.BrandID;
-
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task Delete(Product product)
+    public void Delete(Product product)
     {
         product.IsActive = false;
-        await _dbContext.SaveChangesAsync();
     }
 
     public async Task<List<Product>> GetProductsBySectionAndCategory(int sectionId, int categoryId)
@@ -88,15 +78,13 @@ public class ProductRepository : IProductRepository
         return products.ToDictionary(keySelector: p => p.ID, elementSelector: p => p);
     }
     
-    public async Task AssignToBrand(Product product, int brandId)
+    public void AssignToBrand(Product product, int brandId)
     {
         product.BrandID = brandId;
-        await _dbContext.SaveChangesAsync();
     }
 
-    public async Task UnassignFromBrand(Product product)
+    public void UnassignFromBrand(Product product)
     {
         product.BrandID = null;
-        await _dbContext.SaveChangesAsync();
     }
 }

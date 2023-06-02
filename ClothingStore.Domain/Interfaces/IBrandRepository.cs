@@ -6,8 +6,8 @@ public interface IBrandRepository
 {
     Task<List<Brand>> GetAll();
     Task<Brand?> GetById(int id);
-    Task Add(Brand brand);
-    Task Update(Brand updatingBrand, Brand brand);
-    Task Delete(Brand brand);
+    void Add(Brand brand);
+    Task Save();
+    void Delete(Brand brand);
     Task<bool> DoesBrandExist(string name);
 }

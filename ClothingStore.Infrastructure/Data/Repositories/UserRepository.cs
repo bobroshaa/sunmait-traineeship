@@ -27,50 +27,29 @@ public class UserRepository : IUserRepository
         return await _dbContext.Users.Include(u => u.Address).FirstOrDefaultAsync(u => u.ID == id && u.IsActive);
     }
 
-    public async Task Add(UserAccount userAccount)
+    public void Add(UserAccount userAccount)
     {
         _dbContext.Users.Add(userAccount);
-        await _dbContext.SaveChangesAsync();
     }
 
-    public async Task Update(UserAccount updatingUser, UserAccount user)
+    public async Task Save()
     {
-        updatingUser.Phone = user.Phone;
-        updatingUser.Email = user.Email;
-        updatingUser.FirstName = user.FirstName;
-        updatingUser.LastName = user.LastName;
-
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task Delete(UserAccount user)
+    public void Delete(UserAccount user)
     {
         user.IsActive = false;
-        await _dbContext.SaveChangesAsync();
     }
 
-    public async Task AddAddress(Address address)
+    public void AddAddress(Address address)
     {
         _dbContext.Addresses.Add(address);
-        await _dbContext.SaveChangesAsync();
     }
 
-    public async Task UpdateAddress(Address updatingAddress, Address address)
-    {
-        updatingAddress.Country = address.Country;
-        updatingAddress.District = address.District;
-        updatingAddress.City = address.City;
-        updatingAddress.Postcode = address.Postcode;
-        updatingAddress.AddressLine1 = address.AddressLine1;
-        updatingAddress.AddressLine2 = address.AddressLine2;
-
-        await _dbContext.SaveChangesAsync();
-    }
-
-    public async Task UpdateRole(UserAccount user, Role role)
+    public void UpdateRole(UserAccount user, Role role)
     {
         user.Role = role;
-        await _dbContext.SaveChangesAsync();
     }
 
     public async Task<Address?> GetAddressByUserId(int userId)

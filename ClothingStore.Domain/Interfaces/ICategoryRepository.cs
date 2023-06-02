@@ -5,10 +5,10 @@ namespace ClothingStore.Domain.Interfaces;
 public interface ICategoryRepository
 {
     Task<Category?> GetById(int id);
-    Task Add(Category category);
-    Task Update(Category updatingCategory, Category category);
-    Task Delete(Category category);
-    public Task LinkCategoryToSection(SectionCategory sectionCategory);
+    void Add(Category category);
+    Task Save();
+    void Delete(Category category);
+    void LinkCategoryToSection(SectionCategory sectionCategory);
     Task<bool> DoesSectionCategoryExist(int sectionId, int categoryId);
     Task<SectionCategory?> GetSectionCategoryById(int id);
 }

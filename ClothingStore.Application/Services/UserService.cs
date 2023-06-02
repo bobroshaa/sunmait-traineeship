@@ -44,7 +44,8 @@ public class UserService : IUserService
         var user = _mapper.Map<UserAccount>(userInputModel);
         user.Password = GetHashSha256(user.Password);
         user.Role = Role.Customer;
-        await _userRepository.Add(user);
+        _userRepository.Add(user);
+        await _userRepository.Save();
         return user.ID;
     }
 
@@ -57,35 +58,48 @@ public class UserService : IUserService
             await ValidatePhoneNumber(userInputModel.Phone);
         }
 
-        await _userRepository.Update(user, _mapper.Map<UserAccount>(userInputModel));
+        user.Phone = userInputModel.Phone;
+        user.Email = userInputModel.Email;
+        user.FirstName = userInputModel.FirstName;
+        user.LastName = userInputModel.LastName;
+        await _userRepository.Save();
     }
 
     public async Task Delete(int id)
     {
         var user = await GetUserById(id);
-        await _userRepository.Delete(user);
+        _userRepository.Delete(user);
+        await _userRepository.Save();
     }
 
     public async Task UpdateAddress(int userId, AddressInputModel addressInputModel)
     {
         await GetUserById(userId);
-        var mappedAddress = _mapper.Map<Address>(addressInputModel);
-        mappedAddress.UserID = userId;
         var address = await _userRepository.GetAddressByUserId(userId);
         if (address is null)
         {
-            await _userRepository.AddAddress(mappedAddress);
+            var mappedAddress = _mapper.Map<Address>(addressInputModel);
+            mappedAddress.UserID = userId;
+            _userRepository.AddAddress(mappedAddress);
+            await _userRepository.Save();
         }
         else
         {
-            await _userRepository.UpdateAddress(address, mappedAddress);
+            address.Country = addressInputModel.Country;
+            address.District = addressInputModel.District;
+            address.City = addressInputModel.City;
+            address.Postcode = addressInputModel.Postcode;
+            address.AddressLine1 = addressInputModel.AddressLine1;
+            address.AddressLine2 = addressInputModel.AddressLine2;
+            await _userRepository.Save();
         }
     }
 
     public async Task UpdateRole(int id, Role role)
     {
         var user = await GetUserById(id);
-        await _userRepository.UpdateRole(user, role);
+        _userRepository.UpdateRole(user, role);
+        await _userRepository.Save();
     }
 
     private string GetHashSha256(string str)

@@ -46,7 +46,8 @@ public class ProductService : IProductService
         }
 
         var product = _mapper.Map<Product>(productInputModel);
-        await _productRepository.Add(product);
+        _productRepository.Add(product);
+        await _productRepository.Save();
         return product.ID;
     }
 
@@ -59,13 +60,21 @@ public class ProductService : IProductService
             await ValidateBrand((int)productInputModel.BrandID);
         }
 
-        await _productRepository.Update(product, _mapper.Map<Product>(productInputModel));
+        product.Name = productInputModel.Name;
+        product.Price = productInputModel.Price;
+        product.Quantity = productInputModel.Quantity;
+        product.Description = productInputModel.Description;
+        product.ImageURL = productInputModel.ImageURL;
+        product.SectionCategoryID = productInputModel.SectionCategoryID;
+        product.BrandID = productInputModel.BrandID;
+        await _productRepository.Save();
     }
 
     public async Task Delete(int id)
     {
         var product = await GetProductById(id);
-        await _productRepository.Delete(product);
+        _productRepository.Delete(product);
+        await _productRepository.Save();
     }
 
     public async Task<List<ProductViewModel>> GetProductsBySectionAndCategory(int sectionId, int categoryId)
@@ -87,13 +96,15 @@ public class ProductService : IProductService
     {
         var product = await GetProductById(productId);
         await ValidateBrand(brandId);
-        await _productRepository.AssignToBrand(product, brandId);
+        _productRepository.AssignToBrand(product, brandId);
+        await _productRepository.Save();
     }
 
     public async Task UnassignFromBrand(int productId)
     {
         var product = await GetProductById(productId);
-        await _productRepository.UnassignFromBrand(product);
+        _productRepository.UnassignFromBrand(product);
+        await _productRepository.Save();
     }
 
     private async Task<Product> GetProductById(int id)

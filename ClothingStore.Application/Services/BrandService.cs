@@ -34,20 +34,23 @@ public class BrandService : IBrandService
     {
         await ValidateBrand(brandInputModel.Name);
         var brand = _mapper.Map<Brand>(brandInputModel);
-        await _brandRepository.Add(brand);
+        _brandRepository.Add(brand);
+        await _brandRepository.Save();
         return brand.ID;
     }
 
     public async Task Update(int id, BrandInputModel brandInputModel)
     {
         var brand = await GetBrandById(id);
-        await _brandRepository.Update(brand, _mapper.Map<Brand>(brandInputModel));
+        brand.Name = brandInputModel.Name;
+        await _brandRepository.Save();
     }
 
     public async Task Delete(int id)
     {
         var brand = await GetBrandById(id);
-        await _brandRepository.Delete(brand);
+        _brandRepository.Delete(brand);
+        await _brandRepository.Save();
     }
 
     private async Task<Brand> GetBrandById(int id)

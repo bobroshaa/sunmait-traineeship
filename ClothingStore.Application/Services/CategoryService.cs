@@ -30,20 +30,24 @@ public class CategoryService : ICategoryService
     public async Task<int> Add(CategoryInputModel categoryInputModel)
     {
         var category = _mapper.Map<Category>(categoryInputModel);
-        await _categoryRepository.Add(category);
+        _categoryRepository.Add(category);
+        await _categoryRepository.Save();
         return category.ID;
     }
 
     public async Task Update(int id, CategoryInputModel categoryInputModel)
     {
         var category = await GetCategoryById(id);
-        await _categoryRepository.Update(category, _mapper.Map<Category>(categoryInputModel));
+        category.Name = categoryInputModel.Name;
+        category.ParentCategoryID = categoryInputModel.ParentCategoryID;
+        await _categoryRepository.Save();
     }
 
     public async Task Delete(int id)
     {
         var category = await GetCategoryById(id);
-        await _categoryRepository.Delete(category);
+        _categoryRepository.Delete(category);
+        await _categoryRepository.Save();
     }
 
     public async Task LinkCategoryToSection(int sectionId, int categoryId)
@@ -51,8 +55,9 @@ public class CategoryService : ICategoryService
         await ValidateSection(sectionId);
         await GetCategoryById(categoryId);
         await ValidateSectionCategoryExistence(sectionId, categoryId);
-        await _categoryRepository.LinkCategoryToSection(new SectionCategory
+        _categoryRepository.LinkCategoryToSection(new SectionCategory
             { SectionID = sectionId, CategoryID = categoryId });
+        await _categoryRepository.Save();
     }
 
     private async Task<Category> GetCategoryById(int id)

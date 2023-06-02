@@ -33,20 +33,23 @@ public class SectionService : ISectionService
     public async Task<int> Add(SectionInputModel sectionInputModel)
     {
         var section = _mapper.Map<Section>(sectionInputModel);
-        await _sectionRepository.Add(section);
+        _sectionRepository.Add(section);
+        await _sectionRepository.Save();
         return section.ID;
     }
 
     public async Task Update(int id, SectionInputModel sectionInputModel)
     {
         var section = await GetSectionById(id);
-        await _sectionRepository.Update(section, _mapper.Map<Section>(sectionInputModel));
+        section.Name = sectionInputModel.Name;
+        await _sectionRepository.Save();
     }
     
     public async Task Delete(int id)
     {
         var section = await GetSectionById(id);
-        await _sectionRepository.Delete(section);
+        _sectionRepository.Delete(section);
+        await _sectionRepository.Save();
     }
     
     private async Task<Section> GetSectionById(int id)
