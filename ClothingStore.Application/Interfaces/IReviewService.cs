@@ -5,9 +5,9 @@ namespace ClothingStore.Application.Interfaces;
 
 public interface IReviewService
 {
-    public Task<ReviewViewModel?> GetById(int id);
-    public Task<List<ReviewViewModel>> GetReviewsByProductId(int productId);
-    public Task<int> Add(ReviewInputModel reviewInputModel);
-    public Task Update(int id, ReviewInputModel reviewInputModel);
-    public Task Delete(int id);
+    Task<ReviewViewModel?> GetById(int id);
+    Task<List<ReviewViewModel>> GetReviewsByProductId(int productId);
+    Task<int> Add(ReviewInputModel reviewInputModel);
+    Task Update(int id, ReviewInputModel reviewInputModel);
+    Task Delete(int id);
 }

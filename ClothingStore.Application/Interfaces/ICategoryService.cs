@@ -5,9 +5,9 @@ namespace ClothingStore.Application.Interfaces;
 
 public interface ICategoryService
 {
-    public Task<CategoryViewModel?> GetById(int id);
-    public Task<int> Add(CategoryInputModel categoryInputModel);
-    public Task Update(int id, CategoryInputModel categoryInputModel);
-    public Task LinkCategoryToSection(int sectionId, int categoryId);
-    public Task Delete(int id);
+    Task<CategoryViewModel?> GetById(int id);
+    Task<int> Add(CategoryInputModel categoryInputModel);
+    Task Update(int id, CategoryInputModel categoryInputModel);
+    Task LinkCategoryToSection(int sectionId, int categoryId);
+    Task Delete(int id);
 }

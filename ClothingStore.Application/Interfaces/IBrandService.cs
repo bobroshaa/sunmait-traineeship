@@ -5,9 +5,9 @@ namespace ClothingStore.Application.Interfaces;
 
 public interface IBrandService
 {
-    public Task<List<BrandViewModel>> GetAll();
-    public Task<BrandViewModel?> GetById(int id);
-    public Task<int> Add(BrandInputModel brandInputModel);
-    public Task Update(int id, BrandInputModel brandInputModel);
-    public Task Delete(int id);
+    Task<List<BrandViewModel>> GetAll();
+    Task<BrandViewModel?> GetById(int id);
+    Task<int> Add(BrandInputModel brandInputModel);
+    Task Update(int id, BrandInputModel brandInputModel);
+    Task Delete(int id);
 }
