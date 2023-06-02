@@ -39,7 +39,7 @@ public class ProductRepository : IProductRepository
         _dbContext.Products.Add(product);
     }
 
-    public async Task Save()
+    public async Task SaveChanges()
     {
         await _dbContext.SaveChangesAsync();
     }

@@ -6,7 +6,7 @@ public interface ICategoryRepository
 {
     Task<Category?> GetById(int id);
     void Add(Category category);
-    Task Save();
+    Task SaveChanges();
     void Delete(Category category);
     void LinkCategoryToSection(SectionCategory sectionCategory);
     Task<bool> DoesSectionCategoryExist(int sectionId, int categoryId);

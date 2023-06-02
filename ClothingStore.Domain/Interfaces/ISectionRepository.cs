@@ -7,7 +7,7 @@ public interface ISectionRepository
     Task<List<Section>> GetAll();
     Task<Section?> GetById(int id);
     void Add(Section section);
-    Task Save();
+    Task SaveChanges();
     void Delete(Section section);
     Task<bool> DoesSectionExist(int id);
 }

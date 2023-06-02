@@ -11,7 +11,7 @@ public interface IOrderRepository
     void Add(CustomerOrder order);
     void Update(CustomerOrder updatingOrder, Status orderStatus);
     void Delete(CustomerOrder order);
-    Task Save();
+    Task SaveChanges();
     Task<List<OrderHistory>> GetOrderHistoryByOrderId(int orderId);
     Task<bool> DoesOrderExist(int id);
 }

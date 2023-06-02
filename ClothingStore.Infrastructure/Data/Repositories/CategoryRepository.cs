@@ -24,7 +24,7 @@ public class CategoryRepository : ICategoryRepository
         _dbContext.Categories.Add(category);
     }
 
-    public async Task Save()
+    public async Task SaveChanges()
     {
         await _dbContext.SaveChangesAsync();
     }

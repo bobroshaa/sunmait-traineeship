@@ -34,7 +34,7 @@ public class SectionService : ISectionService
     {
         var section = _mapper.Map<Section>(sectionInputModel);
         _sectionRepository.Add(section);
-        await _sectionRepository.Save();
+        await _sectionRepository.SaveChanges();
         return section.ID;
     }
 
@@ -42,14 +42,14 @@ public class SectionService : ISectionService
     {
         var section = await GetSectionById(id);
         section.Name = sectionInputModel.Name;
-        await _sectionRepository.Save();
+        await _sectionRepository.SaveChanges();
     }
     
     public async Task Delete(int id)
     {
         var section = await GetSectionById(id);
         _sectionRepository.Delete(section);
-        await _sectionRepository.Save();
+        await _sectionRepository.SaveChanges();
     }
     
     private async Task<Section> GetSectionById(int id)

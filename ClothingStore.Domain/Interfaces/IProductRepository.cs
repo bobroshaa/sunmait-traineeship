@@ -7,7 +7,7 @@ public interface IProductRepository
     Task<List<Product>> GetAll();
     Task<Product?> GetById(int id);
     void Add(Product product);
-    Task Save();
+    Task SaveChanges();
     void Delete(Product product);
     Task<List<Product>> GetProductsBySectionAndCategory(int sectionId, int categoryId);
     Task<List<Product>> GetProductsByBrand(int brandId);

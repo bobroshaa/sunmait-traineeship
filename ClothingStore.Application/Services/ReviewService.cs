@@ -42,7 +42,7 @@ public class ReviewService : IReviewService
         await ValidateUser(reviewInputModel.UserID);
         var review = _mapper.Map<Review>(reviewInputModel);
         _reviewRepository.Add(review);
-        await _reviewRepository.Save();
+        await _reviewRepository.SaveChanges();
         return review.ID;
     }
 
@@ -52,15 +52,14 @@ public class ReviewService : IReviewService
         review.Comment = reviewInputModel.Comment;
         review.Rating = reviewInputModel.Rating;
         review.ReviewTitle = reviewInputModel.ReviewTitle;
-        
-        await _reviewRepository.Save();
+        await _reviewRepository.SaveChanges();
     }
 
     public async Task Delete(int id)
     {
         var review = await GetReviewById(id);
         _reviewRepository.Delete(review);
-        await _reviewRepository.Save();
+        await _reviewRepository.SaveChanges();
     }
     
     private async Task<Review> GetReviewById(int id)

@@ -29,7 +29,7 @@ public class ReviewRepository : IReviewRepository
         _dbContext.Reviews.Add(review);
     }
 
-    public async Task Save()
+    public async Task SaveChanges()
     {
         await _dbContext.SaveChangesAsync();
     }

@@ -28,7 +28,7 @@ public class BrandRepository : IBrandRepository
         _dbContext.Brands.Add(brand);
     }
 
-    public async Task Save()
+    public async Task SaveChanges()
     {
         await _dbContext.SaveChangesAsync();
     }

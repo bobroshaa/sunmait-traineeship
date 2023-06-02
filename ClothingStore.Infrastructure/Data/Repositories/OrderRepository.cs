@@ -47,7 +47,7 @@ public class OrderRepository : IOrderRepository
         order.IsActive = false;
     }
     
-    public async Task Save()
+    public async Task SaveChanges()
     {
         await _dbContext.SaveChangesAsync();
     }

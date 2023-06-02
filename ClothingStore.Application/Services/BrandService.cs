@@ -35,7 +35,7 @@ public class BrandService : IBrandService
         await ValidateBrand(brandInputModel.Name);
         var brand = _mapper.Map<Brand>(brandInputModel);
         _brandRepository.Add(brand);
-        await _brandRepository.Save();
+        await _brandRepository.SaveChanges();
         return brand.ID;
     }
 
@@ -44,14 +44,14 @@ public class BrandService : IBrandService
         var brand = await GetBrandById(id);
         await ValidateBrand(brandInputModel.Name);
         brand.Name = brandInputModel.Name;
-        await _brandRepository.Save();
+        await _brandRepository.SaveChanges();
     }
 
     public async Task Delete(int id)
     {
         var brand = await GetBrandById(id);
         _brandRepository.Delete(brand);
-        await _brandRepository.Save();
+        await _brandRepository.SaveChanges();
     }
 
     private async Task<Brand> GetBrandById(int id)

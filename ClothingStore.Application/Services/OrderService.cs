@@ -70,7 +70,7 @@ public class OrderService : IOrderService
         }
 
         _orderRepository.Add(order);
-        await _orderRepository.Save();
+        await _orderRepository.SaveChanges();
         return order.ID;
     }
 
@@ -80,14 +80,14 @@ public class OrderService : IOrderService
         ValidateOrderStatus(orderStatus);
         ValidateOrderStatusChanging(order.CurrentStatus, orderStatus);
         _orderRepository.Update(order, orderStatus);
-        await _orderRepository.Save();
+        await _orderRepository.SaveChanges();
     }
 
     public async Task Delete(int id)
     {
         var order = await GetOrderById(id);
         _orderRepository.Delete(order);
-        await _orderRepository.Save();
+        await _orderRepository.SaveChanges();
     }
 
     public async Task<List<OrderHistoryViewModel>> GetOrderHistoryByOrderId(int orderId)

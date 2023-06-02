@@ -7,6 +7,6 @@ public interface IReviewRepository
     Task<Review?> GetById(int id);
     Task<List<Review>> GetReviewByProductId(int productId);
     void Add(Review review);
-    Task Save();
+    Task SaveChanges();
     void Delete(Review review);
 }
