@@ -114,7 +114,7 @@ public class UserController : Controller
     }
 
     /// <summary>
-    /// Update user role by his ID.
+    /// Update user role by ID.
     /// </summary>
     /// <param name="userId">The ID of the section.</param>
     /// <param name="role">A new role of the user.</param>

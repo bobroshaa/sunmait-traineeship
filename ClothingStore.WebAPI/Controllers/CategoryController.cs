@@ -87,8 +87,8 @@ public class CategoryController : Controller
     /// <param name="sectionId">The ID of the section.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [HttpPost("link-to-section")]
-    public async Task<ActionResult<int>> LinkCategoryToSection([FromQuery] int sectionId, [FromQuery] int categoryId)
+    [HttpPost("{categoryId}/sections/{sectionId}/link")]
+    public async Task<ActionResult<int>> LinkCategoryToSection([FromRoute] int sectionId, [FromRoute] int categoryId)
     {
         if (!ModelState.IsValid)
         {
