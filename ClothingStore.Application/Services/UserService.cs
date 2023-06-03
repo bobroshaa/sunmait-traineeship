@@ -25,17 +25,17 @@ public class UserService : IUserService
     public async Task<List<UserViewModel>> GetAll()
     {
         var users = await _userRepository.GetAll();
-        var mappedUsers = _mapper.Map<List<UserViewModel>>(users);
+        var userVms = _mapper.Map<List<UserViewModel>>(users);
 
-        return mappedUsers;
+        return userVms;
     }
 
     public async Task<UserViewModel?> GetById(int id)
     {
         var user = await GetUserById(id);
-        var mappedUser = _mapper.Map<UserViewModel>(user);
+        var userVm = _mapper.Map<UserViewModel>(user);
 
-        return mappedUser;
+        return userVm;
     }
 
     public async Task<int> Add(UserInputModel userInputModel)
@@ -94,11 +94,11 @@ public class UserService : IUserService
         
         if (address is null)
         {
-            var mappedAddress = _mapper.Map<Address>(addressInputModel);
+            var newAddress = _mapper.Map<Address>(addressInputModel);
         
-            mappedAddress.UserID = userId;
+            newAddress.UserID = userId;
             
-            _userRepository.AddAddress(mappedAddress);
+            _userRepository.AddAddress(newAddress);
             
             await _userRepository.Save();
         }

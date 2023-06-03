@@ -22,17 +22,17 @@ public class BrandService : IBrandService
     public async Task<List<BrandViewModel>> GetAll()
     {
         var brands = await _brandRepository.GetAll();
-        var mappedBrands = _mapper.Map<List<BrandViewModel>>(brands);
+        var brandVms = _mapper.Map<List<BrandViewModel>>(brands);
         
-        return mappedBrands;
+        return brandVms;
     }
 
     public async Task<BrandViewModel?> GetById(int id)
     {
         var brand = await GetBrandById(id);
-        var mappedBrand = _mapper.Map<BrandViewModel>(brand);
+        var brandVm = _mapper.Map<BrandViewModel>(brand);
 
-        return mappedBrand;
+        return brandVm;
     }
 
     public async Task<int> Add(BrandInputModel brandInputModel)

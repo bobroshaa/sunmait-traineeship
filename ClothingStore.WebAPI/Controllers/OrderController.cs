@@ -85,7 +85,7 @@ public class OrderController : Controller
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [HttpPut("{id}")]
+    [HttpPut("{id}/status")]
     public async Task<ActionResult> UpdateOrderStatus([FromRoute] int id, [FromBody] Status orderStatus)
     {
         if (!ModelState.IsValid)

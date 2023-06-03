@@ -27,9 +27,9 @@ public class CategoryService : ICategoryService
     public async Task<CategoryViewModel?> GetById(int id)
     {
         var category = await GetCategoryById(id);
-        var mappedCategory = _mapper.Map<CategoryViewModel>(category);
+        var categoryVm = _mapper.Map<CategoryViewModel>(category);
         
-        return mappedCategory;
+        return categoryVm;
     }
 
     public async Task<int> Add(CategoryInputModel categoryInputModel)

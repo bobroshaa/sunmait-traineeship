@@ -30,9 +30,9 @@ public class ReviewService : IReviewService
     public async Task<ReviewViewModel?> GetById(int id)
     {
         var review = await GetReviewById(id);
-        var mappedReview = _mapper.Map<ReviewViewModel>(review);
+        var reviewVm = _mapper.Map<ReviewViewModel>(review);
         
-        return mappedReview;
+        return reviewVm;
     }
 
     public async Task<List<ReviewViewModel>> GetReviewsByProductId(int productId)
@@ -40,9 +40,9 @@ public class ReviewService : IReviewService
         await ValidateProduct(productId);
 
         var reviews = await _reviewRepository.GetReviewByProductId(productId);
-        var mappedReviews = _mapper.Map<List<ReviewViewModel>>(reviews);
+        var reviewVms = _mapper.Map<List<ReviewViewModel>>(reviews);
         
-        return mappedReviews;
+        return reviewVms;
     }
 
     public async Task<int> Add(ReviewInputModel reviewInputModel)

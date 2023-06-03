@@ -31,9 +31,9 @@ public class OrderService : IOrderService
     public async Task<List<OrderViewModel>> GetAll()
     {
         var orders = await _orderRepository.GetAll();
-        var mappedOrders = _mapper.Map<List<OrderViewModel>>(orders);
+        var orderVms = _mapper.Map<List<OrderViewModel>>(orders);
 
-        return mappedOrders;
+        return orderVms;
     }
 
     public async Task<List<OrderItemViewModel>> GetOrderItemsByOrderId(int orderId)
@@ -41,17 +41,17 @@ public class OrderService : IOrderService
         await ValidateOrder(orderId);
 
         var orderItems = await _orderRepository.GetAllByOrderId(orderId);
-        var mappedOrderItems = _mapper.Map<List<OrderItemViewModel>>(orderItems);
+        var orderItemVms = _mapper.Map<List<OrderItemViewModel>>(orderItems);
         
-        return mappedOrderItems;
+        return orderItemVms;
     }
 
     public async Task<OrderViewModel?> GetById(int id)
     {
         var order = await GetOrderById(id);
-        var mappedOrder = _mapper.Map<OrderViewModel>(order);
+        var orderVm = _mapper.Map<OrderViewModel>(order);
         
-        return mappedOrder;
+        return orderVm;
     }
 
     public async Task<int> Add(OrderInputModel orderInputModel)
@@ -67,25 +67,25 @@ public class OrderService : IOrderService
         
         order.OrderProducts = new List<OrderProduct>();
         
-        foreach (var item in orderInputModel.Products)
+        foreach (var itemInputModel in orderInputModel.Products)
         {
-            if (productsDictionary.TryGetValue(item.ProductID, out var productToUpdate))
+            if (productsDictionary.TryGetValue(itemInputModel.ProductID, out var productToUpdate))
             {
-                ValidateProductQuantity(item.ProductID, item.Quantity, productToUpdate.Quantity);
+                ValidateProductQuantity(itemInputModel.ProductID, itemInputModel.Quantity, productToUpdate.Quantity);
                 
-                var mappedItem = _mapper.Map<OrderProduct>(item);
+                var item = _mapper.Map<OrderProduct>(itemInputModel);
                 
-                mappedItem.Price = productToUpdate.Price;
-                mappedItem.OrderID = order.ID;
+                item.Price = productToUpdate.Price;
+                item.OrderID = order.ID;
                 
-                order.OrderProducts.Add(mappedItem);
+                order.OrderProducts.Add(item);
                 
-                productToUpdate.Quantity -= item.Quantity;
+                productToUpdate.Quantity -= itemInputModel.Quantity;
             }
             else
             {
                 throw new EntityNotFoundException(
-                    string.Format(ExceptionMessages.ProductNotFound, item.ProductID));
+                    string.Format(ExceptionMessages.ProductNotFound, itemInputModel.ProductID));
             }
         }
 
@@ -124,9 +124,9 @@ public class OrderService : IOrderService
         await ValidateOrder(orderId);
         
         var orderHistory = await _orderRepository.GetOrderHistoryByOrderId(orderId);
-        var mappedOrderHistory = _mapper.Map<List<OrderHistoryViewModel>>(orderHistory);
+        var orderHistoryVms = _mapper.Map<List<OrderHistoryViewModel>>(orderHistory);
 
-        return mappedOrderHistory;
+        return orderHistoryVms;
     }
 
     private async Task<CustomerOrder> GetOrderById(int id)

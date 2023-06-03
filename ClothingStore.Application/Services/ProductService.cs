@@ -33,17 +33,17 @@ public class ProductService : IProductService
     public async Task<List<ProductViewModel>> GetAll()
     {
         var products = await _productRepository.GetAll();
-        var mappedProducts = _mapper.Map<List<ProductViewModel>>(products);
+        var productVms = _mapper.Map<List<ProductViewModel>>(products);
         
-        return mappedProducts;
+        return productVms;
     }
 
     public async Task<ProductViewModel?> GetById(int id)
     {
         var product = await GetProductById(id);
-        var mappedProduct = _mapper.Map<ProductViewModel>(product);
+        var productVm = _mapper.Map<ProductViewModel>(product);
         
-        return mappedProduct;
+        return productVm;
     }
 
     public async Task<int> Add(ProductInputModel productInputModel)
@@ -99,9 +99,9 @@ public class ProductService : IProductService
         await ValidateCategory(categoryId);
 
         var products = await _productRepository.GetProductsBySectionAndCategory(sectionId, categoryId);
-        var mappedProducts = _mapper.Map<List<ProductViewModel>>(products);
+        var productVms = _mapper.Map<List<ProductViewModel>>(products);
         
-        return mappedProducts;
+        return productVms;
     }
 
     public async Task<List<ProductViewModel>> GetProductsByBrand(int brandId)
@@ -109,9 +109,9 @@ public class ProductService : IProductService
         await ValidateBrand(brandId);
 
         var products = await _productRepository.GetProductsByBrand(brandId);
-        var mappedProducts = _mapper.Map<List<ProductViewModel>>(products);
+        var productVms = _mapper.Map<List<ProductViewModel>>(products);
 
-        return mappedProducts;
+        return productVms;
     }
 
     public async Task AssignToBrand(int productId, int brandId)
