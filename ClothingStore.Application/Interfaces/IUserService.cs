@@ -8,7 +8,7 @@ public interface IUserService
 {
     Task<List<UserViewModel>> GetAll();
     Task<UserViewModel?> GetById(int id);
-    Task<int> Add(UserInputModel userInputModel);
+    Task<PostResponseViewModel> Add(UserInputModel userInputModel);
     Task Update(int id, UserInputModel user);
     Task Delete(int id);
     Task UpdateAddress(int userId, AddressInputModel address);

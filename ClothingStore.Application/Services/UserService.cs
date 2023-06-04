@@ -38,7 +38,7 @@ public class UserService : IUserService
         return userVm;
     }
 
-    public async Task<int> Add(UserInputModel userInputModel)
+    public async Task<PostResponseViewModel> Add(UserInputModel userInputModel)
     {
         await ValidateEmail(userInputModel.Email);
         if (userInputModel.Phone is not null)
@@ -54,8 +54,10 @@ public class UserService : IUserService
         _userRepository.Add(user);
         
         await _userRepository.Save();
+
+        var response = new PostResponseViewModel { Id = user.ID };
         
-        return user.ID;
+        return response;
     }
 
     public async Task Update(int id, UserInputModel userInputModel)

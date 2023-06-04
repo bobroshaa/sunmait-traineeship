@@ -54,7 +54,7 @@ public class OrderService : IOrderService
         return orderVm;
     }
 
-    public async Task<int> Add(OrderInputModel orderInputModel)
+    public async Task<PostResponseViewModel> Add(OrderInputModel orderInputModel)
     {
         var order = _mapper.Map<CustomerOrder>(orderInputModel);
         
@@ -95,7 +95,9 @@ public class OrderService : IOrderService
 
         await _orderRepository.SaveChanges();
         
-        return order.ID;
+        var response = new PostResponseViewModel {Id = order.ID};
+        
+        return response;
     }
 
     public async Task Update(int id, Status orderStatus)

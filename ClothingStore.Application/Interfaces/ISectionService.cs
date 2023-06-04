@@ -7,7 +7,7 @@ public interface ISectionService
 {
     Task<List<SectionViewModel>> GetAll();
     Task<SectionViewModel?> GetById(int id);
-    Task<int> Add(SectionInputModel sectionInputModel);
+    Task<PostResponseViewModel> Add(SectionInputModel sectionInputModel);
     Task Update(int id, SectionInputModel sectionInputModel);
     Task Delete(int id);
 }

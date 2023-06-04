@@ -56,9 +56,9 @@ public class ProductController : Controller
             return BadRequest(ModelState);
         }
 
-        var id = await _productService.Add(productInputModel);
+        var response = await _productService.Add(productInputModel);
 
-        return Ok(id);
+        return Ok(response);
     }
 
     /// <summary>

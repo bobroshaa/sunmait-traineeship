@@ -46,7 +46,7 @@ public class ProductService : IProductService
         return productVm;
     }
 
-    public async Task<int> Add(ProductInputModel productInputModel)
+    public async Task<PostResponseViewModel> Add(ProductInputModel productInputModel)
     {
         await ValidateSectionCategory(productInputModel.SectionCategoryID);
         if (productInputModel.BrandID is not null)
@@ -60,7 +60,9 @@ public class ProductService : IProductService
 
         await _productRepository.SaveChanges();
 
-        return product.ID;
+        var response = new PostResponseViewModel { Id = product.ID };
+        
+        return response;
     }
 
     public async Task Update(int id, ProductInputModel productInputModel)

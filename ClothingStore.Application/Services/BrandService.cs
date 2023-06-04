@@ -35,7 +35,7 @@ public class BrandService : IBrandService
         return brandVm;
     }
 
-    public async Task<int> Add(BrandInputModel brandInputModel)
+    public async Task<PostResponseViewModel> Add(BrandInputModel brandInputModel)
     {
         await ValidateBrand(brandInputModel.Name);
 
@@ -45,7 +45,9 @@ public class BrandService : IBrandService
 
         await _brandRepository.SaveChanges();
 
-        return brand.ID;
+        var response = new PostResponseViewModel { Id = brand.ID };
+        
+        return response;
     }
 
     public async Task Update(int id, BrandInputModel brandInputModel)

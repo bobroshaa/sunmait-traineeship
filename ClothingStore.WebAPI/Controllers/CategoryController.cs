@@ -44,9 +44,9 @@ public class CategoryController : Controller
             return BadRequest(ModelState);
         }
 
-        var id = await _categoryService.Add(categoryInputModel);
+        var response = await _categoryService.Add(categoryInputModel);
         
-        return Ok(id);
+        return Ok(response);
     }
 
     /// <summary>

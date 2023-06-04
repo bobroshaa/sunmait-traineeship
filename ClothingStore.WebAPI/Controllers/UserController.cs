@@ -57,9 +57,9 @@ public class UserController : Controller
             return BadRequest(ModelState);
         }
 
-        var id = await _userService.Add(userInputModel);
+        var response = await _userService.Add(userInputModel);
         
-        return Ok(id);
+        return Ok(response);
     }
 
     /// <summary>

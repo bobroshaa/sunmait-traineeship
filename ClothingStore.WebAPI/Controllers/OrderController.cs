@@ -72,9 +72,9 @@ public class OrderController : Controller
             return BadRequest(ModelState);
         }
 
-        var id = await _orderService.Add(orderInputModel);
+        var response = await _orderService.Add(orderInputModel);
         
-        return Ok(id);
+        return Ok(response);
     }
 
     /// <summary>

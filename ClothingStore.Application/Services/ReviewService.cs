@@ -45,7 +45,7 @@ public class ReviewService : IReviewService
         return reviewVms;
     }
 
-    public async Task<int> Add(ReviewInputModel reviewInputModel)
+    public async Task<PostResponseViewModel> Add(ReviewInputModel reviewInputModel)
     {
         await ValidateProduct(reviewInputModel.ProductID);
         await ValidateUser(reviewInputModel.UserID);
@@ -55,8 +55,10 @@ public class ReviewService : IReviewService
         _reviewRepository.Add(review);
         
         await _reviewRepository.SaveChanges();
+
+        var response = new PostResponseViewModel { Id = review.ID };
         
-        return review.ID;
+        return response;
     }
 
     public async Task Update(int id, ReviewInputModel reviewInputModel)

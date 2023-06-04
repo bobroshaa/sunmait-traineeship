@@ -59,9 +59,9 @@ public class BrandController : Controller
             return BadRequest(ModelState);
         }
 
-        var id = await _brandService.Add(brandInputModel);
+        var response = await _brandService.Add(brandInputModel);
         
-        return Ok(id);
+        return Ok(response);
     }
 
     /// <summary>

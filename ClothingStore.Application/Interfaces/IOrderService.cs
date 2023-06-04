@@ -10,7 +10,7 @@ public interface IOrderService
     Task<List<OrderItemViewModel>> GetOrderItemsByOrderId(int orderId);
     Task<List<OrderViewModel>> GetAll();
     Task<OrderViewModel?> GetById(int id);
-    Task<int> Add(OrderInputModel order);
+    Task<PostResponseViewModel> Add(OrderInputModel order);
     Task Update(int id, Status orderStatus);
     Task Delete(int id);
     Task<List<OrderHistoryViewModel>> GetOrderHistoryByOrderId(int orderId);

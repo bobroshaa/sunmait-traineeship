@@ -7,7 +7,7 @@ public interface IBrandService
 {
     Task<List<BrandViewModel>> GetAll();
     Task<BrandViewModel?> GetById(int id);
-    Task<int> Add(BrandInputModel brandInputModel);
+    Task<PostResponseViewModel> Add(BrandInputModel brandInputModel);
     Task Update(int id, BrandInputModel brandInputModel);
     Task Delete(int id);
 }

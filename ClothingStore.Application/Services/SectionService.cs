@@ -35,15 +35,16 @@ public class SectionService : ISectionService
         return sectionVm;
     }
     
-    public async Task<int> Add(SectionInputModel sectionInputModel)
+    public async Task<PostResponseViewModel> Add(SectionInputModel sectionInputModel)
     {
         var section = _mapper.Map<Section>(sectionInputModel);
         
         _sectionRepository.Add(section);
         
         await _sectionRepository.SaveChanges();
-        
-        return section.ID;
+
+        var response = new PostResponseViewModel { Id = section.ID };
+        return response;
     }
 
     public async Task Update(int id, SectionInputModel sectionInputModel)

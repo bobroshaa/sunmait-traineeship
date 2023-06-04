@@ -57,9 +57,9 @@ public class ReviewController : Controller
             return BadRequest(ModelState);
         }
 
-        var id = await _reviewService.Add(reviewInputModel);
+        var response = await _reviewService.Add(reviewInputModel);
         
-        return Ok(id);
+        return Ok(response);
     }
 
     /// <summary>

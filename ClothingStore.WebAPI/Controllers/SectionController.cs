@@ -56,9 +56,9 @@ public class SectionController : Controller
             return BadRequest(ModelState);
         }
 
-        var id = await _sectionService.Add(sectionInputModel);
+        var response = await _sectionService.Add(sectionInputModel);
         
-        return Ok(id);
+        return Ok(response);
     }
 
     /// <summary>

@@ -32,7 +32,7 @@ public class CategoryService : ICategoryService
         return categoryVm;
     }
 
-    public async Task<int> Add(CategoryInputModel categoryInputModel)
+    public async Task<PostResponseViewModel> Add(CategoryInputModel categoryInputModel)
     {
         var category = _mapper.Map<Category>(categoryInputModel);
 
@@ -40,7 +40,9 @@ public class CategoryService : ICategoryService
 
         await _categoryRepository.SaveChanges();
 
-        return category.ID;
+        var response = new PostResponseViewModel { Id = category.ID };
+        
+        return response;
     }
 
     public async Task Update(int id, CategoryInputModel categoryInputModel)
