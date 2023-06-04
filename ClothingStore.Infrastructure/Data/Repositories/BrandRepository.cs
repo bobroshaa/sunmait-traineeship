@@ -13,31 +13,38 @@ public class BrandRepository : IBrandRepository
         _dbContext = dbContext;
     }
 
-    public async Task<IEnumerable<Brand>> GetAll()
+    public async Task<List<Brand>> GetAll()
     {
         return await _dbContext.Brands.Where(b => b.IsActive).ToListAsync();
     }
 
     public async Task<Brand?> GetById(int id)
     {
-        return await _dbContext.Brands.FirstOrDefaultAsync(b => b.ID == id & b.IsActive);
+        return await _dbContext.Brands.FirstOrDefaultAsync(b => b.ID == id && b.IsActive);
     }
 
-    public async Task Add(Brand brand)
+    public void Add(Brand brand)
     {
-        await _dbContext.Brands.AddAsync(brand);
+        _dbContext.Brands.Add(brand);
+    }
+
+    public async Task SaveChanges()
+    {
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task Update(Brand updatingBrand, Brand brand)
-    {
-        updatingBrand.Name = brand.Name;
-        await _dbContext.SaveChangesAsync();
-    }
-
-    public async Task Delete(Brand brand)
+    public void Delete(Brand brand)
     {
         brand.IsActive = false;
-        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task<bool> DoesBrandExist(string name)
+    {
+        return await _dbContext.Brands.AnyAsync(b => b.Name == name && b.IsActive);
+    }
+    
+    public async Task<bool> DoesBrandExist(int id)
+    {
+        return await _dbContext.Brands.AnyAsync(b => b.ID == id && b.IsActive);
     }
 }

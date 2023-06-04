@@ -7,6 +7,7 @@ public class Review
     public string Comment { get; set; }
     public int Rating { get; set; }
     public DateTime AddDate { get; set; }
+    public bool IsActive { get; set; }
     
     public int ProductID { get; set; }
     public virtual Product Product { get; set; }

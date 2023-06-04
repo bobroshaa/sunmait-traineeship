@@ -22,7 +22,7 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.Property(p => p.Name).IsRequired().HasMaxLength(100);
         builder.Property(p => p.Description).IsRequired().HasMaxLength(500);
         builder.Property(p => p.Price).IsRequired().HasColumnType("numeric");
-        builder.Property(p => p.BrandID).IsRequired();
+        builder.Property(p => p.BrandID).IsRequired(false);
         builder.Property(p => p.AddDate).IsRequired();
         builder.Property(p => p.SectionCategoryID).IsRequired();
         builder.Property(p => p.SectionCategoryID).IsRequired().HasMaxLength(100);
@@ -34,5 +34,6 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder
             .ToTable(p => p.HasCheckConstraint("quantity", "Quantity >= 0")
                 .HasName("CK_product_quantity"));
+        builder.Property(p => p.IsActive).HasDefaultValue(true);
     }
 }

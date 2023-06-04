@@ -10,7 +10,6 @@ public class BrandConfiguration: IEntityTypeConfiguration<Brand>
     {
         builder.HasKey(b => b.ID);
         builder.Property(b => b.Name).IsRequired().HasMaxLength(50);
-        builder.HasIndex(b => b.Name).IsUnique();
         builder.Property(b => b.IsActive).HasDefaultValue(true);
     }
 }

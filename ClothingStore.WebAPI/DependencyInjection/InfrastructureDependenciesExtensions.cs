@@ -2,17 +2,20 @@
 using ClothingStore.Infrastructure.Data;
 using ClothingStore.Infrastructure.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
-namespace ClothingStore.Infrastructure;
+namespace ClothingStore.WebAPI.DependencyInjection;
 
-public static class DependencyInjection
+public static class InfrastructureDependenciesExtensions
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
         services.AddScoped<IBrandRepository, BrandRepository>();
+        services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<IOrderRepository, OrderRepository>();
+        services.AddScoped<ICategoryRepository, CategoryRepository>();
+        services.AddScoped<ISectionRepository, SectionRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IReviewRepository, ReviewRepository>();
 
         services.AddDbContextPool<Context>(builder =>
         {

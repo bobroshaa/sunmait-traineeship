@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using ClothingStore.Application.Exceptions;
 using ClothingStore.Application.Interfaces;
-using ClothingStore.Application.Models;
+using ClothingStore.Application.Models.InputModels;
+using ClothingStore.Application.Models.ViewModels;
 using ClothingStore.Domain.Entities;
 using ClothingStore.Domain.Interfaces;
 
@@ -19,46 +21,71 @@ public class BrandService : IBrandService
 
     public async Task<List<BrandViewModel>> GetAll()
     {
-        return _mapper.Map<List<BrandViewModel>>(await _brandRepository.GetAll());
+        var brands = await _brandRepository.GetAll();
+        var brandVms = _mapper.Map<List<BrandViewModel>>(brands);
+        
+        return brandVms;
     }
 
     public async Task<BrandViewModel?> GetById(int id)
     {
-        var brand = await _brandRepository.GetById(id);
-        if (brand is null)
-        {
-            throw new Exception(ExceptionMessages.BrandNotFound);
-        }
+        var brand = await GetBrandById(id);
+        var brandVm = _mapper.Map<BrandViewModel>(brand);
 
-        return _mapper.Map<BrandViewModel>(brand);
+        return brandVm;
     }
 
-    public async Task<int> Add(BrandInputModel brandInputModel)
+    public async Task<PostResponseViewModel> Add(BrandInputModel brandInputModel)
     {
+        await ValidateBrand(brandInputModel.Name);
+
         var brand = _mapper.Map<Brand>(brandInputModel);
-        await _brandRepository.Add(brand);
-        return brand.ID;
+
+        _brandRepository.Add(brand);
+
+        await _brandRepository.SaveChanges();
+
+        var response = new PostResponseViewModel { Id = brand.ID };
+        
+        return response;
     }
 
     public async Task Update(int id, BrandInputModel brandInputModel)
     {
-        var updatingBrand = await _brandRepository.GetById(id);
-        if (updatingBrand is null)
-        {
-            throw new Exception(ExceptionMessages.BrandNotFound);
-        }
+        var brand = await GetBrandById(id);
 
-        await _brandRepository.Update(updatingBrand, _mapper.Map<Brand>(brandInputModel));
+        await ValidateBrand(brandInputModel.Name);
+
+        brand.Name = brandInputModel.Name;
+
+        await _brandRepository.SaveChanges();
     }
 
     public async Task Delete(int id)
     {
+        var brand = await GetBrandById(id);
+
+        _brandRepository.Delete(brand);
+
+        await _brandRepository.SaveChanges();
+    }
+
+    private async Task<Brand> GetBrandById(int id)
+    {
         var brand = await _brandRepository.GetById(id);
         if (brand is null)
         {
-            throw new Exception(ExceptionMessages.BrandNotFound);
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.BrandNotFound, id));
         }
 
-        await _brandRepository.Delete(brand);
+        return brand;
+    }
+
+    private async Task ValidateBrand(string name)
+    {
+        if (await _brandRepository.DoesBrandExist(name))
+        {
+            throw new NotUniqueException(string.Format(ExceptionMessages.BrandAlreadyExists, name));
+        }
     }
 }

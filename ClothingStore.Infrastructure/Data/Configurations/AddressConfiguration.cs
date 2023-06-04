@@ -19,5 +19,6 @@ public class AddressConfiguration : IEntityTypeConfiguration<Address>
         builder.Property(a => a.Postcode).IsRequired().HasMaxLength(10);
         builder.Property(a => a.AddressLine1).IsRequired().HasMaxLength(50);
         builder.Property(a => a.AddressLine2).HasMaxLength(20);
+        builder.Property(a => a.IsActive).HasDefaultValue(true);
     }
 }

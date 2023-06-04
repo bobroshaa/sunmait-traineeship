@@ -28,5 +28,6 @@ public class ReviewConfiguration : IEntityTypeConfiguration<Review>
         builder
             .ToTable(r => r.HasCheckConstraint("rating", "rating >= 0 AND rating <= 5")
                 .HasName("CK_review_rating"));
+        builder.Property(r => r.IsActive).HasDefaultValue(true);
     }
 }

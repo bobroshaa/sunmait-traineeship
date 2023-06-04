@@ -4,9 +4,11 @@ namespace ClothingStore.Domain.Interfaces;
 
 public interface IBrandRepository
 {
-    Task<IEnumerable<Brand>> GetAll();
+    Task<List<Brand>> GetAll();
     Task<Brand?> GetById(int id);
-    Task Add(Brand brand);
-    Task Update(Brand updatingBrand, Brand brand);
-    Task Delete(Brand brand);
+    void Add(Brand brand);
+    Task SaveChanges();
+    void Delete(Brand brand);
+    Task<bool> DoesBrandExist(string name);
+    Task<bool> DoesBrandExist(int id);
 }

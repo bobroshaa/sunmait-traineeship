@@ -17,5 +17,6 @@ public class CustomerOrderConfiguration: IEntityTypeConfiguration<CustomerOrder>
         builder.Property(co => co.UserID).IsRequired();
         builder.Property(co => co.OrderDate).IsRequired();
         builder.Property(co => co.CurrentStatus).IsRequired();
+        builder.Property(co => co.IsActive).HasDefaultValue(true);
     }
 }

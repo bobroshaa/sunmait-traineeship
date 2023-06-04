@@ -23,7 +23,7 @@ namespace ClothingStore.Infrastructure.Data.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("ClothingStore.Entities.Address", b =>
+            modelBuilder.Entity("ClothingStore.Domain.Entities.Address", b =>
                 {
                     b.Property<int>("UserID")
                         .HasColumnType("integer")
@@ -57,6 +57,12 @@ namespace ClothingStore.Infrastructure.Data.Migrations
                         .HasColumnType("character varying(50)")
                         .HasColumnName("district");
 
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_active");
+
                     b.Property<string>("Postcode")
                         .IsRequired()
                         .HasMaxLength(10)
@@ -69,7 +75,7 @@ namespace ClothingStore.Infrastructure.Data.Migrations
                     b.ToTable("addresses", "clothing_store");
                 });
 
-            modelBuilder.Entity("ClothingStore.Entities.Brand", b =>
+            modelBuilder.Entity("ClothingStore.Domain.Entities.Brand", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -93,14 +99,10 @@ namespace ClothingStore.Infrastructure.Data.Migrations
                     b.HasKey("ID")
                         .HasName("pk_brands");
 
-                    b.HasIndex("Name")
-                        .IsUnique()
-                        .HasDatabaseName("ix_brands_name");
-
                     b.ToTable("brands", "clothing_store");
                 });
 
-            modelBuilder.Entity("ClothingStore.Entities.Category", b =>
+            modelBuilder.Entity("ClothingStore.Domain.Entities.Category", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -108,6 +110,12 @@ namespace ClothingStore.Infrastructure.Data.Migrations
                         .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_active");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -128,7 +136,7 @@ namespace ClothingStore.Infrastructure.Data.Migrations
                     b.ToTable("categories", "clothing_store");
                 });
 
-            modelBuilder.Entity("ClothingStore.Entities.CustomerOrder", b =>
+            modelBuilder.Entity("ClothingStore.Domain.Entities.CustomerOrder", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -140,6 +148,12 @@ namespace ClothingStore.Infrastructure.Data.Migrations
                     b.Property<int>("CurrentStatus")
                         .HasColumnType("integer")
                         .HasColumnName("current_status");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_active");
 
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("timestamp with time zone")
@@ -158,7 +172,7 @@ namespace ClothingStore.Infrastructure.Data.Migrations
                     b.ToTable("customer_orders", "clothing_store");
                 });
 
-            modelBuilder.Entity("ClothingStore.Entities.OrderHistory", b =>
+            modelBuilder.Entity("ClothingStore.Domain.Entities.OrderHistory", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -188,7 +202,7 @@ namespace ClothingStore.Infrastructure.Data.Migrations
                     b.ToTable("order_histories", "clothing_store");
                 });
 
-            modelBuilder.Entity("ClothingStore.Entities.OrderProduct", b =>
+            modelBuilder.Entity("ClothingStore.Domain.Entities.OrderProduct", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -232,7 +246,7 @@ namespace ClothingStore.Infrastructure.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ClothingStore.Entities.Product", b =>
+            modelBuilder.Entity("ClothingStore.Domain.Entities.Product", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -245,7 +259,7 @@ namespace ClothingStore.Infrastructure.Data.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("add_date");
 
-                    b.Property<int>("BrandID")
+                    b.Property<int?>("BrandID")
                         .HasColumnType("integer")
                         .HasColumnName("brand_id");
 
@@ -260,6 +274,12 @@ namespace ClothingStore.Infrastructure.Data.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)")
                         .HasColumnName("image_url");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_active");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -299,7 +319,7 @@ namespace ClothingStore.Infrastructure.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ClothingStore.Entities.Review", b =>
+            modelBuilder.Entity("ClothingStore.Domain.Entities.Review", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -317,6 +337,12 @@ namespace ClothingStore.Infrastructure.Data.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)")
                         .HasColumnName("comment");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_active");
 
                     b.Property<int>("ProductID")
                         .HasColumnType("integer")
@@ -352,7 +378,7 @@ namespace ClothingStore.Infrastructure.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ClothingStore.Entities.Section", b =>
+            modelBuilder.Entity("ClothingStore.Domain.Entities.Section", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -360,6 +386,12 @@ namespace ClothingStore.Infrastructure.Data.Migrations
                         .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_active");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -377,7 +409,7 @@ namespace ClothingStore.Infrastructure.Data.Migrations
                     b.ToTable("sections", "clothing_store");
                 });
 
-            modelBuilder.Entity("ClothingStore.Entities.SectionCategory", b =>
+            modelBuilder.Entity("ClothingStore.Domain.Entities.SectionCategory", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -406,7 +438,7 @@ namespace ClothingStore.Infrastructure.Data.Migrations
                     b.ToTable("section_categories", "clothing_store");
                 });
 
-            modelBuilder.Entity("ClothingStore.Entities.UserAccount", b =>
+            modelBuilder.Entity("ClothingStore.Domain.Entities.UserAccount", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -426,6 +458,12 @@ namespace ClothingStore.Infrastructure.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")
                         .HasColumnName("first_name");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_active");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -462,11 +500,11 @@ namespace ClothingStore.Infrastructure.Data.Migrations
                     b.ToTable("users", "clothing_store");
                 });
 
-            modelBuilder.Entity("ClothingStore.Entities.Address", b =>
+            modelBuilder.Entity("ClothingStore.Domain.Entities.Address", b =>
                 {
-                    b.HasOne("ClothingStore.Entities.UserAccount", "User")
+                    b.HasOne("ClothingStore.Domain.Entities.UserAccount", "User")
                         .WithOne("Address")
-                        .HasForeignKey("ClothingStore.Entities.Address", "UserID")
+                        .HasForeignKey("ClothingStore.Domain.Entities.Address", "UserID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_addresses_users_user_id");
@@ -474,9 +512,9 @@ namespace ClothingStore.Infrastructure.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ClothingStore.Entities.Category", b =>
+            modelBuilder.Entity("ClothingStore.Domain.Entities.Category", b =>
                 {
-                    b.HasOne("ClothingStore.Entities.Category", "ParentCategory")
+                    b.HasOne("ClothingStore.Domain.Entities.Category", "ParentCategory")
                         .WithMany("Categories")
                         .HasForeignKey("ParentCategoryID")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -485,9 +523,9 @@ namespace ClothingStore.Infrastructure.Data.Migrations
                     b.Navigation("ParentCategory");
                 });
 
-            modelBuilder.Entity("ClothingStore.Entities.CustomerOrder", b =>
+            modelBuilder.Entity("ClothingStore.Domain.Entities.CustomerOrder", b =>
                 {
-                    b.HasOne("ClothingStore.Entities.UserAccount", "User")
+                    b.HasOne("ClothingStore.Domain.Entities.UserAccount", "User")
                         .WithMany("CustomerOrders")
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -497,9 +535,9 @@ namespace ClothingStore.Infrastructure.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ClothingStore.Entities.OrderHistory", b =>
+            modelBuilder.Entity("ClothingStore.Domain.Entities.OrderHistory", b =>
                 {
-                    b.HasOne("ClothingStore.Entities.CustomerOrder", "CustomerOrder")
+                    b.HasOne("ClothingStore.Domain.Entities.CustomerOrder", "CustomerOrder")
                         .WithMany("OrderHistories")
                         .HasForeignKey("OrderID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -509,16 +547,16 @@ namespace ClothingStore.Infrastructure.Data.Migrations
                     b.Navigation("CustomerOrder");
                 });
 
-            modelBuilder.Entity("ClothingStore.Entities.OrderProduct", b =>
+            modelBuilder.Entity("ClothingStore.Domain.Entities.OrderProduct", b =>
                 {
-                    b.HasOne("ClothingStore.Entities.CustomerOrder", "Order")
+                    b.HasOne("ClothingStore.Domain.Entities.CustomerOrder", "Order")
                         .WithMany("OrderProducts")
                         .HasForeignKey("OrderID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_order_products_customer_orders_order_id");
 
-                    b.HasOne("ClothingStore.Entities.Product", "Product")
+                    b.HasOne("ClothingStore.Domain.Entities.Product", "Product")
                         .WithMany("OrderProducts")
                         .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -530,16 +568,15 @@ namespace ClothingStore.Infrastructure.Data.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("ClothingStore.Entities.Product", b =>
+            modelBuilder.Entity("ClothingStore.Domain.Entities.Product", b =>
                 {
-                    b.HasOne("ClothingStore.Entities.Brand", "Brand")
+                    b.HasOne("ClothingStore.Domain.Entities.Brand", "Brand")
                         .WithMany("Products")
                         .HasForeignKey("BrandID")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
                         .HasConstraintName("fk_products_brands_brand_id");
 
-                    b.HasOne("ClothingStore.Entities.SectionCategory", "SectionCategory")
+                    b.HasOne("ClothingStore.Domain.Entities.SectionCategory", "SectionCategory")
                         .WithMany("Products")
                         .HasForeignKey("SectionCategoryID")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -551,16 +588,16 @@ namespace ClothingStore.Infrastructure.Data.Migrations
                     b.Navigation("SectionCategory");
                 });
 
-            modelBuilder.Entity("ClothingStore.Entities.Review", b =>
+            modelBuilder.Entity("ClothingStore.Domain.Entities.Review", b =>
                 {
-                    b.HasOne("ClothingStore.Entities.Product", "Product")
+                    b.HasOne("ClothingStore.Domain.Entities.Product", "Product")
                         .WithMany("Reviews")
                         .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_reviews_products_product_id");
 
-                    b.HasOne("ClothingStore.Entities.UserAccount", "User")
+                    b.HasOne("ClothingStore.Domain.Entities.UserAccount", "User")
                         .WithMany("Reviews")
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -572,16 +609,16 @@ namespace ClothingStore.Infrastructure.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ClothingStore.Entities.SectionCategory", b =>
+            modelBuilder.Entity("ClothingStore.Domain.Entities.SectionCategory", b =>
                 {
-                    b.HasOne("ClothingStore.Entities.Category", "Category")
+                    b.HasOne("ClothingStore.Domain.Entities.Category", "Category")
                         .WithMany("SectionCategories")
                         .HasForeignKey("CategoryID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_section_categories_categories_category_id");
 
-                    b.HasOne("ClothingStore.Entities.Section", "Section")
+                    b.HasOne("ClothingStore.Domain.Entities.Section", "Section")
                         .WithMany("SectionCategories")
                         .HasForeignKey("SectionID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -593,43 +630,43 @@ namespace ClothingStore.Infrastructure.Data.Migrations
                     b.Navigation("Section");
                 });
 
-            modelBuilder.Entity("ClothingStore.Entities.Brand", b =>
+            modelBuilder.Entity("ClothingStore.Domain.Entities.Brand", b =>
                 {
                     b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("ClothingStore.Entities.Category", b =>
+            modelBuilder.Entity("ClothingStore.Domain.Entities.Category", b =>
                 {
                     b.Navigation("Categories");
 
                     b.Navigation("SectionCategories");
                 });
 
-            modelBuilder.Entity("ClothingStore.Entities.CustomerOrder", b =>
+            modelBuilder.Entity("ClothingStore.Domain.Entities.CustomerOrder", b =>
                 {
                     b.Navigation("OrderHistories");
 
                     b.Navigation("OrderProducts");
                 });
 
-            modelBuilder.Entity("ClothingStore.Entities.Product", b =>
+            modelBuilder.Entity("ClothingStore.Domain.Entities.Product", b =>
                 {
                     b.Navigation("OrderProducts");
 
                     b.Navigation("Reviews");
                 });
 
-            modelBuilder.Entity("ClothingStore.Entities.Section", b =>
+            modelBuilder.Entity("ClothingStore.Domain.Entities.Section", b =>
                 {
                     b.Navigation("SectionCategories");
                 });
 
-            modelBuilder.Entity("ClothingStore.Entities.SectionCategory", b =>
+            modelBuilder.Entity("ClothingStore.Domain.Entities.SectionCategory", b =>
                 {
                     b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("ClothingStore.Entities.UserAccount", b =>
+            modelBuilder.Entity("ClothingStore.Domain.Entities.UserAccount", b =>
                 {
                     b.Navigation("Address")
                         .IsRequired();
