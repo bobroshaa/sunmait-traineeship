@@ -85,15 +85,15 @@ public class OrderController : Controller
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [HttpPut("{id}/status")]
-    public async Task<ActionResult> UpdateOrderStatus([FromRoute] int id, [FromBody] Status orderStatus)
+    [HttpPut("{id}/status/{status}")]
+    public async Task<ActionResult> UpdateOrderStatus([FromRoute] int id, [FromRoute] Status status)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
 
-        await _orderService.Update(id, orderStatus);
+        await _orderService.Update(id, status);
         
         return Ok();
     }

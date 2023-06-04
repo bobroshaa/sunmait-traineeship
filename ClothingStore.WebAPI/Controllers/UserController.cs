@@ -127,8 +127,8 @@ public class UserController : Controller
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [HttpPut("{userId}/role")]
-    public async Task<ActionResult> UpdateRole([FromRoute] int userId, [FromBody] Role role)
+    [HttpPut("{userId}/role/{role}")]
+    public async Task<ActionResult> UpdateRole([FromRoute] int userId, [FromRoute] Role role)
     {
         await _userService.UpdateRole(userId, role);
         
