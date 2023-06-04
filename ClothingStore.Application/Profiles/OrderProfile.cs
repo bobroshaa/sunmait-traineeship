@@ -9,7 +9,10 @@ public class OrderProfile : Profile
 {
     public OrderProfile()
     {
-        CreateMap<CustomerOrder, OrderViewModel>().ReverseMap();
+        CreateMap<CustomerOrder, OrderViewModel>()
+            .ForMember(d => d.CurrentStatus, opt => opt.MapFrom(o => Enum.GetName(o.CurrentStatus)))
+            .ForMember(d => d.CurrentStatusId, opt => opt.MapFrom(o => o.CurrentStatus))
+            .ReverseMap();
         CreateMap<CustomerOrder, OrderInputModel>().ReverseMap();
     }
 }

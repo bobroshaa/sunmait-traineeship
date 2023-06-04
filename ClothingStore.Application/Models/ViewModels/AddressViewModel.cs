@@ -5,7 +5,8 @@ namespace ClothingStore.Application.Models.ViewModels;
 public class AddressViewModel
 {
     public int UserID { get; set; }
-    public Country Country {get; set;}
+    public Country CountryId {get; set;}
+    public string Country {get; set;}
     public string District { get; set; }
     public string City { get; set; }
     public string Postcode { get; set; }
