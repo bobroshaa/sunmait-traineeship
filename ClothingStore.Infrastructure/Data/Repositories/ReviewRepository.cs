@@ -15,7 +15,11 @@ public class ReviewRepository : IReviewRepository
     
     public async Task<List<Review>> GetReviewByProductId(int productId)
     {
-        return await _dbContext.Reviews.Where(r => r.ProductID == productId && r.IsActive).ToListAsync();
+        return await _dbContext
+            .Reviews
+            .Where(r => r.ProductID == productId && r.IsActive)
+            .OrderByDescending(r => r.AddDate)
+            .ToListAsync();
     }
 
     public async Task<Review?> GetById(int id)
