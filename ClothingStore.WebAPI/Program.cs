@@ -8,9 +8,21 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services
         .AddApplicationDependencies()
         .AddInfrastructure();
+    
     builder.Services.AddControllers();
-    builder.Services.AddAutoMapper(typeof(BrandProfile), typeof(ProductProfile), typeof(OrderProfile),
-        typeof(OrderItemProfile));
+    
+    builder.Services.AddAutoMapper(
+        typeof(BrandProfile),
+        typeof(ProductProfile),
+        typeof(OrderProfile),
+        typeof(OrderItemProfile),
+        typeof(AddressProfile),
+        typeof(CategoryProfile),
+        typeof(OrderHistoryProfile),
+        typeof(ReviewProfile),
+        typeof(SectionProfile),
+        typeof(UserProfile));
+    
     builder.Services.AddSwaggerGen(c =>
     {
         var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
@@ -23,6 +35,7 @@ var builder = WebApplication.CreateBuilder(args);
                 Description = "An ASP.NET Core Web API for Clothing Store"
             });
     });
+    
     builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 }
 
@@ -34,6 +47,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+
 app.MapControllers();
+
 app.Run();
