@@ -3,9 +3,9 @@ using ClothingStore.Infrastructure.Data;
 using ClothingStore.Infrastructure.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace ClothingStore.WebAPI;
+namespace ClothingStore.WebAPI.DependencyInjection;
 
-public static class DIRepositories
+public static class InfrastructureDependenciesExtensions
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {

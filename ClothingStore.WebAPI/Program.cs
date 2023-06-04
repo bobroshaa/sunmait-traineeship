@@ -1,6 +1,7 @@
 using System.Reflection;
 using ClothingStore.Application.Profiles;
 using ClothingStore.WebAPI;
+using ClothingStore.WebAPI.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,9 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services
         .AddApplicationDependencies()
         .AddInfrastructure();
-    
+
     builder.Services.AddControllers();
-    
+
     builder.Services.AddAutoMapper(
         typeof(BrandProfile),
         typeof(ProductProfile),
@@ -22,7 +23,7 @@ var builder = WebApplication.CreateBuilder(args);
         typeof(ReviewProfile),
         typeof(SectionProfile),
         typeof(UserProfile));
-    
+
     builder.Services.AddSwaggerGen(c =>
     {
         var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
@@ -35,7 +36,7 @@ var builder = WebApplication.CreateBuilder(args);
                 Description = "An ASP.NET Core Web API for Clothing Store"
             });
     });
-    
+
     builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 }
 
@@ -43,7 +44,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "v1"); });
+    app.UseSwaggerUI(options => { options.SwaggerEndpoint("/swagger/v1/swagger.json", "Clothing Store API v1"); });
 }
 
 app.UseHttpsRedirection();
