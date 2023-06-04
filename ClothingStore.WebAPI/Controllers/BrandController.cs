@@ -106,8 +106,8 @@ public class BrandController : Controller
     /// <param name="brandId">The ID of the brand.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [HttpPut("assign")]
-    public async Task<ActionResult> AssignToBrand([FromQuery] int productId, [FromQuery] int brandId)
+    [HttpPut("{brandId}/products/{productId}/assign")]
+    public async Task<ActionResult> AssignToBrand([FromRoute] int productId, [FromRoute] int brandId)
     {
         await _productService.AssignToBrand(productId, brandId);
         
@@ -120,8 +120,8 @@ public class BrandController : Controller
     /// <param name="productId">The ID of the product.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [HttpPut("unassign")]
-    public async Task<ActionResult> UnassignFromBrand([FromQuery] int productId)
+    [HttpPut("products/{productId}/unassign")]
+    public async Task<ActionResult> UnassignFromBrand([FromRoute] int productId)
     {
         await _productService.UnassignFromBrand(productId);
         
