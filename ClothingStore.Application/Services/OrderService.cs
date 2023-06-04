@@ -75,7 +75,7 @@ public class OrderService : IOrderService
                 
                 var item = _mapper.Map<OrderProduct>(itemInputModel);
                 
-                item.Price = productToUpdate.Price * item.Quantity;
+                item.Price = productToUpdate.Price;
                 item.OrderID = order.ID;
                 
                 order.OrderProducts.Add(item);
