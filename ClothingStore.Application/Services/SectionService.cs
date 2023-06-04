@@ -44,6 +44,7 @@ public class SectionService : ISectionService
         await _sectionRepository.SaveChanges();
 
         var response = new PostResponseViewModel { Id = section.ID };
+        
         return response;
     }
 
