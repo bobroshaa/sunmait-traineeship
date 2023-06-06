@@ -113,7 +113,7 @@ public class OrderServiceTests
             .ThrowAsync<EntityNotFoundException>()
             .WithMessage(string.Format(ExceptionMessages.UserNotFound, userId));
     }
-    
+
     [Theory]
     [InlineData(1, 10, 2)]
     public async Task AddNewOrder_InvalidProductId_Failure(int userId, int productId, int quantity)
@@ -140,5 +140,36 @@ public class OrderServiceTests
             .Should()
             .ThrowAsync<EntityNotFoundException>()
             .WithMessage(string.Format(ExceptionMessages.ProductNotFound, productId));
+    }
+
+    [Theory]
+    [InlineData(1, 1, 200)]
+    public async Task AddNewOrder_UnavailableProductQuantity_Failure(int userId, int productId, int quantity)
+    {
+        // Arrange
+        var orderInputModel = new OrderInputModel
+        {
+            UserID = userId,
+            Products = new List<OrderItemInputModel>
+            {
+                new()
+                {
+                    ProductID = productId,
+                    Quantity = quantity
+                }
+            }
+        };
+        
+        // Act
+        Func<Task> action = async () => await _orderService.Add(orderInputModel);
+
+        // Assert
+        var availableQuantity = (await _context.Products.FirstOrDefaultAsync(p => p.ID == productId))?.Quantity;
+
+        await action
+            .Should()
+            .ThrowAsync<IncorrectParamsException>()
+            .WithMessage(
+                string.Format(ExceptionMessages.ProductQuantityIsNotAvailable, quantity, productId, availableQuantity));
     }
 }
