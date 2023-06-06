@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClothingStore.Infrastructur
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClothingStore.WebAPI", "ClothingStore.WebAPI\ClothingStore.WebAPI.csproj", "{65F114B1-ADD3-46EF-A60C-498C3AB903EA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClothingStore.Tests", "ClothingStore.Tests\ClothingStore.Tests.csproj", "{ACA105AF-1C41-42A0-BD19-0DE784C40C8D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{65F114B1-ADD3-46EF-A60C-498C3AB903EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{65F114B1-ADD3-46EF-A60C-498C3AB903EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{65F114B1-ADD3-46EF-A60C-498C3AB903EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACA105AF-1C41-42A0-BD19-0DE784C40C8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACA105AF-1C41-42A0-BD19-0DE784C40C8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACA105AF-1C41-42A0-BD19-0DE784C40C8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACA105AF-1C41-42A0-BD19-0DE784C40C8D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
