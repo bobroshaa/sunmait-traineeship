@@ -59,6 +59,10 @@ public class OrderServiceTests
                 }
             }
         };
+        var product = await _context
+            .Products
+            .FirstOrDefaultAsync(p => p.ID == orderInputModel.Products[0].ProductID);
+        var startProductQuantity = product?.Quantity;
 
         // Act
         var addedOrderId = (await _orderService.Add(orderInputModel)).Id;
@@ -75,15 +79,15 @@ public class OrderServiceTests
 
         var orderItem = orderItems[0];
 
-        var productPrice = (await _context
-                .Products
-                .FirstOrDefaultAsync(p => p.ID == orderInputModel.Products[0].ProductID))
-            ?.Price;
+        
+        var productPrice = product?.Price;
 
         orderItem.Price.Should().Be(productPrice);
         orderItem.Quantity.Should().Be(quantity);
         orderItem.OrderID.Should().Be(addedOrderId);
         orderItem.ProductID.Should().Be(productId);
+
+        product?.Quantity.Should().Be(startProductQuantity - quantity);
     }
 
     [Theory]
