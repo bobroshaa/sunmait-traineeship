@@ -153,7 +153,7 @@ public class OrderServiceTests
         // Arrange
         const int userId = 1;
         const int productId = 1;
-        const int quantity = 200;
+        const int quantity = 2000;
         
         var orderInputModel = new OrderInputModel
         {
