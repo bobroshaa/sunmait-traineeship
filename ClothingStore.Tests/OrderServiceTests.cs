@@ -16,30 +16,23 @@ namespace ClothingStore.Tests;
 public class OrderServiceTests
 {
     private readonly Context _context;
-    private static IMapper _mapper;
-    private readonly OrderRepository _orderRepository;
-    private readonly ProductRepository _productRepository;
-    private readonly UserRepository _userRepository;
     private readonly OrderService _orderService;
 
     public OrderServiceTests()
     {
         _context = DatabaseInMemoryCreator.Create();
-        if (_mapper == null)
-        {
-            var mappingConfig = new MapperConfiguration(mc =>
-            {
-                mc.AddProfile(new OrderProfile());
-                mc.AddProfile(new OrderItemProfile());
-            });
-            IMapper mapper = mappingConfig.CreateMapper();
-            _mapper = mapper;
-        }
 
-        _orderRepository = new OrderRepository(_context);
-        _productRepository = new ProductRepository(_context);
-        _userRepository = new UserRepository(_context);
-        _orderService = new OrderService(_mapper, _orderRepository, _productRepository, _userRepository);
+        var mappingConfig = new MapperConfiguration(mc =>
+        {
+            mc.AddProfile(new OrderProfile());
+            mc.AddProfile(new OrderItemProfile());
+        });
+        IMapper mapper = mappingConfig.CreateMapper();
+
+        var orderRepository = new OrderRepository(_context);
+        var productRepository = new ProductRepository(_context);
+        var userRepository = new UserRepository(_context);
+        _orderService = new OrderService(mapper, orderRepository, productRepository, userRepository);
     }
 
     [Theory]
@@ -70,7 +63,7 @@ public class OrderServiceTests
         // Assert
         var order = await _context.CustomerOrders.FirstOrDefaultAsync(co => co.ID == addedOrderId);
         order.Should().NotBeNull();
-        order.OrderDate.Should().BeCloseTo(DateTime.UtcNow, new TimeSpan(0, 0, 0, 10));
+        order.OrderDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(10));
         order.CurrentStatus.Should().Be(Status.InReview);
         order.UserID.Should().Be(userId);
 
@@ -79,7 +72,6 @@ public class OrderServiceTests
 
         var orderItem = orderItems[0];
 
-        
         var productPrice = product?.Price;
 
         orderItem.Price.Should().Be(productPrice);
@@ -163,7 +155,7 @@ public class OrderServiceTests
                 }
             }
         };
-        
+
         // Act
         Func<Task> action = async () => await _orderService.Add(orderInputModel);
 
