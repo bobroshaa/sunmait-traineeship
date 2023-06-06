@@ -35,11 +35,14 @@ public class OrderServiceTests
         _orderService = new OrderService(mapper, orderRepository, productRepository, userRepository);
     }
 
-    [Theory]
-    [InlineData(1, 1, 2)]
-    public async Task AddNewOrder_ValidValues_Success(int userId, int productId, int quantity)
+    [Fact]
+    public async Task AddNewOrder_ValidValues_Success()
     {
         // Arrange
+        const int userId = 1;
+        const int productId = 1;
+        const int quantity = 2;
+        
         var orderInputModel = new OrderInputModel
         {
             UserID = userId,
@@ -82,11 +85,14 @@ public class OrderServiceTests
         product?.Quantity.Should().Be(startProductQuantity - quantity);
     }
 
-    [Theory]
-    [InlineData(10, 1, 2)]
-    public async Task AddNewOrder_InvalidUserId_Failure(int userId, int productId, int quantity)
+    [Fact]
+    public async Task AddNewOrder_InvalidUserId_Failure()
     {
         // Arrange
+        const int userId = 10;
+        const int productId = 1;
+        const int quantity = 2;
+        
         var orderInputModel = new OrderInputModel
         {
             UserID = userId,
@@ -110,11 +116,14 @@ public class OrderServiceTests
             .WithMessage(string.Format(ExceptionMessages.UserNotFound, userId));
     }
 
-    [Theory]
-    [InlineData(1, 10, 2)]
-    public async Task AddNewOrder_InvalidProductId_Failure(int userId, int productId, int quantity)
+    [Fact]
+    public async Task AddNewOrder_InvalidProductId_Failure()
     {
         // Arrange
+        const int userId = 1;
+        const int productId = 10;
+        const int quantity = 2;
+        
         var orderInputModel = new OrderInputModel
         {
             UserID = userId,
@@ -138,11 +147,14 @@ public class OrderServiceTests
             .WithMessage(string.Format(ExceptionMessages.ProductNotFound, productId));
     }
 
-    [Theory]
-    [InlineData(1, 1, 200)]
-    public async Task AddNewOrder_UnavailableProductQuantity_Failure(int userId, int productId, int quantity)
+    [Fact]
+    public async Task AddNewOrder_UnavailableProductQuantity_Failure()
     {
         // Arrange
+        const int userId = 1;
+        const int productId = 1;
+        const int quantity = 200;
+        
         var orderInputModel = new OrderInputModel
         {
             UserID = userId,
