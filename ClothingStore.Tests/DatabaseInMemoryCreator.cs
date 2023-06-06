@@ -17,31 +17,30 @@ public class DatabaseInMemoryCreator
 
         context.Database.EnsureCreated();
 
-        context.Products.Add(
-            new Product
-            {
-                ID = 1,
-                AddDate = DateTime.UtcNow,
-                Description = "Pretty white dress with flowers.",
-                ImageURL = "https://image",
-                Name = "White Dress",
-                Price = 10,
-                Quantity = 10,
-                IsActive = true
-            }
-        );
-        context.Users.Add(
-            new UserAccount
-            {
-                ID = 1,
-                Email = "email@gmail.com",
-                FirstName = "Ryan",
-                LastName = "Gosling",
-                Password = Convert.ToHexString(SHA256.HashData("password"u8.ToArray())),
-                Phone = "88005553535",
-                IsActive = true
-            }
-        );
+        var product = new Product
+        {
+            ID = 1,
+            AddDate = DateTime.UtcNow,
+            Description = "Pretty white dress with flowers.",
+            ImageURL = "https://image",
+            Name = "White Dress",
+            Price = 10,
+            Quantity = 10,
+            IsActive = true
+        };
+        var user = new UserAccount
+        {
+            ID = 1,
+            Email = "email@gmail.com",
+            FirstName = "Ryan",
+            LastName = "Gosling",
+            Password = Convert.ToHexString(SHA256.HashData("password"u8.ToArray())),
+            Phone = "88005553535",
+            IsActive = true
+        };
+        
+        context.Products.Add(product);
+        context.Users.Add(user);
 
         context.SaveChanges();
 
