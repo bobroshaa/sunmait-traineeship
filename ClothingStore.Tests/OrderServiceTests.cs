@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using ClothingStore.Application;
+using ClothingStore.Application.Exceptions;
 using ClothingStore.Application.Models.InputModels;
 using ClothingStore.Application.Profiles;
 using ClothingStore.Application.Services;
@@ -74,13 +76,41 @@ public class OrderServiceTests
         var orderItem = orderItems[0];
 
         var productPrice = (await _context
-            .Products
-            .FirstOrDefaultAsync(p => p.ID == orderInputModel.Products[0].ProductID))
+                .Products
+                .FirstOrDefaultAsync(p => p.ID == orderInputModel.Products[0].ProductID))
             ?.Price;
-        
+
         orderItem.Price.Should().Be(productPrice);
         orderItem.Quantity.Should().Be(quantity);
         orderItem.OrderID.Should().Be(addedOrderId);
         orderItem.ProductID.Should().Be(productId);
+    }
+
+    [Theory]
+    [InlineData(10, 1, 2)]
+    public async Task AddNewOrder_InvalidUserId_Failure(int userId, int productId, int quantity)
+    {
+        // Arrange
+        var orderInputModel = new OrderInputModel
+        {
+            UserID = userId,
+            Products = new List<OrderItemInputModel>
+            {
+                new()
+                {
+                    ProductID = productId,
+                    Quantity = quantity
+                }
+            }
+        };
+
+        // Act
+        Func<Task> action = async () => await _orderService.Add(orderInputModel);
+
+        // Assert
+        await action
+            .Should()
+            .ThrowAsync<EntityNotFoundException>()
+            .WithMessage(string.Format(ExceptionMessages.UserNotFound, userId));
     }
 }
