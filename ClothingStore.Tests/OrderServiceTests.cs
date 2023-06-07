@@ -37,6 +37,8 @@ public class OrderServiceTests
         _orderService = new OrderService(mapper, orderRepository, productRepository, userRepository);
     }
 
+    #region AddNewOrderTests
+    
     [Fact]
     public async Task AddNewOrder_ValidValues_Success()
     {
@@ -182,7 +184,11 @@ public class OrderServiceTests
             .WithMessage(
                 string.Format(ExceptionMessages.ProductQuantityIsNotAvailable, quantity, productId, availableQuantity));
     }
-
+    
+    #endregion
+    
+    #region UpdateStatusTests
+    
     [Fact]
     public async Task UpdateStatus_FromInReview_ValidStatus_Success()
     {
@@ -292,6 +298,9 @@ public class OrderServiceTests
             .WithMessage(string.Format(ExceptionMessages.StatusNotFound, status));
     }
     
+    #endregion
+    
+    #region GetOrderHistoryByOrderIdTests
     [Fact]
     public async Task GetOrderHistoryByOrderId_ValidOrderId_Success()
     {
@@ -321,6 +330,10 @@ public class OrderServiceTests
             .WithMessage(string.Format(ExceptionMessages.OrderNotFound, orderId));
     }
     
+    #endregion
+    
+    #region GetOrderItemsByOrderIdTests
+    
     [Fact]
     public async Task GetOrderItemsByOrderId_ValidOrderId_Success()
     {
@@ -349,4 +362,6 @@ public class OrderServiceTests
             .ThrowAsync<EntityNotFoundException>()
             .WithMessage(string.Format(ExceptionMessages.OrderNotFound, orderId));
     }
+
+    #endregion
 }
