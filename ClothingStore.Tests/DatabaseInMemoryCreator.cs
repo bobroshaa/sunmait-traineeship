@@ -2,6 +2,7 @@
 using System.Text;
 using Bogus;
 using ClothingStore.Domain.Entities;
+using ClothingStore.Domain.Enums;
 using ClothingStore.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -38,9 +39,21 @@ public class DatabaseInMemoryCreator
                 f => Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(f.Internet.Password()))))
             .RuleFor(u => u.Phone, f => f.Phone.PhoneNumber())
             .RuleFor(u => u.IsActive, true);
+        var orderItem = new Faker<OrderProduct>()
+            .RuleFor(op => op.ProductID, 1)
+            .RuleFor(op => op.Quantity, f => f.Random.Int(1, 500))
+            .RuleFor(op => op.Price, f => f.Random.Int(1, 500));
+        var order = new Faker<CustomerOrder>()
+            .RuleFor(o => o.ID, 1)
+            .RuleFor(o => o.CurrentStatus, Status.InReview)
+            .RuleFor(o => o.OrderDate, f => f.Date.Recent())
+            .RuleFor(o => o.UserID, 1)
+            .RuleFor(o => o.OrderProducts, new List<OrderProduct> { orderItem })
+            .RuleFor(o => o.IsActive, true);
 
         context.Products.Add(product);
         context.Users.Add(user);
+        context.CustomerOrders.Add(order);
 
         context.SaveChanges();
 

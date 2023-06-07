@@ -42,7 +42,7 @@ public class OrderServiceTests
         const int userId = 1;
         const int productId = 1;
         const int quantity = 2;
-        
+
         var orderInputModel = new OrderInputModel
         {
             UserID = userId,
@@ -92,7 +92,7 @@ public class OrderServiceTests
         const int userId = 10;
         const int productId = 1;
         const int quantity = 2;
-        
+
         var orderInputModel = new OrderInputModel
         {
             UserID = userId,
@@ -123,7 +123,7 @@ public class OrderServiceTests
         const int userId = 1;
         const int productId = 10;
         const int quantity = 2;
-        
+
         var orderInputModel = new OrderInputModel
         {
             UserID = userId,
@@ -154,7 +154,7 @@ public class OrderServiceTests
         const int userId = 1;
         const int productId = 1;
         const int quantity = 2000;
-        
+
         var orderInputModel = new OrderInputModel
         {
             UserID = userId,
@@ -179,5 +179,19 @@ public class OrderServiceTests
             .ThrowAsync<IncorrectParamsException>()
             .WithMessage(
                 string.Format(ExceptionMessages.ProductQuantityIsNotAvailable, quantity, productId, availableQuantity));
+    }
+
+    [Fact]
+    public async Task UpdateStatus_ValidStatus_Success()
+    {
+        // Arrange
+        const int orderId = 1;
+        const Status status = Status.InDelivery;
+
+        // Act
+        await _orderService.Update(orderId, status);
+
+        // Assert
+        (await _context.CustomerOrders.FirstOrDefaultAsync(o => o.ID == orderId)).CurrentStatus.Should().Be(status);
     }
 }
