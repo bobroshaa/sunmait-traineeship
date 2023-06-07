@@ -319,4 +319,18 @@ public class OrderServiceTests
             .ThrowAsync<EntityNotFoundException>()
             .WithMessage(string.Format(ExceptionMessages.OrderNotFound, orderId));
     }
+    
+    [Fact]
+    public async Task GetOrderItemsByOrderId_ValidOrderId_Success()
+    {
+        // Arrange
+        const int orderId = 1;
+
+        // Act
+        var orderItems = await _orderService.GetOrderItemsByOrderId(orderId);
+
+        // Assert
+        orderItems.Should().NotBeNull();
+        orderItems.Count.Should().Be(1);
+    }
 }
