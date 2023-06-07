@@ -222,7 +222,11 @@ public class OrderServiceTests
         Func<Task> action = async () => await _orderService.Update(orderId, status);
 
         // Assert
-        await action.Should().ThrowAsync<IncorrectParamsException>();
+        await action
+            .Should()
+            .ThrowAsync<IncorrectParamsException>()
+            .WithMessage(
+                string.Format(ExceptionMessages.IncorrectStatusChanging, Enum.GetName(Status.InReview), Enum.GetName(status)));
     }
 
     [Theory]
@@ -232,13 +236,18 @@ public class OrderServiceTests
     {
         // Arrange
         const int orderId = 1;
-        (await _context.CustomerOrders.FirstOrDefaultAsync(o => o.ID == orderId)).CurrentStatus = Status.InDelivery;
+        const Status startStatus = Status.InDelivery;
+        (await _context.CustomerOrders.FirstOrDefaultAsync(o => o.ID == orderId)).CurrentStatus = startStatus;
 
         // Act
         Func<Task> action = async () => await _orderService.Update(orderId, status);
 
         // Assert
-        await action.Should().ThrowAsync<IncorrectParamsException>();
+        await action
+            .Should()
+            .ThrowAsync<IncorrectParamsException>()
+            .WithMessage(
+                string.Format(ExceptionMessages.IncorrectStatusChanging, Enum.GetName(startStatus), Enum.GetName(status)));
     }
 
     [Theory]
@@ -249,13 +258,18 @@ public class OrderServiceTests
     {
         // Arrange
         const int orderId = 1;
-        (await _context.CustomerOrders.FirstOrDefaultAsync(o => o.ID == orderId)).CurrentStatus = Status.Completed;
+        const Status startStatus = Status.Completed;
+        (await _context.CustomerOrders.FirstOrDefaultAsync(o => o.ID == orderId)).CurrentStatus = startStatus;
 
         // Act
         Func<Task> action = async () => await _orderService.Update(orderId, status);
 
         // Assert
-        await action.Should().ThrowAsync<IncorrectParamsException>();
+        await action
+            .Should()
+            .ThrowAsync<IncorrectParamsException>()
+            .WithMessage(
+                string.Format(ExceptionMessages.IncorrectStatusChanging, Enum.GetName(startStatus), Enum.GetName(status)));
     }
 
     [Theory]
