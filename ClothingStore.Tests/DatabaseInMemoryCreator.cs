@@ -39,10 +39,12 @@ public class DatabaseInMemoryCreator
                 f => Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(f.Internet.Password()))))
             .RuleFor(u => u.Phone, f => f.Phone.PhoneNumber())
             .RuleFor(u => u.IsActive, true);
+
         var orderItem = new Faker<OrderProduct>()
             .RuleFor(op => op.ProductID, 1)
             .RuleFor(op => op.Quantity, f => f.Random.Int(1, 500))
             .RuleFor(op => op.Price, f => f.Random.Int(1, 500));
+
         var order = new Faker<CustomerOrder>()
             .RuleFor(o => o.ID, 1)
             .RuleFor(o => o.CurrentStatus, Status.InReview)
@@ -51,9 +53,25 @@ public class DatabaseInMemoryCreator
             .RuleFor(o => o.OrderProducts, new List<OrderProduct> { orderItem })
             .RuleFor(o => o.IsActive, true);
 
+        var orderHistoryList = new List<OrderHistory>
+        {
+            new Faker<OrderHistory>()
+                .RuleFor(oh => oh.ID, f => f.Random.Int())
+                .RuleFor(oh => oh.Status, Status.InReview)
+                .RuleFor(oh => oh.Date, f => f.Date.Recent(3))
+                .RuleFor(oh => oh.OrderID, 1),
+
+            new Faker<OrderHistory>()
+                .RuleFor(oh => oh.ID, f => f.Random.Int())
+                .RuleFor(oh => oh.Status, Status.InDelivery)
+                .RuleFor(oh => oh.Date, f => f.Date.Recent())
+                .RuleFor(oh => oh.OrderID, 1),
+        };
+
         context.Products.Add(product);
         context.Users.Add(user);
         context.CustomerOrders.Add(order);
+        context.OrderHistories.AddRange(orderHistoryList);
 
         context.SaveChanges();
 

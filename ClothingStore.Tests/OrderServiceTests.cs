@@ -26,6 +26,7 @@ public class OrderServiceTests
         {
             mc.AddProfile(new OrderProfile());
             mc.AddProfile(new OrderItemProfile());
+            mc.AddProfile(new OrderHistoryProfile());
         });
         IMapper mapper = mappingConfig.CreateMapper();
 
@@ -288,5 +289,19 @@ public class OrderServiceTests
             .Should()
             .ThrowAsync<IncorrectParamsException>()
             .WithMessage(string.Format(ExceptionMessages.StatusNotFound, status));
+    }
+    
+    [Fact]
+    public async Task GetOrderHistoryByOrderId_ValidOrderId_Success()
+    {
+        // Arrange
+        const int orderId = 1;
+
+        // Act
+        var orderHistoryVms = await _orderService.GetOrderHistoryByOrderId(orderId);
+
+        // Assert
+        orderHistoryVms.Should().NotBeNull();
+        orderHistoryVms.Count.Should().Be(2);
     }
 }
