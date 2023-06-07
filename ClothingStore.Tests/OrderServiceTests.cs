@@ -15,10 +15,9 @@ namespace ClothingStore.Tests;
 
 public class OrderServiceTests
 {
-    private readonly Context _context;
-    private readonly OrderService _orderService;
+    private Context _context;
 
-    public OrderServiceTests()
+    private OrderService CreateOrderService()
     {
         _context = DatabaseInMemoryCreator.Create();
 
@@ -34,7 +33,8 @@ public class OrderServiceTests
         var productRepository = new ProductRepository(_context);
         var userRepository = new UserRepository(_context);
         
-        _orderService = new OrderService(mapper, orderRepository, productRepository, userRepository);
+        var orderService = new OrderService(mapper, orderRepository, productRepository, userRepository);
+        return orderService;
     }
 
     #region AddNewOrderTests
@@ -46,6 +46,7 @@ public class OrderServiceTests
         const int userId = 1;
         const int productId = 1;
         const int quantity = 2;
+        var orderService = CreateOrderService();
 
         var orderInputModel = new OrderInputModel
         {
@@ -65,7 +66,7 @@ public class OrderServiceTests
         var startProductQuantity = product?.Quantity;
 
         // Act
-        var addedOrderId = (await _orderService.Add(orderInputModel)).Id;
+        var addedOrderId = (await orderService.Add(orderInputModel)).Id;
 
         // Assert
         var order = await _context.CustomerOrders.FirstOrDefaultAsync(co => co.ID == addedOrderId);
@@ -96,6 +97,7 @@ public class OrderServiceTests
         const int userId = 10;
         const int productId = 1;
         const int quantity = 2;
+        var orderService = CreateOrderService();
 
         var orderInputModel = new OrderInputModel
         {
@@ -111,7 +113,7 @@ public class OrderServiceTests
         };
 
         // Act
-        Func<Task> action = async () => await _orderService.Add(orderInputModel);
+        Func<Task> action = async () => await orderService.Add(orderInputModel);
 
         // Assert
         await action
@@ -127,6 +129,7 @@ public class OrderServiceTests
         const int userId = 1;
         const int productId = 10;
         const int quantity = 2;
+        var orderService = CreateOrderService();
 
         var orderInputModel = new OrderInputModel
         {
@@ -142,7 +145,7 @@ public class OrderServiceTests
         };
 
         // Act
-        Func<Task> action = async () => await _orderService.Add(orderInputModel);
+        Func<Task> action = async () => await orderService.Add(orderInputModel);
 
         // Assert
         await action
@@ -158,6 +161,7 @@ public class OrderServiceTests
         const int userId = 1;
         const int productId = 1;
         const int quantity = 2000;
+        var orderService = CreateOrderService();
 
         var orderInputModel = new OrderInputModel
         {
@@ -173,7 +177,7 @@ public class OrderServiceTests
         };
 
         // Act
-        Func<Task> action = async () => await _orderService.Add(orderInputModel);
+        Func<Task> action = async () => await orderService.Add(orderInputModel);
 
         // Assert
         var availableQuantity = (await _context.Products.FirstOrDefaultAsync(p => p.ID == productId))?.Quantity;
@@ -195,9 +199,10 @@ public class OrderServiceTests
         // Arrange
         const int orderId = 1;
         const Status status = Status.InDelivery;
+        var orderService = CreateOrderService();
 
         // Act
-        await _orderService.Update(orderId, status);
+        await orderService.Update(orderId, status);
 
         // Assert
         (await _context.CustomerOrders.FirstOrDefaultAsync(o => o.ID == orderId)).CurrentStatus.Should().Be(status);
@@ -209,10 +214,11 @@ public class OrderServiceTests
         // Arrange
         const int orderId = 1;
         const Status status = Status.Completed;
+        var orderService = CreateOrderService();
         (await _context.CustomerOrders.FirstOrDefaultAsync(o => o.ID == orderId)).CurrentStatus = Status.InDelivery;
 
         // Act
-        await _orderService.Update(orderId, status);
+        await orderService.Update(orderId, status);
 
         // Assert
         (await _context.CustomerOrders.FirstOrDefaultAsync(o => o.ID == orderId)).CurrentStatus.Should().Be(status);
@@ -225,9 +231,10 @@ public class OrderServiceTests
     {
         // Arrange
         const int orderId = 1;
+        var orderService = CreateOrderService();
 
         // Act
-        Func<Task> action = async () => await _orderService.Update(orderId, status);
+        Func<Task> action = async () => await orderService.Update(orderId, status);
 
         // Assert
         await action
@@ -245,10 +252,11 @@ public class OrderServiceTests
         // Arrange
         const int orderId = 1;
         const Status startStatus = Status.InDelivery;
+        var orderService = CreateOrderService();
         (await _context.CustomerOrders.FirstOrDefaultAsync(o => o.ID == orderId)).CurrentStatus = startStatus;
 
         // Act
-        Func<Task> action = async () => await _orderService.Update(orderId, status);
+        Func<Task> action = async () => await orderService.Update(orderId, status);
 
         // Assert
         await action
@@ -267,10 +275,11 @@ public class OrderServiceTests
         // Arrange
         const int orderId = 1;
         const Status startStatus = Status.Completed;
+        var orderService = CreateOrderService();
         (await _context.CustomerOrders.FirstOrDefaultAsync(o => o.ID == orderId)).CurrentStatus = startStatus;
 
         // Act
-        Func<Task> action = async () => await _orderService.Update(orderId, status);
+        Func<Task> action = async () => await orderService.Update(orderId, status);
 
         // Assert
         await action
@@ -287,9 +296,10 @@ public class OrderServiceTests
     {
         // Arrange
         const int orderId = 1;
+        var orderService = CreateOrderService();
 
         // Act
-        Func<Task> action = async () => await _orderService.Update(orderId, status);
+        Func<Task> action = async () => await orderService.Update(orderId, status);
 
         // Assert
         await action
@@ -306,9 +316,10 @@ public class OrderServiceTests
     {
         // Arrange
         const int orderId = 1;
+        var orderService = CreateOrderService();
 
         // Act
-        var orderHistoryVms = await _orderService.GetOrderHistoryByOrderId(orderId);
+        var orderHistoryVms = await orderService.GetOrderHistoryByOrderId(orderId);
 
         // Assert
         orderHistoryVms.Should().NotBeNull();
@@ -320,8 +331,11 @@ public class OrderServiceTests
     [InlineData(20)]
     public async Task GetOrderHistoryByOrderId_InvalidOrderId_Failure(int orderId)
     {
+        // Arrange
+        var orderService = CreateOrderService();
+        
         // Act
-        Func<Task> action = async () => await _orderService.GetOrderHistoryByOrderId(orderId);
+        Func<Task> action = async () => await orderService.GetOrderHistoryByOrderId(orderId);
 
         // Assert
         await action
@@ -339,9 +353,10 @@ public class OrderServiceTests
     {
         // Arrange
         const int orderId = 1;
+        var orderService = CreateOrderService();
 
         // Act
-        var orderItems = await _orderService.GetOrderItemsByOrderId(orderId);
+        var orderItems = await orderService.GetOrderItemsByOrderId(orderId);
 
         // Assert
         orderItems.Should().NotBeNull();
@@ -353,8 +368,11 @@ public class OrderServiceTests
     [InlineData(20)]
     public async Task GetOrderItemsByOrderId_InvalidOrderId_Failure(int orderId)
     {
+        // Arrange
+        var orderService = CreateOrderService();
+        
         // Act
-        Func<Task> action = async () => await _orderService.GetOrderItemsByOrderId(orderId);
+        Func<Task> action = async () => await orderService.GetOrderItemsByOrderId(orderId);
 
         // Assert
         await action
