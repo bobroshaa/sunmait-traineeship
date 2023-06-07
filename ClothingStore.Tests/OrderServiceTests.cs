@@ -333,4 +333,19 @@ public class OrderServiceTests
         orderItems.Should().NotBeNull();
         orderItems.Count.Should().Be(1);
     }
+    
+    [Theory]
+    [InlineData(1000)]
+    [InlineData(20)]
+    public async Task GetOrderItemsByOrderId_InvalidOrderId_Failure(int orderId)
+    {
+        // Act
+        Func<Task> action = async () => await _orderService.GetOrderItemsByOrderId(orderId);
+
+        // Assert
+        await action
+            .Should()
+            .ThrowAsync<EntityNotFoundException>()
+            .WithMessage(string.Format(ExceptionMessages.OrderNotFound, orderId));
+    }
 }
