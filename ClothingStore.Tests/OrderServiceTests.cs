@@ -182,11 +182,26 @@ public class OrderServiceTests
     }
 
     [Fact]
-    public async Task UpdateStatus_ValidStatus_Success()
+    public async Task UpdateStatus_FromInReview_ValidStatus_Success()
     {
         // Arrange
         const int orderId = 1;
         const Status status = Status.InDelivery;
+
+        // Act
+        await _orderService.Update(orderId, status);
+
+        // Assert
+        (await _context.CustomerOrders.FirstOrDefaultAsync(o => o.ID == orderId)).CurrentStatus.Should().Be(status);
+    }
+    
+    [Fact]
+    public async Task UpdateStatus_FromInDelivery_ValidStatus_Success()
+    {
+        // Arrange
+        const int orderId = 1;
+        const Status status = Status.Completed;
+        (await _context.CustomerOrders.FirstOrDefaultAsync(o => o.ID == orderId)).CurrentStatus = Status.InDelivery;
 
         // Act
         await _orderService.Update(orderId, status);
