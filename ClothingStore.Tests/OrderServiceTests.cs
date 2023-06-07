@@ -304,4 +304,19 @@ public class OrderServiceTests
         orderHistoryVms.Should().NotBeNull();
         orderHistoryVms.Count.Should().Be(2);
     }
+    
+    [Theory]
+    [InlineData(1000)]
+    [InlineData(20)]
+    public async Task GetOrderHistoryByOrderId_InvalidOrderId_Failure(int orderId)
+    {
+        // Act
+        Func<Task> action = async () => await _orderService.GetOrderHistoryByOrderId(orderId);
+
+        // Assert
+        await action
+            .Should()
+            .ThrowAsync<EntityNotFoundException>()
+            .WithMessage(string.Format(ExceptionMessages.OrderNotFound, orderId));
+    }
 }
