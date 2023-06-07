@@ -240,4 +240,21 @@ public class OrderServiceTests
         // Assert
         await action.Should().ThrowAsync<IncorrectParamsException>();
     }
+    
+    [Theory]
+    [InlineData(Status.InReview)]
+    [InlineData(Status.InDelivery)]
+    [InlineData(Status.Completed)]
+    public async Task UpdateStatus_FromInCompleted_InvalidStatus_Failure(Status status)
+    {
+        // Arrange
+        const int orderId = 1;
+        (await _context.CustomerOrders.FirstOrDefaultAsync(o => o.ID == orderId)).CurrentStatus = Status.Completed;
+
+        // Act
+        Func<Task> action = async () => await _orderService.Update(orderId, status);
+
+        // Assert
+        await action.Should().ThrowAsync<IncorrectParamsException>();
+    }
 }
