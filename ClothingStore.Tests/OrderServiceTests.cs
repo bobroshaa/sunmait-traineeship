@@ -209,4 +209,19 @@ public class OrderServiceTests
         // Assert
         (await _context.CustomerOrders.FirstOrDefaultAsync(o => o.ID == orderId)).CurrentStatus.Should().Be(status);
     }
+    
+    [Theory]
+    [InlineData(Status.InReview)]
+    [InlineData(Status.Completed)]
+    public async Task UpdateStatus_FromInReview_InvalidStatus_Failure(Status status)
+    {
+        // Arrange
+        const int orderId = 1;
+
+        // Act
+        Func<Task> action = async () => await _orderService.Update(orderId, status);
+
+        // Assert
+        await action.Should().ThrowAsync<IncorrectParamsException>();
+    }
 }
