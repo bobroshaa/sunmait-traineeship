@@ -194,7 +194,7 @@ public class OrderServiceTests
         // Assert
         (await _context.CustomerOrders.FirstOrDefaultAsync(o => o.ID == orderId)).CurrentStatus.Should().Be(status);
     }
-    
+
     [Fact]
     public async Task UpdateStatus_FromInDelivery_ValidStatus_Success()
     {
@@ -209,7 +209,7 @@ public class OrderServiceTests
         // Assert
         (await _context.CustomerOrders.FirstOrDefaultAsync(o => o.ID == orderId)).CurrentStatus.Should().Be(status);
     }
-    
+
     [Theory]
     [InlineData(Status.InReview)]
     [InlineData(Status.Completed)]
@@ -224,7 +224,7 @@ public class OrderServiceTests
         // Assert
         await action.Should().ThrowAsync<IncorrectParamsException>();
     }
-    
+
     [Theory]
     [InlineData(Status.InDelivery)]
     [InlineData(Status.InReview)]
@@ -240,7 +240,7 @@ public class OrderServiceTests
         // Assert
         await action.Should().ThrowAsync<IncorrectParamsException>();
     }
-    
+
     [Theory]
     [InlineData(Status.InReview)]
     [InlineData(Status.InDelivery)]
@@ -256,5 +256,23 @@ public class OrderServiceTests
 
         // Assert
         await action.Should().ThrowAsync<IncorrectParamsException>();
+    }
+
+    [Theory]
+    [InlineData((Status)3)]
+    [InlineData((Status)10)]
+    public async Task UpdateStatus_InvalidStatus_Failure(Status status)
+    {
+        // Arrange
+        const int orderId = 1;
+
+        // Act
+        Func<Task> action = async () => await _orderService.Update(orderId, status);
+
+        // Assert
+        await action
+            .Should()
+            .ThrowAsync<IncorrectParamsException>()
+            .WithMessage(string.Format(ExceptionMessages.StatusNotFound, status));
     }
 }
