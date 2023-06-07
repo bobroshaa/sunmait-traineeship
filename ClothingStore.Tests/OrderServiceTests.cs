@@ -33,6 +33,7 @@ public class OrderServiceTests
         var orderRepository = new OrderRepository(_context);
         var productRepository = new ProductRepository(_context);
         var userRepository = new UserRepository(_context);
+        
         _orderService = new OrderService(mapper, orderRepository, productRepository, userRepository);
     }
 
@@ -255,7 +256,7 @@ public class OrderServiceTests
     [InlineData(Status.InReview)]
     [InlineData(Status.InDelivery)]
     [InlineData(Status.Completed)]
-    public async Task UpdateStatus_FromInCompleted_InvalidStatus_Failure(Status status)
+    public async Task UpdateStatus_FromCompleted_InvalidStatus_Failure(Status status)
     {
         // Arrange
         const int orderId = 1;
