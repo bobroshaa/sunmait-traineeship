@@ -10,6 +10,7 @@ public static class ExceptionMessages
     public static readonly string SectionNotFound = "Section with id {0} does not exist.";
     public static readonly string BrandAlreadyExists = "Brand with name {0} already exists.";
     public static readonly string UserNotFound = "User with id {0} does not exist.";
+    public static readonly string UserNotFoundByEmail = "User with email {0} does not exist.";
     public static readonly string ReviewNotFound = "Review with id {0} does not exist.";
     public static readonly string CategoryLinked = "Category with id {0} already linked to section with id {1}.";
     public static readonly string EmailIsNotUnique = "Email {0} is already occupied.";
@@ -19,4 +20,5 @@ public static class ExceptionMessages
     public static readonly string StatusNotFound = "Status {0} does not exist.";
     public static readonly string RoleNotFound = "Role {0} does not exist.";
     public static readonly string CountryNotFound = "Country {0} does not exist.";
+    public static readonly string IncorrectPassword = "Incorrect password.";
 }

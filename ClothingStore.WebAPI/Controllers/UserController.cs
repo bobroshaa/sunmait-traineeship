@@ -1,13 +1,16 @@
-﻿using ClothingStore.Application.Interfaces;
+﻿using System.Text;
+using ClothingStore.Application.Interfaces;
 using ClothingStore.Application.Models.InputModels;
 using ClothingStore.Application.Models.ViewModels;
 using ClothingStore.Domain.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClothingStore.WebAPI.Controllers;
 
 [Route("api/users")]
 [ApiController]
+[Authorize]
 public class UserController : Controller
 {
     private readonly IUserService _userService;
@@ -49,6 +52,7 @@ public class UserController : Controller
     /// <param name="userInputModel">The input model of the new user.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [AllowAnonymous]
     [HttpPost]
     public async Task<ActionResult<int>> AddUser([FromBody] UserInputModel userInputModel)
     {
@@ -134,4 +138,28 @@ public class UserController : Controller
         
         return Ok();
     }
+    
+    /// <summary>
+    /// Authenticate user.
+    /// </summary>
+    /// <param name="user"></param>
+    /// <returns></returns>
+    [AllowAnonymous]
+    [HttpPost("auth")]
+    public async Task<ActionResult> Authenticate([FromBody]LoginInputModel user)
+    {
+        IConfiguration configuration = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json", true, true)
+            .Build();
+        var key = Encoding.UTF8.GetBytes(configuration.GetSection("JwtConfig").GetValue<string>("Secret"));
+        var token = await _userService.Authenticate(user, key);
+        
+        if (token == null)
+        {
+            return Unauthorized();
+        }
+        
+        return Ok(token);
+    }
+    
 }
