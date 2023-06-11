@@ -17,7 +17,7 @@ var builder = WebApplication.CreateBuilder(args);
         })
     .AddJwtBearer(jwt =>
         {
-            var key = Encoding.UTF8.GetBytes(builder.Configuration.GetSection("JwtConfig").GetValue<string>("Secret"));
+            var key = Encoding.UTF8.GetBytes(builder.Configuration.GetSection("JwtConfig:Secret").Value);
             jwt.SaveToken = true;
             jwt.TokenValidationParameters = new TokenValidationParameters()
             {

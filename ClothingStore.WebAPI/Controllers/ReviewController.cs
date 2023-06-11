@@ -1,6 +1,7 @@
 ﻿using ClothingStore.Application.Interfaces;
 using ClothingStore.Application.Models.InputModels;
 using ClothingStore.Application.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClothingStore.WebAPI.Controllers;
@@ -22,6 +23,7 @@ public class ReviewController : Controller
     /// <param name="id">The ID of the review.</param>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ReviewViewModel))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [AllowAnonymous]
     [HttpGet("{id}")]
     public async Task<ActionResult<ReviewViewModel>> GetReview([FromRoute] int id)
     {
@@ -35,6 +37,7 @@ public class ReviewController : Controller
     /// </summary>
     /// <param name="productId">The ID of the product.</param>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<ReviewViewModel>))]
+    [AllowAnonymous]
     [HttpGet("product/{productId}")]
     public async Task<ActionResult<List<ReviewViewModel>>> GetReviewsByProductId([FromRoute] int productId)
     {
@@ -49,6 +52,7 @@ public class ReviewController : Controller
     /// <param name="reviewInputModel">The input model of the new review.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<int>> AddReview([FromBody] ReviewInputModel reviewInputModel)
     {
@@ -70,6 +74,7 @@ public class ReviewController : Controller
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [Authorize]
     [HttpPut("{id}")]
     public async Task<ActionResult> UpdateReview([FromRoute] int id, [FromBody] ReviewInputModel reviewInputModel)
     {
@@ -89,6 +94,7 @@ public class ReviewController : Controller
     /// <param name="id">The ID of the review.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteReview([FromRoute] int id)
     {

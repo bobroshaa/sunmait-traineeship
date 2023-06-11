@@ -10,20 +10,22 @@ namespace ClothingStore.WebAPI.Controllers;
 
 [Route("api/users")]
 [ApiController]
-[Authorize]
 public class UserController : Controller
 {
     private readonly IUserService _userService;
+    private readonly IConfiguration _configuration;
 
-    public UserController(IUserService userService)
+    public UserController(IUserService userService, IConfiguration configuration)
     {
         _userService = userService;
+        _configuration = configuration;
     }
 
     /// <summary>
     /// Get all users.
     /// </summary>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<UserViewModel>))]
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     public async Task<ActionResult<List<UserViewModel>>> GetAllUsers()
     {
@@ -38,6 +40,7 @@ public class UserController : Controller
     /// <param name="id">The ID of the user.</param>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserViewModel))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [Authorize]
     [HttpGet("{id}")]
     public async Task<ActionResult<UserViewModel>> GetUser([FromRoute] int id)
     {
@@ -52,7 +55,7 @@ public class UserController : Controller
     /// <param name="userInputModel">The input model of the new user.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [AllowAnonymous]
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<ActionResult<int>> AddUser([FromBody] UserInputModel userInputModel)
     {
@@ -74,6 +77,7 @@ public class UserController : Controller
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [Authorize]
     [HttpPut("{id}")]
     public async Task<ActionResult> UpdateUser([FromRoute] int id, [FromBody] UserInputModel userInputModel)
     {
@@ -93,6 +97,7 @@ public class UserController : Controller
     /// <param name="id">The ID of the user.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteUser([FromRoute] int id)
     {
@@ -109,6 +114,7 @@ public class UserController : Controller
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [Authorize]
     [HttpPut("{userId}/address")]
     public async Task<ActionResult> UpdateAddress([FromRoute] int userId,
         [FromBody] AddressInputModel addressInputModel)
@@ -131,6 +137,7 @@ public class UserController : Controller
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [Authorize(Roles = "Admin")]
     [HttpPut("{userId}/role/{role}")]
     public async Task<ActionResult> UpdateRole([FromRoute] int userId, [FromRoute] Role role)
     {
@@ -148,10 +155,7 @@ public class UserController : Controller
     [HttpPost("auth")]
     public async Task<ActionResult> Authenticate([FromBody]LoginInputModel user)
     {
-        IConfiguration configuration = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json", true, true)
-            .Build();
-        var key = Encoding.UTF8.GetBytes(configuration.GetSection("JwtConfig").GetValue<string>("Secret"));
+        var key = Encoding.UTF8.GetBytes(_configuration.GetSection("JwtConfig:Secret").Value);
         var token = await _userService.Authenticate(user, key);
         
         if (token == null)
@@ -161,5 +165,4 @@ public class UserController : Controller
         
         return Ok(token);
     }
-    
 }

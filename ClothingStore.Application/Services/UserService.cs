@@ -221,6 +221,7 @@ public class UserService : IUserService
             Subject = new ClaimsIdentity(
                 new []
                 {
+                    new Claim(ClaimTypes.Role, Enum.GetName(user.Role)),
                     new Claim(ClaimTypes.Email, user.Email),
                 }
             ),
