@@ -62,3 +62,7 @@ body {
     font-family: 'Courier New', Courier, monospace;
     cursor: pointer;
 }
+
+.token {
+    overflow-wrap: break-word;
+}

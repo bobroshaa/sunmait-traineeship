@@ -23,7 +23,7 @@ public class OrderController : Controller
     /// Get all orders.
     /// </summary>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<OrderViewModel>))]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = nameof(Role.Admin))]
     [HttpGet]
     public async Task<ActionResult<List<OrderViewModel>>> GetAllOrders()
     {
@@ -90,7 +90,7 @@ public class OrderController : Controller
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = nameof(Role.Admin))]
     [HttpPut("{id}/status/{status}")]
     public async Task<ActionResult> UpdateOrderStatus([FromRoute] int id, [FromRoute] Status status)
     {
@@ -110,7 +110,7 @@ public class OrderController : Controller
     /// <param name="id">The ID of the order.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = nameof(Role.Admin))]
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteOrder([FromRoute] int id)
     {

@@ -55,7 +55,7 @@ public class BrandController : Controller
     /// <param name="brandInputModel">The input model of the new brand.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = nameof(Role.Admin))]
     [HttpPost]
     public async Task<ActionResult<int>> AddBrand([FromBody] BrandInputModel brandInputModel)
     {
@@ -77,7 +77,7 @@ public class BrandController : Controller
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = nameof(Role.Admin))]
     [HttpPut("{id}")]
     public async Task<ActionResult> UpdateBrand([FromRoute] int id, [FromBody] BrandInputModel brandInputModel)
     {
@@ -97,7 +97,7 @@ public class BrandController : Controller
     /// <param name="id">The ID of the brand.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = nameof(Role.Admin))]
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteBrand([FromRoute] int id)
     {
@@ -113,7 +113,7 @@ public class BrandController : Controller
     /// <param name="brandId">The ID of the brand.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = nameof(Role.Admin))]
     [HttpPut("{brandId}/products/{productId}/assign")]
     public async Task<ActionResult> AssignToBrand([FromRoute] int productId, [FromRoute] int brandId)
     {
@@ -128,7 +128,7 @@ public class BrandController : Controller
     /// <param name="productId">The ID of the product.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = nameof(Role.Admin))]
     [HttpPut("products/{productId}/unassign")]
     public async Task<ActionResult> UnassignFromBrand([FromRoute] int productId)
     {

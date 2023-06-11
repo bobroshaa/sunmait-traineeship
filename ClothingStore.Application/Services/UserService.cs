@@ -215,6 +215,13 @@ public class UserService : IUserService
         var user = await GetUserByEmail(loginInputModel.Email);
         CheckPassword(user, passwordHash);
 
+        var token = CreateToken(user, secret);
+
+        return token;
+    }
+
+    private string CreateToken(UserAccount user, byte[] secret)
+    {
         var tokenHandler = new JwtSecurityTokenHandler();
         var tokenDescriptor = new SecurityTokenDescriptor
         {
@@ -231,6 +238,6 @@ public class UserService : IUserService
 
         var token = tokenHandler.CreateToken(tokenDescriptor);
         
-        return tokenHandler.WriteToken(token);;
+        return tokenHandler.WriteToken(token);
     }
 }

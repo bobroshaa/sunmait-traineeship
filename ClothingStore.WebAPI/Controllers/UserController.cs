@@ -1,5 +1,4 @@
-﻿using System.Text;
-using ClothingStore.Application.Interfaces;
+﻿using ClothingStore.Application.Interfaces;
 using ClothingStore.Application.Models.InputModels;
 using ClothingStore.Application.Models.ViewModels;
 using ClothingStore.Domain.Enums;
@@ -13,19 +12,17 @@ namespace ClothingStore.WebAPI.Controllers;
 public class UserController : Controller
 {
     private readonly IUserService _userService;
-    private readonly IConfiguration _configuration;
 
-    public UserController(IUserService userService, IConfiguration configuration)
+    public UserController(IUserService userService)
     {
         _userService = userService;
-        _configuration = configuration;
     }
 
     /// <summary>
     /// Get all users.
     /// </summary>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<UserViewModel>))]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = nameof(Role.Admin))]
     [HttpGet]
     public async Task<ActionResult<List<UserViewModel>>> GetAllUsers()
     {
@@ -55,7 +52,7 @@ public class UserController : Controller
     /// <param name="userInputModel">The input model of the new user.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = nameof(Role.Admin))]
     [HttpPost]
     public async Task<ActionResult<int>> AddUser([FromBody] UserInputModel userInputModel)
     {
@@ -137,32 +134,12 @@ public class UserController : Controller
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = nameof(Role.Admin))]
     [HttpPut("{userId}/role/{role}")]
     public async Task<ActionResult> UpdateRole([FromRoute] int userId, [FromRoute] Role role)
     {
         await _userService.UpdateRole(userId, role);
         
         return Ok();
-    }
-    
-    /// <summary>
-    /// Authenticate user.
-    /// </summary>
-    /// <param name="user"></param>
-    /// <returns></returns>
-    [AllowAnonymous]
-    [HttpPost("auth")]
-    public async Task<ActionResult> Authenticate([FromBody]LoginInputModel user)
-    {
-        var key = Encoding.UTF8.GetBytes(_configuration.GetSection("JwtConfig:Secret").Value);
-        var token = await _userService.Authenticate(user, key);
-        
-        if (token == null)
-        {
-            return Unauthorized();
-        }
-        
-        return Ok(token);
     }
 }
