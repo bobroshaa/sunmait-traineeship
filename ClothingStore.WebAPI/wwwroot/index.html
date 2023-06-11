@@ -1,41 +1,53 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
-<h1>Login</h1>
-<div>
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required>
-</div>
-<div>
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required>
-</div>
-<div>
-    <button id="submit" type="submit">Login</button>
-</div>
 
-<script>
-    document.getElementById("submit").addEventListener("click", async e => {
-        e.preventDefault();
-        const response = await fetch("http://localhost:5051/api/users/auth", {
-            method: "POST",
-            headers: {"Accept": "application/json", "Content-Type": "application/json"},
-            body: JSON.stringify({
-                email: document.getElementById("email").value,
-                password: document.getElementById("password").value
-            })
+<body>
+    <div class="container">
+        <img class="image-side" src="https://i.pinimg.com/564x/a6/a8/a0/a6a8a0699ba1e63db8bb5068dee6605c.jpg" alt="Decorative image">
+        <div class="login-side">
+            <h3 class="login-side-header">
+                glad to see you again, buddy.
+                sign in to continue.
+            </h3>
+            <div class="input-container">
+                <label class="label" for="email">email:</label>
+                <input class="input" type="email" id="email" name="email" required placeholder="enter email...">
+            </div>
+            <div class="input-container">
+                <label class="label" for="password">password:</label>
+                <input class="input" type="password" id="password" name="password" required placeholder="enter password...">
+            </div>
+            <div>
+                <button class="login-button" id="submit" type="submit">login</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("submit").addEventListener("click", async e => {
+            e.preventDefault();
+            const response = await fetch("http://localhost:5051/api/users/auth", {
+                method: "POST",
+                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    email: document.getElementById("email").value,
+                    password: document.getElementById("password").value
+                })
+            });
+            if (response.ok === true) {
+                const data = await response.json();
+                localStorage.setItem("accessToken", data);
+                window.location.href = "http://localhost:63342/ClothingStore/ClothingStore.WebAPI/wwwroot/token.html";
+            } else
+                console.log("Status: ", response.status);
         });
-        if (response.ok === true) {
-            const data = await response.json();
-            localStorage.setItem("accessToken", data);
-            window.location.href = "http://localhost:63342/ClothingStore/ClothingStore.WebAPI/wwwroot/token.html";
-        } else
-            console.log("Status: ", response.status);
-    });
-</script>
+    </script>
 </body>
+
 </html>
