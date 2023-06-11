@@ -9,6 +9,16 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 {
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("AllowOrigin", corsPolicyBuilder =>
+        {
+            corsPolicyBuilder.WithOrigins("http://localhost:63342")
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+    });
+    
     builder.Services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -71,6 +81,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(options => { options.SwaggerEndpoint("/swagger/v1/swagger.json", "Clothing Store API v1"); });
 }
 
+app.UseCors("AllowOrigin");
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
@@ -79,5 +91,7 @@ app.UseAuthorization();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.MapControllers();
+
+app.UseStaticFiles();
 
 app.Run();
