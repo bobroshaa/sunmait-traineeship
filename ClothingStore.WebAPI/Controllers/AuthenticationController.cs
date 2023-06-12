@@ -24,6 +24,9 @@ public class AuthenticationController : Controller
     /// Authenticate user.
     /// </summary>
     /// <param name="user">Input model with login data.</param>
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [AllowAnonymous]
     [HttpPost]
     public async Task<ActionResult> Authenticate([FromBody]LoginInputModel user)
