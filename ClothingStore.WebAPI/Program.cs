@@ -35,7 +35,7 @@ var builder = WebApplication.CreateBuilder(args);
                 IssuerSigningKey = new SymmetricSecurityKey(key),
                 ValidateIssuer = false,
                 ValidateAudience = false,
-                RequireExpirationTime = false,
+                RequireExpirationTime = true,
                 ValidateLifetime = true
             };
         });

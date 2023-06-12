@@ -232,7 +232,7 @@ public class UserService : IUserService
                     new Claim(ClaimTypes.Email, user.Email),
                 }
             ),
-            Expires = DateTime.UtcNow.AddMinutes(5),
+            Expires = DateTime.UtcNow.AddMinutes(30),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secret), SecurityAlgorithms.HmacSha256)
         };
 
