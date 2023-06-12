@@ -2,22 +2,24 @@
 using System.Security.Claims;
 using System.Text;
 using ClothingStore.Application.Models.ViewModels;
+using ClothingStore.WebAPI.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace ClothingStore.WebAPI;
 
 public class JwtGenerator
 {
-    private readonly IConfiguration _configuration;
+    private readonly JwtConfiguration _jwtConfiguration;
 
-    public JwtGenerator(IConfiguration configuration)
+    public JwtGenerator(IOptions<JwtConfiguration> options)
     {
-        _configuration = configuration;
+        _jwtConfiguration = options.Value;
     }
+    
     public string CreateToken(UserViewModel user)
     {
-        var key = _configuration["JwtConfig:Secret"];
-        var secret = Encoding.UTF8.GetBytes(key);
+        var secret = Encoding.UTF8.GetBytes(_jwtConfiguration.Secret);
 
         var tokenHandler = new JwtSecurityTokenHandler();
         var tokenDescriptor = new SecurityTokenDescriptor
@@ -32,8 +34,8 @@ public class JwtGenerator
             ),
             Expires = DateTime.UtcNow.AddDays(30),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secret), SecurityAlgorithms.HmacSha256),
-            Audience = _configuration["JwtConfig:Audience"],
-            Issuer = _configuration["JwtConfig:Issuer"]
+            Audience = _jwtConfiguration.Audience,
+            Issuer = _jwtConfiguration.Issuer
         };
 
         var token = tokenHandler.CreateToken(tokenDescriptor);
