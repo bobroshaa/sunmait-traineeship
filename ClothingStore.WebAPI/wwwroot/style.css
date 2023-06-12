@@ -63,6 +63,12 @@ body {
     cursor: pointer;
 }
 
-.token {
-    overflow-wrap: break-word;
+.error-text {
+    display: none;
+    font-weight: bold;
+    text-decoration: underline red;
+}
+
+.show {
+    display: block;
 }
