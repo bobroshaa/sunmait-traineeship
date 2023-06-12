@@ -22,7 +22,7 @@ public class UserController : Controller
     /// Get all users.
     /// </summary>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<UserViewModel>))]
-    [Authorize(Roles = nameof(Role.Admin))]
+    [Authorize(Policy = PolicyNames.AdminAccess)]
     [HttpGet]
     public async Task<ActionResult<List<UserViewModel>>> GetAllUsers()
     {
@@ -37,7 +37,7 @@ public class UserController : Controller
     /// <param name="id">The ID of the user.</param>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserViewModel))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [Authorize]
+    [Authorize(Policy = PolicyNames.CustomerAccess)]
     [HttpGet("{id}")]
     public async Task<ActionResult<UserViewModel>> GetUser([FromRoute] int id)
     {
@@ -52,7 +52,7 @@ public class UserController : Controller
     /// <param name="userInputModel">The input model of the new user.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [Authorize(Roles = nameof(Role.Admin))]
+    [Authorize(Policy = PolicyNames.AdminAccess)]
     [HttpPost]
     public async Task<ActionResult<int>> AddUser([FromBody] UserInputModel userInputModel)
     {
@@ -74,7 +74,7 @@ public class UserController : Controller
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [Authorize]
+    [Authorize(Policy = PolicyNames.CustomerAccess)]
     [HttpPut("{id}")]
     public async Task<ActionResult> UpdateUser([FromRoute] int id, [FromBody] UserInputModel userInputModel)
     {
@@ -94,7 +94,7 @@ public class UserController : Controller
     /// <param name="id">The ID of the user.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [Authorize]
+    [Authorize(Policy = PolicyNames.CustomerAccess)]
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteUser([FromRoute] int id)
     {
@@ -111,7 +111,7 @@ public class UserController : Controller
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [Authorize]
+    [Authorize(Policy = PolicyNames.CustomerAccess)]
     [HttpPut("{userId}/address")]
     public async Task<ActionResult> UpdateAddress([FromRoute] int userId,
         [FromBody] AddressInputModel addressInputModel)
@@ -134,7 +134,7 @@ public class UserController : Controller
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [Authorize(Roles = nameof(Role.Admin))]
+    [Authorize(Policy = PolicyNames.AdminAccess)]
     [HttpPut("{userId}/role/{role}")]
     public async Task<ActionResult> UpdateRole([FromRoute] int userId, [FromRoute] Role role)
     {

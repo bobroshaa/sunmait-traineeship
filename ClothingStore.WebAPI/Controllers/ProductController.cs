@@ -1,7 +1,6 @@
 ﻿using ClothingStore.Application.Interfaces;
 using ClothingStore.Application.Models.InputModels;
 using ClothingStore.Application.Models.ViewModels;
-using ClothingStore.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,7 +21,7 @@ public class ProductController : Controller
     /// Get all products.
     /// </summary>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<ProductViewModel>))]
-    [AllowAnonymous]
+    [Authorize(Policy = PolicyNames.CustomerAccess)]
     [HttpGet]
     public async Task<ActionResult<List<ProductViewModel>>> GetAllProducts()
     {
@@ -37,7 +36,7 @@ public class ProductController : Controller
     /// <param name="id">The ID of the product.</param>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductViewModel))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [AllowAnonymous]
+    [Authorize(Policy = PolicyNames.CustomerAccess)]
     [HttpGet("{id}")]
     public async Task<ActionResult<ProductViewModel>> GetProduct([FromRoute] int id)
     {
@@ -52,7 +51,7 @@ public class ProductController : Controller
     /// <param name="productInputModel">The input model of the product.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [Authorize(Roles = nameof(Role.Admin))]
+    [Authorize(Policy = PolicyNames.AdminAccess)]
     [HttpPost]
     public async Task<ActionResult<int>> AddProduct([FromBody] ProductInputModel productInputModel)
     {
@@ -74,7 +73,7 @@ public class ProductController : Controller
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [Authorize(Roles = nameof(Role.Admin))]
+    [Authorize(Policy = PolicyNames.AdminAccess)]
     [HttpPut("{id}")]
     public async Task<ActionResult> UpdateProduct([FromRoute] int id, [FromBody] ProductInputModel productInputModel)
     {
@@ -94,7 +93,7 @@ public class ProductController : Controller
     /// <param name="id">The ID of the product.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [Authorize(Roles = nameof(Role.Admin))]
+    [Authorize(Policy = PolicyNames.AdminAccess)]
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteProduct([FromRoute] int id)
     {
@@ -110,7 +109,7 @@ public class ProductController : Controller
     /// <param name="categoryId">The ID of the category.</param>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<ProductViewModel>))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [AllowAnonymous]
+    [Authorize(Policy = PolicyNames.CustomerAccess)]
     [HttpGet("sections/{sectionId}/categories/{categoryId}")]
     public async Task<ActionResult<List<ProductViewModel>>> GetProductsBySectionAndCategory([FromRoute] int sectionId,
         [FromRoute] int categoryId)
@@ -126,7 +125,7 @@ public class ProductController : Controller
     /// <param name="brandId">The ID of the brand.</param>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<ProductViewModel>))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [AllowAnonymous]
+    [Authorize(Policy = PolicyNames.CustomerAccess)]
     [HttpGet("brands/{brandId}")]
     public async Task<ActionResult<List<ProductViewModel>>> GetProductsByBrand([FromRoute] int brandId)
     {

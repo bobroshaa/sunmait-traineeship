@@ -18,8 +18,9 @@ var jwtConfiguration = jwtConfigurationSection.Get<JwtConfiguration>();
 builder.Services.Configure<JwtConfiguration>(jwtConfigurationSection);
 
 builder.Services
-    .AddCors(corsPolicyConfiguration)
-    .AddAuthentication(jwtConfiguration)
+    .AddCustomCors(corsPolicyConfiguration)
+    .AddCustomAuthentication(jwtConfiguration)
+    .AddCustomAuthorization()
     .AddApplicationDependencies()
     .AddInfrastructure();
 

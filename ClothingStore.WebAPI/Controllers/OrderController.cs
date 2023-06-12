@@ -23,7 +23,7 @@ public class OrderController : Controller
     /// Get all orders.
     /// </summary>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<OrderViewModel>))]
-    [Authorize(Roles = nameof(Role.Admin))]
+    [Authorize(Policy = PolicyNames.AdminAccess)]
     [HttpGet]
     public async Task<ActionResult<List<OrderViewModel>>> GetAllOrders()
     {
@@ -38,7 +38,7 @@ public class OrderController : Controller
     /// <param name="orderId">The ID of the order.</param>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<OrderItemViewModel>))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [Authorize]
+    [Authorize(Policy = PolicyNames.CustomerAccess)]
     [HttpGet("{orderId}/items")]
     public async Task<ActionResult<List<OrderItemViewModel>>> GetOrderItemsByOrder(int orderId)
     {
@@ -53,7 +53,7 @@ public class OrderController : Controller
     /// <param name="id">The ID of the order.</param>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderViewModel))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [Authorize]
+    [Authorize(Policy = PolicyNames.CustomerAccess)]
     [HttpGet("{id}")]
     public async Task<ActionResult<OrderViewModel>> GetOrder([FromRoute] int id)
     {
@@ -68,7 +68,7 @@ public class OrderController : Controller
     /// <param name="orderInputModel">The input model of the new order.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [Authorize]
+    [Authorize(Policy = PolicyNames.CustomerAccess)]
     [HttpPost]
     public async Task<ActionResult<int>> AddOrder([FromBody] OrderInputModel orderInputModel)
     {
@@ -90,7 +90,7 @@ public class OrderController : Controller
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [Authorize(Roles = nameof(Role.Admin))]
+    [Authorize(Policy = PolicyNames.AdminAccess)]
     [HttpPut("{id}/status/{status}")]
     public async Task<ActionResult> UpdateOrderStatus([FromRoute] int id, [FromRoute] Status status)
     {
@@ -110,7 +110,7 @@ public class OrderController : Controller
     /// <param name="id">The ID of the order.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [Authorize(Roles = nameof(Role.Admin))]
+    [Authorize(Policy = PolicyNames.AdminAccess)]
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteOrder([FromRoute] int id)
     {
@@ -125,7 +125,7 @@ public class OrderController : Controller
     /// <param name="id">The ID of the order.</param>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderViewModel))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [Authorize]
+    [Authorize(Policy = PolicyNames.CustomerAccess)]
     [HttpGet("{id}/history")]
     public async Task<ActionResult<List<OrderHistory>>> GetOrderHistory([FromRoute] int id)
     {

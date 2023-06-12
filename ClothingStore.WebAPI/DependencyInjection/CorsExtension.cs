@@ -4,7 +4,7 @@ namespace ClothingStore.WebAPI.DependencyInjection;
 
 public static class CorsExtension
 {
-    public static IServiceCollection AddCors(
+    public static IServiceCollection AddCustomCors(
         this IServiceCollection services,
         CorsPolicyConfiguration corsPolicyConfiguration)
     {

@@ -7,7 +7,7 @@ namespace ClothingStore.WebAPI.DependencyInjection;
 
 public static class AuthenticationExtension
 {
-    public static IServiceCollection AddAuthentication(
+    public static IServiceCollection AddCustomAuthentication(
         this IServiceCollection services,
         JwtConfiguration jwtConfiguration)
     {
@@ -33,7 +33,7 @@ public static class AuthenticationExtension
                     ValidateLifetime = true
                 };
             });
-
+        
         return services;
     }
 }
