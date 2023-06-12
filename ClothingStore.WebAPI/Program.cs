@@ -27,14 +27,16 @@ var builder = WebApplication.CreateBuilder(args);
         })
     .AddJwtBearer(jwt =>
         {
-            var key = Encoding.UTF8.GetBytes(builder.Configuration.GetSection("JwtConfig:Secret").Value);
+            var key = Encoding.UTF8.GetBytes(builder.Configuration["JwtConfig:Secret"]);
             jwt.SaveToken = true;
-            jwt.TokenValidationParameters = new TokenValidationParameters()
+            jwt.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(key),
-                ValidateIssuer = false,
-                ValidateAudience = false,
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidIssuer = builder.Configuration["JwtConfig:Issuer"],
+                ValidAudience = builder.Configuration["JwtConfig:Audience"],
                 RequireExpirationTime = true,
                 ValidateLifetime = true
             };
