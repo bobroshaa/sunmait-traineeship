@@ -10,7 +10,6 @@ using ClothingStore.Application.Models.ViewModels;
 using ClothingStore.Domain.Entities;
 using ClothingStore.Domain.Enums;
 using ClothingStore.Domain.Interfaces;
-using Microsoft.IdentityModel.Tokens;
 
 namespace ClothingStore.Application.Services;
 
@@ -208,36 +207,15 @@ public class UserService : IUserService
         }
     }
 
-    public async Task<string> Authenticate(LoginInputModel loginInputModel, byte[] secret)
+    public async Task<UserViewModel> Authenticate(LoginInputModel loginInputModel)
     {
         var passwordHash = GetHashSha256(loginInputModel.Password);
 
         var user = await GetUserByEmail(loginInputModel.Email);
         CheckPassword(user, passwordHash);
-
-        var token = CreateToken(user, secret);
-
-        return token;
-    }
-
-    private string CreateToken(UserAccount user, byte[] secret)
-    {
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var tokenDescriptor = new SecurityTokenDescriptor
-        {
-            Subject = new ClaimsIdentity(
-                new []
-                {
-                    new Claim(ClaimTypes.Role, Enum.GetName(user.Role)),
-                    new Claim(ClaimTypes.Email, user.Email),
-                }
-            ),
-            Expires = DateTime.UtcNow.AddMinutes(30),
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secret), SecurityAlgorithms.HmacSha256)
-        };
-
-        var token = tokenHandler.CreateToken(tokenDescriptor);
         
-        return tokenHandler.WriteToken(token);
+        var userVm = _mapper.Map<UserViewModel>(user);
+
+        return userVm;
     }
 }

@@ -72,6 +72,7 @@ var builder = WebApplication.CreateBuilder(args);
     });
 
     builder.Services.AddTransient<ExceptionHandlingMiddleware>();
+    builder.Services.AddTransient<JwtGenerator>();
 }
 
 var app = builder.Build();
