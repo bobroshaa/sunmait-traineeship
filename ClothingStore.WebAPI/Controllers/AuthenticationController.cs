@@ -11,9 +11,9 @@ namespace ClothingStore.WebAPI.Controllers;
 public class AuthenticationController : Controller
 {
     private readonly IUserService _userService;
-    private readonly JwtGenerator _jwtGenerator;
+    private readonly IJwtGenerator _jwtGenerator;
 
-    public AuthenticationController(IUserService userService, JwtGenerator jwtGenerator)
+    public AuthenticationController(IUserService userService, IJwtGenerator jwtGenerator)
     {
         _userService = userService;
         _jwtGenerator = jwtGenerator;

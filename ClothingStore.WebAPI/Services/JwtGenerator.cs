@@ -17,7 +17,7 @@ public class JwtGenerator : IJwtGenerator
         _jwtConfiguration = options.Value;
     }
     
-    public string CreateToken(UserViewModel user)
+    public TokenViewModel CreateToken(UserViewModel user)
     {
         var secret = Encoding.UTF8.GetBytes(_jwtConfiguration.Secret);
 
@@ -38,8 +38,9 @@ public class JwtGenerator : IJwtGenerator
             Issuer = _jwtConfiguration.Issuer
         };
 
-        var token = tokenHandler.CreateToken(tokenDescriptor);
+        var securityToken = tokenHandler.CreateToken(tokenDescriptor);
+        var token = new TokenViewModel { AccessToken = tokenHandler.WriteToken(securityToken) };
         
-        return tokenHandler.WriteToken(token);
+        return token;
     }
 }

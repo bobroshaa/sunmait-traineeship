@@ -43,7 +43,7 @@
         });
         if (response.ok === true) {
             const data = await response.json();
-            localStorage.setItem("accessToken", data);
+            localStorage.setItem("accessToken", data.accessToken);
             window.location.href = "http://localhost:63342/ClothingStore/ClothingStore.WebAPI/wwwroot/token.html";
         } else if (response.status === 400 || response.status === 404) {
             document.getElementById("error-text").classList.add("show");
