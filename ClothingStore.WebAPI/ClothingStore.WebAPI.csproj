@@ -36,8 +36,4 @@
       <ProjectReference Include="..\ClothingStore.Infrastructure\ClothingStore.Infrastructure.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <_ContentIncludedByDefault Remove="Views\Login.cshtml" />
-    </ItemGroup>
-
 </Project>

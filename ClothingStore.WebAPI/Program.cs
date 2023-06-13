@@ -3,9 +3,12 @@ using ClothingStore.Application.Profiles;
 using ClothingStore.WebAPI;
 using ClothingStore.WebAPI.Configuration;
 using ClothingStore.WebAPI.DependencyInjection;
+using ClothingStore.WebAPI.Services;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+
+#region ServicesConfiguration
 
 var corsPolicyConfiguration = builder
     .Configuration
@@ -52,9 +55,14 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
-builder.Services.AddTransient<JwtGenerator>();
+builder.Services.AddTransient<IJwtGenerator, JwtGenerator>();
+
+#endregion
 
 var app = builder.Build();
+
+#region MiddlewareConfiguration
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -73,5 +81,7 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.MapControllers();
 
 app.UseStaticFiles();
+
+#endregion
 
 app.Run();

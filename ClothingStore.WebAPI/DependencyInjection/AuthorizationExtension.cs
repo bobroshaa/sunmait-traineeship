@@ -8,11 +8,11 @@ public static class AuthorizationExtension
     {
         services.AddAuthorization(opts =>
         {
-            opts.AddPolicy("AdminAccess", policy =>
+            opts.AddPolicy(PolicyNames.AdminAccess, policy =>
             {
                 policy.RequireRole(Enum.GetName(Role.Admin));
             });
-            opts.AddPolicy("CustomerAccess", policy =>
+            opts.AddPolicy(PolicyNames.CustomerAccess, policy =>
             {
                 policy.RequireRole(Enum.GetName(Role.Admin), Enum.GetName(Role.Customer));
             });

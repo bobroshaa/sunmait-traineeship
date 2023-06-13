@@ -6,9 +6,9 @@ using ClothingStore.WebAPI.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace ClothingStore.WebAPI;
+namespace ClothingStore.WebAPI.Services;
 
-public class JwtGenerator
+public class JwtGenerator : IJwtGenerator
 {
     private readonly JwtConfiguration _jwtConfiguration;
 
