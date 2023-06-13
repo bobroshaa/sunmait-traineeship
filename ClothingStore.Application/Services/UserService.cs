@@ -66,14 +66,20 @@ public class UserService : IUserService
     {
         var user = await GetUserById(id);
 
-        await ValidateEmail(userInputModel.Email);
-        if (userInputModel.Phone is not null)
+        if (user.Email != userInputModel.Email)
         {
-            await ValidatePhoneNumber(userInputModel.Phone);
+            await ValidateEmail(userInputModel.Email);
+            
+            user.Email = userInputModel.Email;
         }
 
-        user.Phone = userInputModel.Phone;
-        user.Email = userInputModel.Email;
+        if (user.Phone != userInputModel.Phone && userInputModel.Phone is not null)
+        {
+            await ValidatePhoneNumber(userInputModel.Phone);
+            
+            user.Phone = userInputModel.Phone;
+        }
+
         user.FirstName = userInputModel.FirstName;
         user.LastName = userInputModel.LastName;
 
