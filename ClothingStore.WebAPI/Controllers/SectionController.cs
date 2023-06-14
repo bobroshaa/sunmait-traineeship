@@ -1,6 +1,7 @@
 ﻿using ClothingStore.Application.Interfaces;
 using ClothingStore.Application.Models.InputModels;
 using ClothingStore.Application.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClothingStore.WebAPI.Controllers;
@@ -20,6 +21,7 @@ public class SectionController : Controller
     /// Get all sections.
     /// </summary>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<SectionViewModel>))]
+    [Authorize(Policy = PolicyNames.CustomerAccess)]
     [HttpGet]
     public async Task<ActionResult<List<SectionViewModel>>> GetAllSections()
     {
@@ -34,6 +36,7 @@ public class SectionController : Controller
     /// <param name="id">The ID of the section.</param>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SectionViewModel))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [Authorize(Policy = PolicyNames.CustomerAccess)]
     [HttpGet("{id}")]
     public async Task<ActionResult<SectionViewModel>> GetSection([FromRoute] int id)
     {
@@ -48,6 +51,7 @@ public class SectionController : Controller
     /// <param name="sectionInputModel">The input model of the new section.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [Authorize(Policy = PolicyNames.AdminAccess)]
     [HttpPost]
     public async Task<ActionResult<int>> AddSection([FromBody] SectionInputModel sectionInputModel)
     {
@@ -69,6 +73,7 @@ public class SectionController : Controller
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [Authorize(Policy = PolicyNames.AdminAccess)]
     [HttpPut("{id}")]
     public async Task<ActionResult> UpdateSectionName([FromRoute] int id,
         [FromBody] SectionInputModel sectionInputModel)
@@ -89,6 +94,7 @@ public class SectionController : Controller
     /// <param name="id">The ID of the section.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [Authorize(Policy = PolicyNames.AdminAccess)]
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteSection([FromRoute] int id)
     {

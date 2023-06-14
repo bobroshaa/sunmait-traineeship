@@ -13,4 +13,5 @@ public interface IUserService
     Task Delete(int id);
     Task UpdateAddress(int userId, AddressInputModel address);
     Task UpdateRole(int id, Role role);
+    Task<UserViewModel> Authenticate(LoginInputModel user);
 }

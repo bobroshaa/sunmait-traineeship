@@ -72,4 +72,9 @@ public class UserRepository : IUserRepository
     {
         return await _dbContext.Users.AnyAsync(u => u.ID == id && u.IsActive);
     }
+
+    public async Task<UserAccount?> GetUserByEmail(string email)
+    {
+        return await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email && u.IsActive);
+    }
 }
