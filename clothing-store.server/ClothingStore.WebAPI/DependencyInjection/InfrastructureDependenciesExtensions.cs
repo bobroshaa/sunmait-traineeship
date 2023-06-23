@@ -16,6 +16,7 @@ public static class InfrastructureDependenciesExtensions
         services.AddScoped<ISectionRepository, SectionRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IReviewRepository, ReviewRepository>();
+        services.AddScoped<ICartRepository, CartRepository>();
 
         services.AddDbContextPool<Context>(builder =>
         {
