@@ -1,0 +1,40 @@
+.accordion {
+  border-top: 1px solid #000;
+  border-bottom: 1px solid #000;
+  cursor: pointer;
+  padding: 10px 0;
+}
+
+.accordion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.accordion-title {
+  font-weight: 400;
+  font-size: 14px;
+}
+
+.accordion-content {
+  font-weight: 300;
+  font-size: 14px;
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.4s ease;
+}
+
+.accordion-content.open {
+  max-height: 400px;
+  transition: max-height 1s ease;
+}
+
+.accordion-arrow {
+  font-size: 28px;
+  font-weight: 200;
+  transition: all 0.3s ease;
+}
+
+.accordion-arrow.open {
+  transform: rotate(45deg);
+}

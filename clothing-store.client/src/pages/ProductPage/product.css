@@ -1,0 +1,93 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100;200;300;500&display=swap");
+
+html {
+  overflow: hidden;
+}
+
+.page-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Roboto Mono", monospace;
+}
+
+.product-container {
+  display: flex;
+  gap: 30px;
+  max-width: 900px;
+}
+
+.product-image {
+  max-width: 500px;
+  height: min-content;
+}
+
+.product-details {
+  display: flex;
+  gap: 30px;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.product-name {
+  margin: 0;
+  text-transform: uppercase;
+  font-weight: 500;
+  font-size: 26px;
+}
+
+.product-price {
+  font-weight: 300;
+  font-size: 20px;
+}
+
+.product-size {
+  font-weight: 300;
+  font-size: 14px;
+}
+
+.product-description {
+  font-weight: 300;
+  font-size: 14px;
+}
+
+.product-viewers {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 300;
+  font-size: 14px;
+}
+
+.add-to-cart {
+  padding: 10px;
+  width: 100%;
+  background-color: rgb(45, 45, 45);
+  color: white;
+  font-weight: 300;
+  font-family: "Roboto Mono", monospace;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.extra-info-container {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.extra-info-text-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.extra-info-header {
+  font-weight: 400;
+  font-size: 14px;
+}
+
+.extra-info-description {
+  font-weight: 300;
+  font-size: 14px;
+}
