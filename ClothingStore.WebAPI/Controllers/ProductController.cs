@@ -36,7 +36,7 @@ public class ProductController : Controller
     /// <param name="id">The ID of the product.</param>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductViewModel))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [Authorize(Policy = PolicyNames.CustomerAccess)]
+    //[Authorize(Policy = PolicyNames.CustomerAccess)]
     [HttpGet("{id}")]
     public async Task<ActionResult<ProductViewModel>> GetProduct([FromRoute] int id)
     {

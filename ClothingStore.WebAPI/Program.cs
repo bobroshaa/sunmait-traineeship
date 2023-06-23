@@ -3,7 +3,9 @@ using ClothingStore.Application.Profiles;
 using ClothingStore.WebAPI;
 using ClothingStore.WebAPI.Configuration;
 using ClothingStore.WebAPI.DependencyInjection;
+using ClothingStore.WebAPI.Hubs;
 using ClothingStore.WebAPI.Services;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -57,6 +59,10 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 builder.Services.AddTransient<IJwtGenerator, JwtGenerator>();
 
+builder.Services.AddSignalR();
+builder.Services.AddResponseCompression(options =>
+    options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[] { "application/octet-stream" }));
+
 #endregion
 
 var app = builder.Build();
@@ -79,6 +85,7 @@ app.UseAuthorization();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.MapControllers();
+app.MapHub<ProductHub>("/producthub");
 
 app.UseStaticFiles();
 

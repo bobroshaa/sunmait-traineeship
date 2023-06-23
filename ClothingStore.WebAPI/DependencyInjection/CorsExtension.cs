@@ -14,7 +14,8 @@ public static class CorsExtension
             {
                 corsPolicyBuilder.WithOrigins(corsPolicyConfiguration.Origins)
                     .AllowAnyHeader()
-                    .AllowAnyMethod();
+                    .AllowAnyMethod()
+                    .AllowCredentials();
             });
         });
 
