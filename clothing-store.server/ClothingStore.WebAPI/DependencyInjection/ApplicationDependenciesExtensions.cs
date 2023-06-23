@@ -14,6 +14,7 @@ public static class ApplicationDependenciesExtensions
         services.AddTransient<ISectionService, SectionService>();
         services.AddTransient<IUserService, UserService>();
         services.AddTransient<IReviewService, ReviewService>();
+        services.AddTransient<ICartService, CartService>();
 
         return services;
     }

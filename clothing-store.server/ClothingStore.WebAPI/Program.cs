@@ -41,7 +41,8 @@ builder.Services.AddAutoMapper(
     typeof(OrderHistoryProfile),
     typeof(ReviewProfile),
     typeof(SectionProfile),
-    typeof(UserProfile));
+    typeof(UserProfile),
+    typeof(CartItemProfile));
 
 builder.Services.AddSwaggerGen(c =>
 {

@@ -21,4 +21,5 @@ public static class ExceptionMessages
     public static readonly string RoleNotFound = "Role {0} does not exist.";
     public static readonly string CountryNotFound = "Country {0} does not exist.";
     public static readonly string IncorrectPassword = "Incorrect password.";
+    public static readonly string CartItemNotFound = "CartItem with id {0} does not exist.";
 }
