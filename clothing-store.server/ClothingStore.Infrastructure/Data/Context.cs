@@ -27,4 +27,5 @@ public class Context : DbContext
     public DbSet<CustomerOrder> CustomerOrders { get; set; }
     public DbSet<OrderProduct> OrderProducts { get; set; }
     public DbSet<OrderHistory> OrderHistories { get; set; }
+    public DbSet<CartItem> CartItems { get; set; }
 }
