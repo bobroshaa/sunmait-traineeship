@@ -18,4 +18,5 @@ public class Product
     
     public virtual ICollection<OrderProduct> OrderProducts { get; set; }
     public virtual ICollection<Review> Reviews { get; set; }
+    public virtual ICollection<CartItem> CartItems { get; set; }
 }

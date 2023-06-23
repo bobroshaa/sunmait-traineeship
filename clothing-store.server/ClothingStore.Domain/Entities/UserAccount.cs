@@ -17,4 +17,6 @@ public class UserAccount
     
     public virtual ICollection<CustomerOrder> CustomerOrders { get; set; }
     public virtual ICollection<Review> Reviews { get; set; }
+    public virtual ICollection<CartItem> CartItems { get; set; }
+
 }
