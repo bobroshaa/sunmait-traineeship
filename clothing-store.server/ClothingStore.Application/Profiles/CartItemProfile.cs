@@ -11,6 +11,8 @@ public class CartItemProfile: Profile
     {
         CreateMap<CartItem, CartItemViewModel>()
             .ForMember(ci => ci.Price, opt => opt.MapFrom(ci => ci.Product.Price))
+            .ForMember(ci => ci.ImageURL, opt => opt.MapFrom(ci => ci.Product.ImageURL))
+            .ForMember(ci => ci.Name, opt => opt.MapFrom(ci => ci.Product.Name))
             .ReverseMap();
         CreateMap<CartItem, CartItemInputModel>().ReverseMap();
     }

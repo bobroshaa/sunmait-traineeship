@@ -1,4 +1,5 @@
 using System.Reflection;
+using ClothingStore.Application.Options;
 using ClothingStore.Application.Profiles;
 using ClothingStore.WebAPI;
 using ClothingStore.WebAPI.Configuration;
@@ -21,6 +22,9 @@ var jwtConfigurationSection = builder.Configuration.GetSection(JwtConfiguration.
 var jwtConfiguration = jwtConfigurationSection.Get<JwtConfiguration>();
 
 builder.Services.Configure<JwtConfiguration>(jwtConfigurationSection);
+
+builder.Services.Configure<ReservationConfiguration>(
+    builder.Configuration.GetSection(ReservationConfiguration.SectionName));
 
 builder.Services
     .AddCustomCors(corsPolicyConfiguration)

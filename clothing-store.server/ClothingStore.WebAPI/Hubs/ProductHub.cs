@@ -21,9 +21,15 @@ public class ProductHub : Hub
         await BroadcastToGroup(productId);
     }
 
+    public async Task ReserveProduct(int productId, int reservedCount)
+    {
+        await Clients.Group(productId.ToString())
+            .SendAsync("updateReservedCount", reservedCount);
+    }
+
     private async Task BroadcastToGroup(int productId)
     {
         await Clients.Group(productId.ToString())
-            .SendAsync("broadcasttogroup", _viewingUsers[productId]);
+            .SendAsync("updateViewers", _viewingUsers[productId]);
     }
 }

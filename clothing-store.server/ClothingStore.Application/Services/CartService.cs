@@ -3,9 +3,11 @@ using ClothingStore.Application.Exceptions;
 using ClothingStore.Application.Interfaces;
 using ClothingStore.Application.Models.InputModels;
 using ClothingStore.Application.Models.ViewModels;
+using ClothingStore.Application.Options;
 using ClothingStore.Domain.Entities;
 using ClothingStore.Domain.Enums;
 using ClothingStore.Domain.Interfaces;
+using Microsoft.Extensions.Options;
 
 namespace ClothingStore.Application.Services;
 
@@ -15,17 +17,20 @@ public class CartService : ICartService
     private readonly IUserRepository _userRepository;
     private readonly IProductRepository _productRepository;
     private readonly IMapper _mapper;
+    private readonly ReservationConfiguration _reservationConfiguration;
 
     public CartService(
         IMapper mapper,
         ICartRepository cartRepository,
         IUserRepository userRepository,
-        IProductRepository productRepository)
+        IProductRepository productRepository,
+        IOptions<ReservationConfiguration> options)
     {
         _mapper = mapper;
         _cartRepository = cartRepository;
         _userRepository = userRepository;
         _productRepository = productRepository;
+        _reservationConfiguration = options.Value;
     }
 
     public async Task<List<CartItemViewModel>> GetUserCart(int userId)
@@ -46,7 +51,7 @@ public class CartService : ICartService
         return cartItemVm;
     }
 
-    public async Task<PostResponseViewModel> Add(CartItemInputModel cartItemInputModel)
+    public async Task<CartItemPostResponseViewModel> Add(CartItemInputModel cartItemInputModel)
     {
         await ValidateProduct(cartItemInputModel.ProductID);
         await ValidateUser(cartItemInputModel.UserID);
@@ -59,7 +64,8 @@ public class CartService : ICartService
 
         await _cartRepository.SaveChanges();
 
-        var response = new PostResponseViewModel { Id = cartItem.ID };
+        var response = new CartItemPostResponseViewModel
+            { Id = cartItem.ID, ReservationTime = _reservationConfiguration.reservationTime };
 
         return response;
     }
@@ -75,7 +81,7 @@ public class CartService : ICartService
     public async Task Delete(int id)
     {
         var cartItem = await GetCartItemById(id);
-        
+
         _cartRepository.Delete(cartItem);
 
         await _cartRepository.SaveChanges();
@@ -106,16 +112,5 @@ public class CartService : ICartService
         }
 
         return cartItem;
-    }
-    
-    private async Task<Product> GetProductById(int id)
-    {
-        var product = await _productRepository.GetById(id);
-        if (product is null)
-        {
-            throw new EntityNotFoundException(string.Format(ExceptionMessages.ProductNotFound, id));
-        }
-
-        return product;
     }
 }
