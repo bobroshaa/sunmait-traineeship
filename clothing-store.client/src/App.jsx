@@ -6,6 +6,7 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
+import Cart from './pages/Cart/Cart';
 
 const App = () => {
   return (
@@ -14,6 +15,12 @@ const App = () => {
         <Route
           path="/products/:productId"
           element={<Product />}
+        />
+      </Routes>
+      <Routes>
+        <Route
+          path="/cart/:userId"
+          element={<Cart />}
         />
       </Routes>
     </BrowserRouter>

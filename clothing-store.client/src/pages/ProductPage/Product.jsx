@@ -22,8 +22,7 @@ const Product = () => {
         .configureLogging(LogLevel.Information)
         .build();
 
-      hubConnection.on("broadcasttogroup", (message) => {
-        console.log("MESSAGE: ", message);
+      hubConnection.on("updateViewers", (message) => {
         setViewersCount(message);
       });
 
@@ -53,11 +52,11 @@ const Product = () => {
         `http://localhost:5051/api/products/${productId}`
       );
       setProduct(response.data);
-      console.log(response.data);
     } catch (error) {
       console.error(`Error: ${error}`);
     }
   };
+
   useEffect(() => {
     getProduct();
     joinRoom(productId);
@@ -77,7 +76,7 @@ const Product = () => {
   }, [connection]);
 
   return (
-    <div className="page-container">
+    <div className="product-page-container">
       {product && (
         <div className="product-container">
           <img
