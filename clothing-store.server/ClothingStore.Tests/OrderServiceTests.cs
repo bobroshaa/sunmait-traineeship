@@ -63,7 +63,7 @@ public class OrderServiceTests
         var product = await _context
             .Products
             .FirstOrDefaultAsync(p => p.ID == orderInputModel.Products[0].ProductID);
-        var startProductQuantity = product?.Quantity;
+        var startProductQuantity = product?.InStockQuantity;
 
         // Act
         var addedOrderId = (await orderService.Add(orderInputModel)).Id;
@@ -87,7 +87,7 @@ public class OrderServiceTests
         orderItem.OrderID.Should().Be(addedOrderId);
         orderItem.ProductID.Should().Be(productId);
 
-        product?.Quantity.Should().Be(startProductQuantity - quantity);
+        product?.InStockQuantity.Should().Be(startProductQuantity - quantity);
     }
 
     [Fact]
@@ -180,7 +180,7 @@ public class OrderServiceTests
         Func<Task> action = async () => await orderService.Add(orderInputModel);
 
         // Assert
-        var availableQuantity = (await _context.Products.FirstOrDefaultAsync(p => p.ID == productId))?.Quantity;
+        var availableQuantity = (await _context.Products.FirstOrDefaultAsync(p => p.ID == productId))?.InStockQuantity;
 
         await action
             .Should()

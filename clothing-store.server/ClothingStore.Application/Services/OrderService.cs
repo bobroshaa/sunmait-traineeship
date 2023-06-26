@@ -14,18 +14,21 @@ public class OrderService : IOrderService
     private readonly IOrderRepository _orderRepository;
     private readonly IProductRepository _productRepository;
     private readonly IUserRepository _userRepository;
+    private readonly ICartRepository _cartRepository;
     private readonly IMapper _mapper;
 
     public OrderService(
         IMapper mapper, 
         IOrderRepository orderRepository, 
         IProductRepository productRepository,
-        IUserRepository userRepository)
+        IUserRepository userRepository,
+        ICartRepository cartRepository)
     {
         _mapper = mapper;
         _orderRepository = orderRepository;
         _productRepository = productRepository;
         _userRepository = userRepository;
+        _cartRepository = cartRepository;
     }
 
     public async Task<List<OrderViewModel>> GetAll()
@@ -54,38 +57,42 @@ public class OrderService : IOrderService
         return orderVm;
     }
 
-    public async Task<PostResponseViewModel> Add(OrderInputModel orderInputModel)
+    // TODO: include product in cart repository
+    public async Task<OrderPostResponseViewModel> Add(OrderInputModel orderInputModel)
     {
         var order = _mapper.Map<CustomerOrder>(orderInputModel);
         
-        var productsIds = orderInputModel.Products.Select(p => p.ProductID).ToList();
+        var cartItemIds = orderInputModel.CartItemIds;
+        var cartItemsDictionary = await _cartRepository.GetCartItemsByIds(cartItemIds);
         
-        var productsDictionary = await _productRepository.GetProductsByIds(productsIds);
-        
-        ValidateProducts(productsIds, productsDictionary.Keys.ToList());
-        await ValidateUser(order.UserID);
+        ValidateCartItems(cartItemIds, cartItemsDictionary.Keys.ToList());
         
         order.OrderProducts = new List<OrderProduct>();
+        var productReservedQuantity = new Dictionary<int, int>();
         
-        foreach (var itemInputModel in orderInputModel.Products)
+        foreach (var cartItemId in orderInputModel.CartItemIds)
         {
-            if (productsDictionary.TryGetValue(itemInputModel.ProductID, out var productToUpdate))
+            if (cartItemsDictionary.TryGetValue(cartItemId, out var cartItem))
             {
-                ValidateProductQuantity(itemInputModel.ProductID, itemInputModel.Quantity, productToUpdate.Quantity);
-                
-                var item = _mapper.Map<OrderProduct>(itemInputModel);
-                
-                item.Price = productToUpdate.Price;
-                item.OrderID = order.ID;
+                //ValidateProductQuantity(itemInputModel.ProductID, itemInputModel.Quantity, productToUpdate.InStockQuantity);
+
+                var item = new OrderProduct
+                {
+                    ProductID = cartItem.ProductID,
+                    OrderID = order.ID,
+                    Quantity = cartItem.Quantity,
+                    Price = cartItem.Product.Price
+                };
                 
                 order.OrderProducts.Add(item);
                 
-                productToUpdate.Quantity -= itemInputModel.Quantity;
+                cartItem.Product.ReservedQuantity -= cartItem.Quantity;
+                productReservedQuantity.Add(cartItem.ProductID, cartItem.Product.ReservedQuantity);
             }
             else
             {
                 throw new EntityNotFoundException(
-                    string.Format(ExceptionMessages.ProductNotFound, itemInputModel.ProductID));
+                    string.Format(ExceptionMessages.CartItemNotFound, cartItem.ProductID));
             }
         }
 
@@ -95,7 +102,11 @@ public class OrderService : IOrderService
 
         await _orderRepository.SaveChanges();
         
-        var response = new PostResponseViewModel {Id = order.ID};
+        var response = new OrderPostResponseViewModel
+        {
+            OrderId = order.ID,
+            ProductReservedQuantity = productReservedQuantity
+        };
         
         return response;
     }
@@ -191,12 +202,21 @@ public class OrderService : IOrderService
             string.Format(ExceptionMessages.IncorrectStatusChanging, Enum.GetName(currentStatus), Enum.GetName(newStatus)));
     }
 
-    private void ValidateProducts(List<int> productsIds, List<int> existingProductsIds)
+    /*private void ValidateProducts(List<int> productsIds, List<int> existingProductsIds)
     {
         var missingProductIds = productsIds.Except(existingProductsIds).ToList();
         if (missingProductIds.Count > 0)
         {
             throw new EntityNotFoundException(string.Format(ExceptionMessages.ProductNotFound, missingProductIds[0]));
+        }
+    }*/
+    
+    private void ValidateCartItems(List<int> cartItemIds, List<int> existingCartItems)
+    {
+        var missingCartItemIds = cartItemIds.Except(existingCartItems).ToList();
+        if (missingCartItemIds.Count > 0)
+        {
+            throw new EntityNotFoundException(string.Format(ExceptionMessages.CartItemNotFound, missingCartItemIds[0]));
         }
     }
 }

@@ -6,6 +6,8 @@ using ClothingStore.WebAPI.Configuration;
 using ClothingStore.WebAPI.DependencyInjection;
 using ClothingStore.WebAPI.Hubs;
 using ClothingStore.WebAPI.Services;
+using Hangfire;
+using Hangfire.PostgreSql;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.OpenApi.Models;
 
@@ -61,8 +63,16 @@ builder.Services.AddSwaggerGen(c =>
         });
 });
 
+builder.Services.AddHangfire(config => config
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UsePostgreSqlStorage(builder.Configuration.GetConnectionString("ClothingStoreDatabase"))
+);
+builder.Services.AddHangfireServer();
+
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 builder.Services.AddTransient<IJwtGenerator, JwtGenerator>();
+builder.Services.AddTransient<ICartReservationService, CartReservationService>();
 
 builder.Services.AddSignalR();
 builder.Services.AddResponseCompression(options =>
@@ -93,6 +103,14 @@ app.MapControllers();
 app.MapHub<ProductHub>("/producthub");
 
 app.UseStaticFiles();
+
+app.UseHangfireDashboard();
+app.MapHangfireDashboard();
+
+RecurringJob.AddOrUpdate<ICartReservationService>(
+    new Guid().ToString(),
+    x => x.DeleteExpiredCartItems(),
+    "0 * * ? * *");
 
 #endregion
 

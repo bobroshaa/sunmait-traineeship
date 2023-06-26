@@ -27,7 +27,7 @@ public class DatabaseInMemoryCreator
             .RuleFor(p => p.ImageURL, f => f.Image.PicsumUrl())
             .RuleFor(p => p.Name, f => f.Lorem.Word())
             .RuleFor(p => p.Price, f => f.Random.Int(1, 500))
-            .RuleFor(p => p.Quantity, f => f.Random.Int(1, 500))
+            .RuleFor(p => p.InStockQuantity, f => f.Random.Int(1, 500))
             .RuleFor(p => p.IsActive, true);
 
         var user = new Faker<UserAccount>()

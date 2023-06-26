@@ -7,7 +7,8 @@ public class ProductViewModel
     public string Description { get; set; }
     public double Price { get; set; }
     public DateTime AddDate { get; set; }
-    public int Quantity { get; set; }
+    public int InStockQuantity { get; set; }
+    public int ReservedQuantity { get; set; }
     public string ImageURL { get; set; }
     public int SectionCategoryId { get; set; }
     public int? BrandId { get; set; }

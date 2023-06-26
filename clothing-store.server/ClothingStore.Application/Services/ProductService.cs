@@ -77,7 +77,7 @@ public class ProductService : IProductService
 
         product.Name = productInputModel.Name;
         product.Price = productInputModel.Price;
-        product.Quantity = productInputModel.Quantity;
+        product.InStockQuantity = productInputModel.Quantity;
         product.Description = productInputModel.Description;
         product.ImageURL = productInputModel.ImageURL;
         product.SectionCategoryID = productInputModel.SectionCategoryID;

@@ -9,4 +9,6 @@ public interface ICartRepository
     void Add(CartItem cartItem);
     void Delete(CartItem cartItem);
     Task SaveChanges();
+    Task<Dictionary<int, int>> DeleteExpired();
+    Task<Dictionary<int, CartItem>> GetCartItemsByIds(List<int> cartItemIds);
 }

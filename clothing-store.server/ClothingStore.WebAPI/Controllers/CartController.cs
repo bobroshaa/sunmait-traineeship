@@ -1,8 +1,10 @@
 ﻿using ClothingStore.Application.Interfaces;
 using ClothingStore.Application.Models.InputModels;
 using ClothingStore.Application.Models.ViewModels;
+using ClothingStore.WebAPI.Hubs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace ClothingStore.WebAPI.Controllers;
 
@@ -11,10 +13,12 @@ namespace ClothingStore.WebAPI.Controllers;
 public class CartController : Controller
 {
     private readonly ICartService _cartService;
+    private readonly IHubContext<ProductHub> _productHub;
 
-    public CartController(ICartService cartService)
+    public CartController(ICartService cartService, IHubContext<ProductHub> productHub)
     {
         _cartService = cartService;
+        _productHub = productHub;
     }
 
     /// <summary>
@@ -61,9 +65,11 @@ public class CartController : Controller
         {
             return BadRequest(ModelState);
         }
-
-        var response = await _cartService.Add(cartItemInputModel);
         
+        var response = await _cartService.Add(cartItemInputModel);
+
+        await _productHub.Clients.Group(response.ProductId.ToString()).SendAsync("updateReserved", response.ReservedQuantity);
+
         return Ok(response);
     }
     

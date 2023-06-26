@@ -5,7 +5,6 @@ using ClothingStore.Application.Models.InputModels;
 using ClothingStore.Application.Models.ViewModels;
 using ClothingStore.Application.Options;
 using ClothingStore.Domain.Entities;
-using ClothingStore.Domain.Enums;
 using ClothingStore.Domain.Interfaces;
 using Microsoft.Extensions.Options;
 
@@ -53,19 +52,27 @@ public class CartService : ICartService
 
     public async Task<CartItemPostResponseViewModel> Add(CartItemInputModel cartItemInputModel)
     {
-        await ValidateProduct(cartItemInputModel.ProductID);
+        var product = await GetProductById(cartItemInputModel.ProductID);
         await ValidateUser(cartItemInputModel.UserID);
 
         var cartItem = _mapper.Map<CartItem>(cartItemInputModel);
 
-        cartItem.Status = CartItemStatus.Reserved;
+        cartItem.ReservationEndDate = DateTime.UtcNow + TimeSpan.FromSeconds(_reservationConfiguration.reservationTime);
 
         _cartRepository.Add(cartItem);
 
+        product.ReservedQuantity += cartItem.Quantity;
+        product.InStockQuantity -= cartItem.Quantity;
+
         await _cartRepository.SaveChanges();
 
-        var response = new CartItemPostResponseViewModel
-            { Id = cartItem.ID, ReservationTime = _reservationConfiguration.reservationTime };
+            var response = new CartItemPostResponseViewModel
+        {
+            Id = cartItem.ID, 
+            ReservationTime = _reservationConfiguration.reservationTime,
+            ProductId = cartItem.ProductID,
+            ReservedQuantity = product.ReservedQuantity
+        };
 
         return response;
     }
@@ -95,12 +102,15 @@ public class CartService : ICartService
         }
     }
 
-    private async Task ValidateProduct(int id)
+    private async Task<Product> GetProductById(int id)
     {
-        if (!await _productRepository.DoesProductExist(id))
+        var product = await _productRepository.GetById(id);
+        if (product is null)
         {
             throw new EntityNotFoundException(string.Format(ExceptionMessages.ProductNotFound, id));
         }
+
+        return product;
     }
 
     private async Task<CartItem> GetCartItemById(int id)
@@ -112,5 +122,16 @@ public class CartService : ICartService
         }
 
         return cartItem;
+    }
+
+    public async Task<Dictionary<int, int>> DeleteExpiredCartItems()
+    {
+        var productIdsOfDeletedItems = await _cartRepository.DeleteExpired();
+        
+        await _cartRepository.SaveChanges();
+
+        Console.WriteLine("DeleteExpiredCartItems:" + DateTime.Now);
+
+        return productIdsOfDeletedItems;
     }
 }

@@ -3,8 +3,11 @@ using ClothingStore.Application.Models.InputModels;
 using ClothingStore.Application.Models.ViewModels;
 using ClothingStore.Domain.Entities;
 using ClothingStore.Domain.Enums;
+using ClothingStore.WebAPI.Hubs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.IdentityModel.Tokens;
 
 namespace ClothingStore.WebAPI.Controllers;
 
@@ -13,10 +16,12 @@ namespace ClothingStore.WebAPI.Controllers;
 public class OrderController : Controller
 {
     private readonly IOrderService _orderService;
+    private readonly IHubContext<ProductHub> _productHub;
 
-    public OrderController(IOrderService orderService)
+    public OrderController(IOrderService orderService,  IHubContext<ProductHub> productHub)
     {
         _orderService = orderService;
+        _productHub = productHub;
     }
 
     /// <summary>
@@ -68,7 +73,7 @@ public class OrderController : Controller
     /// <param name="orderInputModel">The input model of the new order.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [Authorize(Policy = PolicyNames.CustomerAccess)]
+    //[Authorize(Policy = PolicyNames.CustomerAccess)]
     [HttpPost]
     public async Task<ActionResult<int>> AddOrder([FromBody] OrderInputModel orderInputModel)
     {
@@ -78,6 +83,14 @@ public class OrderController : Controller
         }
 
         var response = await _orderService.Add(orderInputModel);
+
+        if (!response.ProductReservedQuantity.IsNullOrEmpty())
+        {
+            foreach (var item in response.ProductReservedQuantity)
+            {
+                await _productHub.Clients.Group(item.Key.ToString()).SendAsync("updateReserved", item.Value);
+            }
+        }
         
         return Ok(response);
     }

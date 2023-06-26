@@ -10,4 +10,5 @@ public interface ICartService
     Task<CartItemPostResponseViewModel> Add(CartItemInputModel cartItemInputModel);
     Task Update(int id, int count);
     Task Delete(int id);
+    Task<Dictionary<int, int>> DeleteExpiredCartItems();
 }

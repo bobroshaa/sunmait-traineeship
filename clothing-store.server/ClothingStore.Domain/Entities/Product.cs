@@ -7,8 +7,9 @@ public class Product
     public string Description { get; set; }
     public double Price { get; set; }
     public DateTime AddDate { get; set; }
-    public int Quantity { get; set; }
+    public int InStockQuantity { get; set; }
     public string ImageURL { get; set; }
+    public int ReservedQuantity { get; set; }
     public bool IsActive { get; set; }
     
     public int SectionCategoryID { get; set; }

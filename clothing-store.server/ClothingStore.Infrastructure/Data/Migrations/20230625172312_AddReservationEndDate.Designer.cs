@@ -3,6 +3,7 @@ using System;
 using ClothingStore.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ClothingStore.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20230625172312_AddReservationEndDate")]
+    partial class AddReservationEndDate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -322,10 +325,6 @@ namespace ClothingStore.Infrastructure.Data.Migrations
                         .HasColumnType("character varying(500)")
                         .HasColumnName("image_url");
 
-                    b.Property<int>("InStockQuantity")
-                        .HasColumnType("integer")
-                        .HasColumnName("in_stock_quantity");
-
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
@@ -342,13 +341,12 @@ namespace ClothingStore.Infrastructure.Data.Migrations
                         .HasColumnType("numeric")
                         .HasColumnName("price");
 
-                    b.Property<int>("ReservedQuantity")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("Quantity")
                         .HasColumnType("integer")
-                        .HasDefaultValue(0)
-                        .HasColumnName("reserved_quantity");
+                        .HasColumnName("quantity");
 
                     b.Property<int>("SectionCategoryID")
+                        .HasMaxLength(100)
                         .HasColumnType("integer")
                         .HasColumnName("section_category_id");
 
@@ -363,14 +361,11 @@ namespace ClothingStore.Infrastructure.Data.Migrations
 
                     b.ToTable("products", "clothing_store", t =>
                         {
-                            t.HasCheckConstraint("in_stock_quantity", "in_stock_quantity >= 0")
-                                .HasName("CK_product_in_stock_quantity");
-
                             t.HasCheckConstraint("price", "price > 0")
                                 .HasName("CK_product_price");
 
-                            t.HasCheckConstraint("reserved_quantity", "reserved_quantity >= 0")
-                                .HasName("CK_product_reserved_quantity");
+                            t.HasCheckConstraint("quantity", "Quantity >= 0")
+                                .HasName("CK_product_quantity");
                         });
                 });
 

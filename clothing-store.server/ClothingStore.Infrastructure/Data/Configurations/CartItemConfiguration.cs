@@ -22,7 +22,7 @@ public class CartItemConfiguration : IEntityTypeConfiguration<CartItem>
         builder.Property(ci => ci.ProductID).IsRequired();
         builder.Property(ci => ci.UserID).IsRequired();
         builder.Property(ci => ci.Quantity).IsRequired();
-        builder.Property(ci => ci.Status).IsRequired();
+        builder.Property(ci => ci.ReservationEndDate).IsRequired();
         builder
             .ToTable(op => op.HasCheckConstraint("quantity", "quantity > 0")
                 .HasName("CK_order_product_quantity"));
