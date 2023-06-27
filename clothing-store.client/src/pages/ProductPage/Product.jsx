@@ -5,12 +5,28 @@ import { useParams } from "react-router-dom";
 import "./product.css";
 import { HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
 import Accordion from "../../components/Accordion/Accordion";
-import { LocalShippingOutlined, Repeat, VisibilityOutlined } from "@mui/icons-material";
+import {
+  LocalShippingOutlined,
+  Repeat,
+  VisibilityOutlined,
+} from "@mui/icons-material";
+import { useToast } from "rc-toastr";
 
 const Product = () => {
   const [product, setProduct] = useState();
   const [connection, setConnection] = useState();
   const [viewersCount, setViewersCount] = useState();
+  const [reservedCount, setReservedCount] = useState();
+
+  const { toast } = useToast();
+
+  const showSuccessfulNotification = () => {
+    toast("Product successfully added to your cart!");
+  };
+
+  const showErrorNotification = () => {
+    toast("We're sorry, but there was an error processing your request.");
+  };
 
   const params = useParams();
   const productId = params.productId;
@@ -24,6 +40,10 @@ const Product = () => {
 
       hubConnection.on("updateViewers", (message) => {
         setViewersCount(message);
+      });
+
+      hubConnection.on("updatereserved", (message) => {
+        setReservedCount(message);
       });
 
       await hubConnection.start();
@@ -52,6 +72,7 @@ const Product = () => {
         `http://localhost:5051/api/products/${productId}`
       );
       setProduct(response.data);
+      setReservedCount(response.data.reservedQuantity);
     } catch (error) {
       console.error(`Error: ${error}`);
     }
@@ -75,6 +96,22 @@ const Product = () => {
     };
   }, [connection]);
 
+  // TODO: get user id from local storage
+  const addToCart = async () => {
+    try {
+      const response = await axios.post(`http://localhost:5051/api/cart`, {
+        quantity: 1,
+        productID: productId,
+        userID: 1,
+      });
+      console.log(response);
+      showSuccessfulNotification();
+    } catch (error) {
+      showErrorNotification();
+      console.error(`Error: ${error}`);
+    }
+  };
+
   return (
     <div className="product-page-container">
       {product && (
@@ -92,7 +129,7 @@ const Product = () => {
             )}
             <div className="product-price">${product.price}</div>
             <div className="product-size">Size: One Size (M - L)</div>
-            
+
             <div className="extra-info-container">
               <LocalShippingOutlined />
               <div className="extra-info-text-container">
@@ -115,8 +152,15 @@ const Product = () => {
             </div>
 
             <Accordion title="Description" content={product.description} />
-            <div className="product-viewers"><VisibilityOutlined /> {viewersCount} Viewers</div>
-            <button className="add-to-cart">Add to Cart</button>
+            <div className="product-viewers">
+              <VisibilityOutlined /> {viewersCount} Viewers
+            </div>
+            <div className="product-viewers">
+              <VisibilityOutlined /> {reservedCount} Items were already Reserved
+            </div>
+            <button onClick={addToCart} className="add-to-cart">
+              Add to Cart
+            </button>
           </div>
         </div>
       )}
