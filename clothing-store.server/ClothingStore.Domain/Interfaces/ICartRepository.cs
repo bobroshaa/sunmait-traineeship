@@ -11,4 +11,5 @@ public interface ICartRepository
     Task SaveChanges();
     Task<Dictionary<int, int>> DeleteExpired();
     Task<Dictionary<int, CartItem>> GetCartItemsByIds(List<int> cartItemIds);
+    Task<CartItem?> GetByUserAndProduct(int userId, int productId);
 }

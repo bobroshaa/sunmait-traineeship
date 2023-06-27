@@ -24,7 +24,16 @@ public class CartRepository : ICartRepository
 
     public async Task<CartItem?> GetById(int id)
     {
-        return await _dbContext.CartItems.Include(ci => ci.Product).FirstOrDefaultAsync(ci => ci.ID == id && ci.IsActive);
+        return await _dbContext.CartItems.Include(ci => ci.Product)
+            .FirstOrDefaultAsync(ci => ci.ID == id && ci.IsActive);
+    }
+
+    public async Task<CartItem?> GetByUserAndProduct(int userId, int productId)
+    {
+        return await _dbContext
+            .CartItems
+            .Include(ci => ci.Product)
+            .FirstOrDefaultAsync(ci => ci.UserID == userId && ci.ProductID == productId && ci.IsActive);
     }
 
     public void Add(CartItem cartItem)
@@ -45,7 +54,7 @@ public class CartRepository : ICartRepository
     public async Task<Dictionary<int, int>> DeleteExpired()
     {
         var productIdsOfDeletedItems = new Dictionary<int, int>();
-        
+
         await _dbContext
             .CartItems
             .Include(ci => ci.Product)
@@ -53,17 +62,17 @@ public class CartRepository : ICartRepository
             .ForEachAsync(ci =>
             {
                 ci.IsActive = false;
-                
+
                 ci.Product.ReservedQuantity -= ci.Quantity;
                 ci.Product.InStockQuantity += ci.Quantity;
-                
+
                 productIdsOfDeletedItems.Add(ci.ProductID, ci.Product.ReservedQuantity);
                 Console.WriteLine(ci.ID);
             });
-        
+
         return productIdsOfDeletedItems;
     }
-    
+
     public async Task<Dictionary<int, CartItem>> GetCartItemsByIds(List<int> cartItemIds)
     {
         var cartItems = await _dbContext
@@ -71,6 +80,6 @@ public class CartRepository : ICartRepository
             .Include(ci => ci.Product)
             .Where(ci => cartItemIds.Contains(ci.ID))
             .ToListAsync();
-        return cartItems.ToDictionary( ci => ci.ID, ci => ci);
+        return cartItems.ToDictionary(ci => ci.ID, ci => ci);
     }
 }

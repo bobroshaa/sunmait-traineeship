@@ -49,24 +49,33 @@ public class CartService : ICartService
 
         return cartItemVm;
     }
+    
 
     public async Task<CartItemPostResponseViewModel> Add(CartItemInputModel cartItemInputModel)
     {
         var product = await GetProductById(cartItemInputModel.ProductID);
         await ValidateUser(cartItemInputModel.UserID);
-
+        
         var cartItem = _mapper.Map<CartItem>(cartItemInputModel);
+        
+        var existingCartItem = await GetCartItemByUserAndProduct(cartItemInputModel.UserID, cartItemInputModel.ProductID);
+        if (existingCartItem is null)
+        {
+            cartItem.ReservationEndDate =
+                DateTime.UtcNow + TimeSpan.FromSeconds(_reservationConfiguration.reservationTime);
 
-        cartItem.ReservationEndDate = DateTime.UtcNow + TimeSpan.FromSeconds(_reservationConfiguration.reservationTime);
-
-        _cartRepository.Add(cartItem);
+            _cartRepository.Add(cartItem);
+        }
+        else
+        {
+            existingCartItem.Quantity += cartItem.Quantity;
+        }
 
         product.ReservedQuantity += cartItem.Quantity;
-        product.InStockQuantity -= cartItem.Quantity;
 
         await _cartRepository.SaveChanges();
 
-            var response = new CartItemPostResponseViewModel
+        var response = new CartItemPostResponseViewModel
         {
             Id = cartItem.ID, 
             ReservationTime = _reservationConfiguration.reservationTime,
@@ -120,6 +129,13 @@ public class CartService : ICartService
         {
             throw new EntityNotFoundException(string.Format(ExceptionMessages.CartItemNotFound, id));
         }
+
+        return cartItem;
+    }
+    
+    private async Task<CartItem?> GetCartItemByUserAndProduct(int userId, int productId)
+    {
+        var cartItem = await _cartRepository.GetByUserAndProduct(userId, productId);
 
         return cartItem;
     }

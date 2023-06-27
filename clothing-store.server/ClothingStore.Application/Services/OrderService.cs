@@ -87,6 +87,7 @@ public class OrderService : IOrderService
                 order.OrderProducts.Add(item);
                 
                 cartItem.Product.ReservedQuantity -= cartItem.Quantity;
+                cartItem.IsActive = false;
                 productReservedQuantity.Add(cartItem.ProductID, cartItem.Product.ReservedQuantity);
             }
             else
