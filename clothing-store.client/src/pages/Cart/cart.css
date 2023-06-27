@@ -8,8 +8,13 @@
   min-height: 100vh;
 }
 
-.cart-container {
+.cart-oder-container {
   padding: 30px 0;
+  display: flex;
+  gap: 30px;
+}
+
+.cart-container {
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -64,4 +69,60 @@
 .cart-item-size {
   font-size: 14px;
   font-weight: 300;
+}
+
+/* Order side */
+
+.total-order-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.total-order-price {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  background-color: #fff;
+}
+
+.total-order-header {
+  padding-bottom: 5px;
+  text-transform: uppercase;
+  font-size: 18px;
+  border-bottom: 1px solid #000;
+}
+
+.order-subtotal-price {
+  font-size: 16px;
+  font-weight: 300;
+}
+
+.order-delivery {
+  font-size: 16px;
+  font-weight: 300;
+}
+
+.personal-details-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  background-color: #fff;
+}
+
+.personal-details-header {
+  padding: 15px;
+  padding-bottom: 5px;
+  text-transform: uppercase;
+  font-size: 18px;
+}
+
+.empty-cart-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 24px;
+  color: #555;
 }
