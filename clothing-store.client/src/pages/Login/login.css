@@ -1,0 +1,72 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100;200;300;500&display=swap");
+
+.login-page-container {
+  min-height: 100vh;
+  background-color: rgb(210, 210, 210);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Roboto Mono", monospace;
+}
+
+.container {
+  display: flex;
+  gap: 40px;
+  padding: 10px;
+  height: 40em;
+  width: 50em;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 4px 2px 22px 0px rgba(34, 60, 80, 0.2);
+}
+
+.image-side {
+  border-radius: 10px;
+}
+
+.login-side {
+  padding-right: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-self: center;
+}
+
+.login-side-header {
+  margin: 0;
+  font-size: 24px;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.input {
+  padding: 7px;
+  font-family: "Roboto Mono", monospace;
+}
+
+.input::placeholder {
+  font-family: "Roboto Mono", monospace;
+}
+
+.login-button {
+  padding: 7px;
+  width: 100%;
+  background-color: rgb(45, 45, 45);
+  color: white;
+  font-family: "Roboto Mono", monospace;
+  cursor: pointer;
+}
+
+.error-text {
+  display: none;
+  font-weight: bold;
+  text-decoration: underline red;
+}
+
+.show {
+  display: block;
+}
