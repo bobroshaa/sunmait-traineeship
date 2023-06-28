@@ -6,6 +6,8 @@ import "./product.css";
 import { HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
 import Accordion from "../../components/Accordion/Accordion";
 import {
+  AccessTimeOutlined,
+  CheckCircleOutline,
   LocalShippingOutlined,
   Repeat,
   VisibilityOutlined,
@@ -16,7 +18,6 @@ const Product = () => {
   const [product, setProduct] = useState();
   const [connection, setConnection] = useState();
   const [viewersCount, setViewersCount] = useState();
-  const [reservedCount, setReservedCount] = useState();
 
   const { toast } = useToast();
 
@@ -31,7 +32,11 @@ const Product = () => {
   const params = useParams();
   const productId = params.productId;
 
+  const userId = JSON.parse(localStorage.getItem("user")).id;
+
   const joinRoom = async (productId) => {
+    if (connection) return;
+    console.log(product);
     try {
       const hubConnection = new HubConnectionBuilder()
         .withUrl("http://localhost:5051/producthub")
@@ -42,12 +47,16 @@ const Product = () => {
         setViewersCount(message);
       });
 
-      hubConnection.on("updatereserved", (message) => {
-        setReservedCount(message);
+      hubConnection.on("updatequantity", (cartItem) => {
+        setProduct((prev) => ({
+          ...prev,
+          reservedQuantity: cartItem.reservedQuantity,
+          inStockQuantity: cartItem.inStockQuantity,
+        }));
       });
 
       await hubConnection.start();
-      await hubConnection.invoke("JoinRoom", parseInt(productId));
+      await hubConnection.invoke("JoinRoomFromProduct", parseInt(productId));
 
       setConnection(hubConnection);
     } catch (error) {
@@ -58,7 +67,7 @@ const Product = () => {
   const leaveRoom = async (productId) => {
     try {
       if (connection) {
-        await connection.invoke("LeaveRoom", parseInt(productId));
+        await connection.invoke("LeaveRoomFromProduct", parseInt(productId));
         connection.stop();
       }
     } catch (error) {
@@ -72,7 +81,6 @@ const Product = () => {
         `http://localhost:5051/api/products/${productId}`
       );
       setProduct(response.data);
-      setReservedCount(response.data.reservedQuantity);
     } catch (error) {
       console.error(`Error: ${error}`);
     }
@@ -80,8 +88,13 @@ const Product = () => {
 
   useEffect(() => {
     getProduct();
-    joinRoom(productId);
   }, []);
+
+  useEffect(() => {
+    if (product !== undefined) {
+      joinRoom(productId);
+    }
+  }, [product]);
 
   useEffect(() => {
     const handleBeforeUnload = async (e) => {
@@ -102,7 +115,7 @@ const Product = () => {
       const response = await axios.post(`http://localhost:5051/api/cart`, {
         quantity: 1,
         productID: productId,
-        userID: 1,
+        userID: userId,
       });
       console.log(response);
       showSuccessfulNotification();
@@ -156,11 +169,24 @@ const Product = () => {
               <VisibilityOutlined /> {viewersCount} Viewers
             </div>
             <div className="product-viewers">
-              <VisibilityOutlined /> {reservedCount} Items were already Reserved
+              <AccessTimeOutlined /> {product.reservedQuantity} Items were
+              already Reserved
             </div>
-            <button onClick={addToCart} className="add-to-cart">
-              Add to Cart
-            </button>
+            <div className="product-viewers">
+              <CheckCircleOutline />{" "}
+              {product.inStockQuantity - product.reservedQuantity} Items are
+              Available
+            </div>
+
+            {product.inStockQuantity - product.reservedQuantity > 0 ? (
+              <button onClick={addToCart} className="add-to-cart">
+                Add to Cart
+              </button>
+            ) : (
+              <button disabled className="out-of-stock">
+                Out Of Stock
+              </button>
+            )}
           </div>
         </div>
       )}
