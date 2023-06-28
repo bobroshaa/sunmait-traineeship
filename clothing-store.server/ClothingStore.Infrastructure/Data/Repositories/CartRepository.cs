@@ -51,26 +51,24 @@ public class CartRepository : ICartRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<Dictionary<int, int>> DeleteExpired()
+    public async Task<List<CartItem>> DeleteExpired()
     {
-        var productIdsOfDeletedItems = new Dictionary<int, int>();
+        var deletedCartItems = new List<CartItem>();
 
-        await _dbContext
-            .CartItems
+        var cartItems = await _dbContext.CartItems
             .Include(ci => ci.Product)
             .Where(ci => ci.IsActive && ci.ReservationEndDate < DateTime.UtcNow)
-            .ForEachAsync(ci =>
-            {
-                ci.IsActive = false;
+            .ToListAsync();
 
-                ci.Product.ReservedQuantity -= ci.Quantity;
-                ci.Product.InStockQuantity += ci.Quantity;
+        foreach (var ci in cartItems)
+        {
+            ci.IsActive = false;
+            ci.Product.ReservedQuantity -= ci.Quantity;
+            deletedCartItems.Add(ci);
+            Console.WriteLine(ci.ID);
+        }
 
-                productIdsOfDeletedItems.Add(ci.ProductID, ci.Product.ReservedQuantity);
-                Console.WriteLine(ci.ID);
-            });
-
-        return productIdsOfDeletedItems;
+        return deletedCartItems;
     }
 
     public async Task<Dictionary<int, CartItem>> GetCartItemsByIds(List<int> cartItemIds)

@@ -50,7 +50,7 @@ public class CartController : Controller
 
         return Ok(cartItem);
     }
-    
+
     /// <summary>
     /// Add a new cart item.
     /// </summary>
@@ -65,14 +65,22 @@ public class CartController : Controller
         {
             return BadRequest(ModelState);
         }
+
+        var newCartItem = await _cartService.Add(cartItemInputModel);
+
+        await _productHub
+            .Clients
+            .Group(newCartItem.ProductID.ToString())
+            .SendAsync("updateQuantity", newCartItem);
         
-        var response = await _cartService.Add(cartItemInputModel);
+        await _productHub
+            .Clients
+            .Group(newCartItem.UserID.ToString())
+            .SendAsync("updateCart");
 
-        await _productHub.Clients.Group(response.ProductId.ToString()).SendAsync("updateReserved", response.ReservedQuantity);
-
-        return Ok(response);
+        return Ok(newCartItem);
     }
-    
+
     /// <summary>
     /// Update a number of the cart item by ID.
     /// </summary>
@@ -90,9 +98,14 @@ public class CartController : Controller
             return BadRequest(ModelState);
         }
 
-        await _cartService.Update(id, count);
-        
-        return Ok();
+        var cartItem = await _cartService.Update(id, count);
+
+        await _productHub
+            .Clients
+            .Group(cartItem.ProductID.ToString())
+            .SendAsync("updateQuantity", cartItem);
+
+        return Ok(cartItem);
     }
 
     /// <summary>
@@ -105,8 +118,18 @@ public class CartController : Controller
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteCartItem([FromRoute] int id)
     {
-        await _cartService.Delete(id);
+        var cartItem = await _cartService.Delete(id);
+
+        await _productHub
+            .Clients
+            .Group(cartItem.ProductID.ToString())
+            .SendAsync("updateQuantity", cartItem);
         
+        await _productHub
+            .Clients
+            .Group(cartItem.UserID.ToString())
+            .SendAsync("updateCart");
+
         return Ok();
     }
 }

@@ -11,5 +11,7 @@ public class CartItemViewModel
     public string Name { get; set; }
     public int ProductID { get; set; }
     public int UserID { get; set; }
+    public int InStockQuantity { get; set; }
+    public int ReservedQuantity { get; set; }
     public CartItemStatus CartItemStatus { get; set; }
 }

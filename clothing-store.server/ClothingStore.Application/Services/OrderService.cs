@@ -58,19 +58,19 @@ public class OrderService : IOrderService
     }
 
     // TODO: include product in cart repository
-    public async Task<OrderPostResponseViewModel> Add(OrderInputModel orderInputModel)
+    public async Task<List<CartItemViewModel>> Add(OrderInputModel orderInputModel)
     {
-        var order = _mapper.Map<CustomerOrder>(orderInputModel);
+        var order = new CustomerOrder { UserID = orderInputModel.CartItems[0].UserID };
         
-        var cartItemIds = orderInputModel.CartItemIds;
+        var cartItemIds = orderInputModel.CartItems.Select(ci => ci.ID).ToList();
         var cartItemsDictionary = await _cartRepository.GetCartItemsByIds(cartItemIds);
         
         ValidateCartItems(cartItemIds, cartItemsDictionary.Keys.ToList());
         
         order.OrderProducts = new List<OrderProduct>();
-        var productReservedQuantity = new Dictionary<int, int>();
+        var deletedCartItems = new List<CartItem>();
         
-        foreach (var cartItemId in orderInputModel.CartItemIds)
+        foreach (var cartItemId in cartItemIds)
         {
             if (cartItemsDictionary.TryGetValue(cartItemId, out var cartItem))
             {
@@ -87,8 +87,9 @@ public class OrderService : IOrderService
                 order.OrderProducts.Add(item);
                 
                 cartItem.Product.ReservedQuantity -= cartItem.Quantity;
+                cartItem.Product.InStockQuantity -= cartItem.Quantity;
                 cartItem.IsActive = false;
-                productReservedQuantity.Add(cartItem.ProductID, cartItem.Product.ReservedQuantity);
+                deletedCartItems.Add(cartItem);
             }
             else
             {
@@ -103,13 +104,9 @@ public class OrderService : IOrderService
 
         await _orderRepository.SaveChanges();
         
-        var response = new OrderPostResponseViewModel
-        {
-            OrderId = order.ID,
-            ProductReservedQuantity = productReservedQuantity
-        };
+        var deletedCarItemVms = _mapper.Map<List<CartItemViewModel>>(deletedCartItems);
         
-        return response;
+        return deletedCarItemVms;
     }
 
     public async Task Update(int id, Status orderStatus)

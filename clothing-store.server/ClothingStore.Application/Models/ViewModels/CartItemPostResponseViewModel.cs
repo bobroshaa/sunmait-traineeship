@@ -6,4 +6,6 @@ public class CartItemPostResponseViewModel
     public int ProductId { get; set; }
     public int ReservationTime { get; set; }
     public int ReservedQuantity { get; set; }
+    public int AvailableQuantity { get; set; }
+
 }

@@ -16,9 +16,9 @@ public class ProductInputModel
     [Range(0, 100000)]
     public double Price { get; set; }
     
-    [Required(ErrorMessage = "The Quantity field is required.")]
+    [Required(ErrorMessage = "The InStockQuantity field is required.")]
     [Range(0, 100000)]
-    public int Quantity { get; set; }
+    public int InStockQuantity { get; set; }
     
     [Required(ErrorMessage = "The ImageURL field is required.")]
     [StringLength(500, ErrorMessage = "The ImageURL field must not exceed 500 characters.")]

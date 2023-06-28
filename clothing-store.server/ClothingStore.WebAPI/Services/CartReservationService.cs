@@ -21,9 +21,12 @@ public class CartReservationService : ICartReservationService
         var productIdsOfDeletedItems = await _cartService.DeleteExpiredCartItems();
         if (!productIdsOfDeletedItems.IsNullOrEmpty())
         {
-            foreach (var item in productIdsOfDeletedItems)
+            foreach (var cartItem in productIdsOfDeletedItems)
             {
-                await _productHub.Clients.Group(item.Key.ToString()).SendAsync("updateReserved", item.Value);
+                await _productHub
+                    .Clients
+                    .Group(cartItem.ProductID.ToString())
+                    .SendAsync("updateQuantity", cartItem);
             }
         }
     }

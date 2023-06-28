@@ -51,13 +51,13 @@ public class CartService : ICartService
     }
     
 
-    public async Task<CartItemPostResponseViewModel> Add(CartItemInputModel cartItemInputModel)
+    public async Task<CartItemViewModel> Add(CartItemInputModel cartItemInputModel)
     {
         var product = await GetProductById(cartItemInputModel.ProductID);
         await ValidateUser(cartItemInputModel.UserID);
         
         var cartItem = _mapper.Map<CartItem>(cartItemInputModel);
-        
+
         var existingCartItem = await GetCartItemByUserAndProduct(cartItemInputModel.UserID, cartItemInputModel.ProductID);
         if (existingCartItem is null)
         {
@@ -65,6 +65,8 @@ public class CartService : ICartService
                 DateTime.UtcNow + TimeSpan.FromSeconds(_reservationConfiguration.reservationTime);
 
             _cartRepository.Add(cartItem);
+            
+            cartItem.Product = product;
         }
         else
         {
@@ -72,35 +74,44 @@ public class CartService : ICartService
         }
 
         product.ReservedQuantity += cartItem.Quantity;
+        
+        var cartItemVm = existingCartItem is null
+            ? _mapper.Map<CartItemViewModel>(cartItem)
+            : _mapper.Map<CartItemViewModel>(existingCartItem);
 
         await _cartRepository.SaveChanges();
 
-        var response = new CartItemPostResponseViewModel
-        {
-            Id = cartItem.ID, 
-            ReservationTime = _reservationConfiguration.reservationTime,
-            ProductId = cartItem.ProductID,
-            ReservedQuantity = product.ReservedQuantity
-        };
-
-        return response;
+        return cartItemVm;
     }
 
-    public async Task Update(int id, int count)
+    public async Task<CartItemViewModel> Update(int id, int count)
     {
         var cartItem = await GetCartItemById(id);
 
+        cartItem.Product.ReservedQuantity += count - cartItem.Quantity;
         cartItem.Quantity = count;
+        
         await _cartRepository.SaveChanges();
+        
+        var cartItemVm = _mapper.Map<CartItemViewModel>(cartItem);
+
+        return cartItemVm;
     }
 
-    public async Task Delete(int id)
+    public async Task<CartItemViewModel> Delete(int id)
     {
         var cartItem = await GetCartItemById(id);
-
+        var product = await GetProductById(cartItem.ProductID);
+        
         _cartRepository.Delete(cartItem);
 
+        product.ReservedQuantity -= cartItem.Quantity;
+
         await _cartRepository.SaveChanges();
+
+        var cartItemVm = _mapper.Map<CartItemViewModel>(cartItem);
+
+        return cartItemVm;
     }
 
     private async Task ValidateUser(int id)
@@ -140,14 +151,16 @@ public class CartService : ICartService
         return cartItem;
     }
 
-    public async Task<Dictionary<int, int>> DeleteExpiredCartItems()
+    public async Task<List<CartItemViewModel>> DeleteExpiredCartItems()
     {
-        var productIdsOfDeletedItems = await _cartRepository.DeleteExpired();
+        var deletedCartItems = await _cartRepository.DeleteExpired();
         
         await _cartRepository.SaveChanges();
 
         Console.WriteLine("DeleteExpiredCartItems:" + DateTime.Now);
 
-        return productIdsOfDeletedItems;
+        var deletedCartItemVms = _mapper.Map<List<CartItemViewModel>>(deletedCartItems);
+        
+        return deletedCartItemVms;
     }
 }

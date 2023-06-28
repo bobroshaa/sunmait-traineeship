@@ -18,7 +18,7 @@ public class OrderController : Controller
     private readonly IOrderService _orderService;
     private readonly IHubContext<ProductHub> _productHub;
 
-    public OrderController(IOrderService orderService,  IHubContext<ProductHub> productHub)
+    public OrderController(IOrderService orderService, IHubContext<ProductHub> productHub)
     {
         _orderService = orderService;
         _productHub = productHub;
@@ -33,7 +33,7 @@ public class OrderController : Controller
     public async Task<ActionResult<List<OrderViewModel>>> GetAllOrders()
     {
         var orders = await _orderService.GetAll();
-        
+
         return Ok(orders);
     }
 
@@ -48,7 +48,7 @@ public class OrderController : Controller
     public async Task<ActionResult<List<OrderItemViewModel>>> GetOrderItemsByOrder(int orderId)
     {
         var orderItems = await _orderService.GetOrderItemsByOrderId(orderId);
-        
+
         return Ok(orderItems);
     }
 
@@ -63,10 +63,12 @@ public class OrderController : Controller
     public async Task<ActionResult<OrderViewModel>> GetOrder([FromRoute] int id)
     {
         var order = await _orderService.GetById(id);
-        
+
         return Ok(order);
     }
 
+
+    // Todo: return orderId
     /// <summary>
     /// Add a new order with items.
     /// </summary>
@@ -82,17 +84,25 @@ public class OrderController : Controller
             return BadRequest(ModelState);
         }
 
-        var response = await _orderService.Add(orderInputModel);
+        var deletedCartItems = await _orderService.Add(orderInputModel);
 
-        if (!response.ProductReservedQuantity.IsNullOrEmpty())
+        if (!deletedCartItems.IsNullOrEmpty())
         {
-            foreach (var item in response.ProductReservedQuantity)
+            foreach (var item in deletedCartItems)
             {
-                await _productHub.Clients.Group(item.Key.ToString()).SendAsync("updateReserved", item.Value);
+                await _productHub
+                    .Clients
+                    .Group(item.ProductID.ToString())
+                    .SendAsync("updateQuantity", item);
+                
+                await _productHub
+                    .Clients
+                    .Group(item.UserID.ToString())
+                    .SendAsync("updateCart");
             }
         }
-        
-        return Ok(response);
+
+        return Ok(deletedCartItems);
     }
 
     /// <summary>
@@ -113,7 +123,7 @@ public class OrderController : Controller
         }
 
         await _orderService.Update(id, status);
-        
+
         return Ok();
     }
 
@@ -128,10 +138,10 @@ public class OrderController : Controller
     public async Task<ActionResult> DeleteOrder([FromRoute] int id)
     {
         await _orderService.Delete(id);
-        
+
         return Ok();
     }
-    
+
     /// <summary>
     /// Get order history order by ID.
     /// </summary>
@@ -143,7 +153,7 @@ public class OrderController : Controller
     public async Task<ActionResult<List<OrderHistory>>> GetOrderHistory([FromRoute] int id)
     {
         var order = await _orderService.GetOrderHistoryByOrderId(id);
-        
+
         return Ok(order);
     }
 }

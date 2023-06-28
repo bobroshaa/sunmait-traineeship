@@ -1,5 +1,6 @@
 ﻿using ClothingStore.Application.Interfaces;
 using ClothingStore.Application.Models.InputModels;
+using ClothingStore.Application.Models.ViewModels;
 using ClothingStore.WebAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -33,7 +34,12 @@ public class AuthenticationController : Controller
         var user = await _userService.Authenticate(loginInputModel);
 
         var token = _jwtGenerator.CreateToken(user);
-        
-        return Ok(token);
+
+        var response = new LoginResponse
+        {
+            Id = user.ID,
+            AccessToken = token.AccessToken
+        };
+        return Ok(response);
     }
 }
