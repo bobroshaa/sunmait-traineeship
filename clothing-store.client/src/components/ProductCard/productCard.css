@@ -1,0 +1,39 @@
+.product-card-container {
+  padding: 15px;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  font-family: "Roboto Mono", monospace;
+}
+
+.product-card-image {
+  max-width: 300px;
+  height: auto;
+  object-fit: cover;
+}
+
+.product-card-info {
+  width: 100%;
+  display: flex;
+  gap: 40px;
+  justify-content: space-between;
+}
+
+.product-card-name {
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.product-card-price {
+  font-size: 14px;
+}
+
+.product-card-brand{
+  align-self: start;
+  font-size: 12px;
+  font-weight: 300;
+  text-transform: uppercase;
+  color: rgb(104, 104, 104);
+}

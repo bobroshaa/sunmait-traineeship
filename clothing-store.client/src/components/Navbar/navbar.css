@@ -1,0 +1,32 @@
+.navbar-container {
+  padding: 10px 120px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: rgb(45, 45, 45);
+  font-family: "Roboto Mono", monospace;
+}
+
+.navbar-right-side {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.navbar-logo {
+  font-size: 36px;
+  padding-right: 20px;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+.navbar-left-side {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.navbar-item {
+  cursor: pointer;
+  color: #fff;
+}

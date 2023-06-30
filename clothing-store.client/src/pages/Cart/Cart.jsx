@@ -92,10 +92,11 @@ const Cart = () => {
 
       await hubConnection.start();
       cartItemsRef.current.forEach(async (item) => {
+        console.log(parseInt(item.productID), userId);
         await hubConnection.invoke(
           "JoinRoomFromCart",
           parseInt(item.productID),
-          userId
+          parseInt(userId)
         );
       });
 

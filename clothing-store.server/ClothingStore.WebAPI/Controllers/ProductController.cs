@@ -125,7 +125,7 @@ public class ProductController : Controller
     /// <param name="brandId">The ID of the brand.</param>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<ProductViewModel>))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [Authorize(Policy = PolicyNames.CustomerAccess)]
+    //[Authorize(Policy = PolicyNames.CustomerAccess)]
     [HttpGet("brands/{brandId}")]
     public async Task<ActionResult<List<ProductViewModel>>> GetProductsByBrand([FromRoute] int brandId)
     {

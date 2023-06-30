@@ -102,8 +102,6 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.MapControllers();
 app.MapHub<ProductHub>("/producthub");
 
-app.UseStaticFiles();
-
 app.UseHangfireDashboard();
 app.MapHangfireDashboard();
 

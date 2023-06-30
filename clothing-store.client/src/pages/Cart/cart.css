@@ -85,6 +85,7 @@
 .total-order-container {
   display: flex;
   flex-direction: column;
+  min-width: 250px;
   gap: 15px;
 }
 

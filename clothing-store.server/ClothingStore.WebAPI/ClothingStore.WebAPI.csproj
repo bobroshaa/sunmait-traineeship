@@ -39,12 +39,4 @@
       <ProjectReference Include="..\ClothingStore.Application\ClothingStore.Application.csproj" />
       <ProjectReference Include="..\ClothingStore.Infrastructure\ClothingStore.Infrastructure.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-      <_ContentIncludedByDefault Remove="wwwroot\index.html" />
-      <_ContentIncludedByDefault Remove="wwwroot\style.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\token.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\token.html" />
-    </ItemGroup>
-
 </Project>
