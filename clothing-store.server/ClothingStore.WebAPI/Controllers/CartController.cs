@@ -27,7 +27,7 @@ public class CartController : Controller
     /// <param name="userId">The ID of the user.</param>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<CartItemViewModel>))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    //[Authorize(Policy = PolicyNames.CustomerAccess)]
+    [Authorize(Policy = PolicyNames.CustomerAccess)]
     [HttpGet("{userId}")]
     public async Task<ActionResult<List<CartItemViewModel>>> GetUserCart([FromRoute] int userId)
     {
@@ -42,7 +42,7 @@ public class CartController : Controller
     /// <param name="id">The ID of the cart item.</param>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CartItemViewModel))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    //[Authorize(Policy = PolicyNames.CustomerAccess)]
+    [Authorize(Policy = PolicyNames.CustomerAccess)]
     [HttpGet("items/{id}")]
     public async Task<ActionResult<CartItemViewModel>> GetCartItem([FromRoute] int id)
     {
@@ -57,7 +57,7 @@ public class CartController : Controller
     /// <param name="cartItemInputModel">The input model of the new cart item.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    //[Authorize(Policy = PolicyNames.CustomerAccess)]
+    [Authorize(Policy = PolicyNames.CustomerAccess)]
     [HttpPost]
     public async Task<ActionResult<int>> AddCartItem([FromBody] CartItemInputModel cartItemInputModel)
     {
@@ -89,7 +89,7 @@ public class CartController : Controller
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    //[Authorize(Policy = PolicyNames.CustomerAccess)]
+    [Authorize(Policy = PolicyNames.CustomerAccess)]
     [HttpPut("{id}")]
     public async Task<ActionResult> UpdateCartItem([FromRoute] int id, [FromBody] int count)
     {
@@ -114,7 +114,7 @@ public class CartController : Controller
     /// <param name="id">The ID of the cart item.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    //[Authorize(Policy = PolicyNames.CustomerAccess)]
+    [Authorize(Policy = PolicyNames.CustomerAccess)]
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteCartItem([FromRoute] int id)
     {

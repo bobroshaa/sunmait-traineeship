@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import React from "react";
-import axios from "axios";
+import axios from "../../axiosConfig";
 import { useParams } from "react-router-dom";
 import "./product.css";
 import { HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
@@ -33,6 +33,7 @@ const Product = () => {
   const productId = params.productId;
 
   const userId = JSON.parse(localStorage.getItem("user")).id;
+  const token = JSON.parse(localStorage.getItem("user")).accessToken;
 
   const joinRoom = async (productId) => {
     if (connection) return;
@@ -83,7 +84,12 @@ const Product = () => {
   const getProduct = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5051/api/products/${productId}`
+        `http://localhost:5051/api/products/${productId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       setProduct(response.data);
     } catch (error) {
@@ -120,11 +126,19 @@ const Product = () => {
   // TODO: get user id from local storage
   const addToCart = async () => {
     try {
-      const response = await axios.post(`http://localhost:5051/api/cart`, {
-        quantity: 1,
-        productID: productId,
-        userID: userId,
-      });
+      const response = await axios.post(
+        `http://localhost:5051/api/cart`,
+        {
+          quantity: 1,
+          productID: productId,
+          userID: userId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       console.log(response);
       showSuccessfulNotification();
     } catch (error) {

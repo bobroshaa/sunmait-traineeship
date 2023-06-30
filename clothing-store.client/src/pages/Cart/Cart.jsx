@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import React from "react";
-import axios from "axios";
+import axios from "../../axiosConfig";
 import { useParams } from "react-router-dom";
 import "./cart.css";
 import { useToast } from "rc-toastr";
@@ -26,6 +26,7 @@ const Cart = () => {
 
   const params = useParams();
   const userId = params.userId;
+  const token = JSON.parse(localStorage.getItem("user")).accessToken;
 
   const leaveRoom = async () => {
     try {
@@ -47,9 +48,17 @@ const Cart = () => {
   const order = async () => {
     console.log(cartItems.map((item) => item.id));
     try {
-      await axios.post(`http://localhost:5051/api/orders`, {
-        cartItems,
-      });
+      await axios.post(
+        `http://localhost:5051/api/orders`,
+        {
+          cartItems,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       showSuccessfulOrder();
     } catch (error) {
@@ -60,7 +69,11 @@ const Cart = () => {
 
   const deleteCartItem = async (cartItemId) => {
     try {
-      await axios.delete(`http://localhost:5051/api/cart/${cartItemId}`);
+      await axios.delete(`http://localhost:5051/api/cart/${cartItemId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
     } catch (error) {
       console.error(`Error: ${error}`);
     }
@@ -109,7 +122,12 @@ const Cart = () => {
   const getCartItems = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5051/api/cart/${userId}`
+        `http://localhost:5051/api/cart/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       setCartItems(response.data);
       console.log("GET CART ITEMS", response.data);
@@ -144,15 +162,12 @@ const Cart = () => {
 
   const handleQuantityChange = async (itemId, newQuantity) => {
     try {
-      await axios.put(
-        `http://localhost:5051/api/cart/${itemId}`,
-        JSON.parse(newQuantity),
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      await axios.put(`http://localhost:5051/api/cart/${itemId}`, newQuantity, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
     } catch (error) {
       console.error(`Error: ${error}`);
     }

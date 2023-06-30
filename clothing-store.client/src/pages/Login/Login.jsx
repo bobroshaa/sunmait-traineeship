@@ -1,10 +1,13 @@
 import "./login.css";
 import React from "react";
-import axios from "axios";
+import axios from "../../axiosConfig";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [loginData, setLoginData] = useState({});
+
+  const navigate = useNavigate();
 
   const updateLoginData = (e) => {
     setLoginData({
@@ -26,6 +29,7 @@ const Login = () => {
       );
       console.log(response.data);
       localStorage.setItem("user", JSON.stringify(response.data));
+      navigate("/");
     } catch (error) {
       console.log(error);
     }

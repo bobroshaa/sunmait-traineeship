@@ -37,7 +37,7 @@ public class UserController : Controller
     /// <param name="id">The ID of the user.</param>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserViewModel))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    // [Authorize(Policy = PolicyNames.CustomerAccess)]
+    [Authorize(Policy = PolicyNames.CustomerAccess)]
     [HttpGet("{id}")]
     public async Task<ActionResult<UserViewModel>> GetUser([FromRoute] int id)
     {

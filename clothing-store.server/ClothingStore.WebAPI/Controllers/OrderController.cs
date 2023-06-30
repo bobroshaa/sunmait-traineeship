@@ -75,7 +75,7 @@ public class OrderController : Controller
     /// <param name="orderInputModel">The input model of the new order.</param>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    //[Authorize(Policy = PolicyNames.CustomerAccess)]
+    [Authorize(Policy = PolicyNames.CustomerAccess)]
     [HttpPost]
     public async Task<ActionResult<int>> AddOrder([FromBody] OrderInputModel orderInputModel)
     {
