@@ -55,6 +55,11 @@ const Product = () => {
         }));
       });
 
+      console.log(hubConnection);
+      hubConnection.onclose(() => {
+        leaveRoom(productId);
+      });
+
       await hubConnection.start();
       await hubConnection.invoke("JoinRoomFromProduct", parseInt(productId));
 
@@ -106,6 +111,9 @@ const Product = () => {
 
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
+      if (connection) {
+        leaveRoom(productId);
+      }
     };
   }, [connection]);
 
