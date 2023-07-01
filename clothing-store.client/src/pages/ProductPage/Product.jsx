@@ -48,15 +48,22 @@ const Product = () => {
         setViewersCount(message);
       });
 
-      hubConnection.on("updatequantity", (cartItem) => {
+      hubConnection.on("updateReservedQuantity", (reservedQuantity) => {
+        console.log("GROUP?: ", hubConnection.connection.features.groups);
         setProduct((prev) => ({
           ...prev,
-          reservedQuantity: cartItem.reservedQuantity,
-          inStockQuantity: cartItem.inStockQuantity,
+          reservedQuantity,
         }));
       });
 
-      console.log(hubConnection);
+      hubConnection.on("updateInStockQuantity", (inStockQuantity) => {
+        console.log("GROUP?: ", hubConnection.connectionId);
+        setProduct((prev) => ({
+          ...prev,
+          inStockQuantity,
+        }));
+      });
+
       hubConnection.onclose(() => {
         leaveRoom(productId);
       });

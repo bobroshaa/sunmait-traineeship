@@ -57,7 +57,6 @@ public class OrderService : IOrderService
         return orderVm;
     }
 
-    // TODO: include product in cart repository
     public async Task<List<CartItemViewModel>> Add(OrderInputModel orderInputModel)
     {
         var order = new CustomerOrder { UserID = orderInputModel.CartItems[0].UserID };
@@ -121,13 +120,25 @@ public class OrderService : IOrderService
         await _orderRepository.SaveChanges();
     }
 
-    public async Task Delete(int id)
+    public async Task<List<ProductViewModel>> Delete(int id)
     {
         var order = await GetOrderById(id);
+        var orderProducts = await GetOrderItemsByOrderId(id);
+        var orderProductsDictionary = orderProducts.ToDictionary(item => item.ProductID, item => item);
+
+        var products = await _productRepository.GetProductsByIds(orderProducts.Select(op => op.ProductID).ToList());
         
         _orderRepository.Delete(order);
+
+        foreach (var product in products)
+        {
+            product.Value.InStockQuantity += orderProductsDictionary[product.Key].Quantity;
+        }
+
+        var productVms = _mapper.Map<List<ProductViewModel>>(products.Values);
         
         await _orderRepository.SaveChanges();
+        return productVms;
     }
 
     public async Task<List<OrderHistoryViewModel>> GetOrderHistoryByOrderId(int orderId)

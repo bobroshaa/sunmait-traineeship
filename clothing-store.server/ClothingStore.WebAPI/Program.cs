@@ -72,7 +72,7 @@ builder.Services.AddHangfireServer();
 
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 builder.Services.AddTransient<IJwtGenerator, JwtGenerator>();
-builder.Services.AddTransient<ICartReservationService, CartReservationService>();
+builder.Services.AddTransient<ISignalRService, SignalRService>();
 
 builder.Services.AddSignalR();
 builder.Services.AddResponseCompression(options =>
@@ -105,7 +105,7 @@ app.MapHub<ProductHub>("/producthub");
 app.UseHangfireDashboard();
 app.MapHangfireDashboard();
 
-RecurringJob.AddOrUpdate<ICartReservationService>(
+RecurringJob.AddOrUpdate<ISignalRService>(
     new Guid().ToString(),
     x => x.DeleteExpiredCartItems(),
     "0 * * ? * *");

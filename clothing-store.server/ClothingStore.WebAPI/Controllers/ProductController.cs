@@ -1,6 +1,7 @@
 ﻿using ClothingStore.Application.Interfaces;
 using ClothingStore.Application.Models.InputModels;
 using ClothingStore.Application.Models.ViewModels;
+using ClothingStore.WebAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,10 +12,12 @@ namespace ClothingStore.WebAPI.Controllers;
 public class ProductController : Controller
 {
     private readonly IProductService _productService;
+    private readonly ISignalRService _signalRService;
 
-    public ProductController(IProductService productService)
+    public ProductController(IProductService productService, ISignalRService signalRService)
     {
         _productService = productService;
+        _signalRService = signalRService;
     }
 
     /// <summary>
@@ -83,6 +86,8 @@ public class ProductController : Controller
         }
 
         await _productService.Update(id, productInputModel);
+
+        await _signalRService.UpdateInStockQuantity(id, productInputModel.InStockQuantity);
 
         return Ok();
     }

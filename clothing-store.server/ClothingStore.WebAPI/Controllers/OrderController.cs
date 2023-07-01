@@ -4,6 +4,7 @@ using ClothingStore.Application.Models.ViewModels;
 using ClothingStore.Domain.Entities;
 using ClothingStore.Domain.Enums;
 using ClothingStore.WebAPI.Hubs;
+using ClothingStore.WebAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -17,11 +18,13 @@ public class OrderController : Controller
 {
     private readonly IOrderService _orderService;
     private readonly IHubContext<ProductHub> _productHub;
+    private readonly ISignalRService _signalRService;
 
-    public OrderController(IOrderService orderService, IHubContext<ProductHub> productHub)
+    public OrderController(IOrderService orderService, IHubContext<ProductHub> productHub, ISignalRService signalRService)
     {
         _orderService = orderService;
         _productHub = productHub;
+        _signalRService = signalRService;
     }
 
     /// <summary>
@@ -90,15 +93,9 @@ public class OrderController : Controller
         {
             foreach (var item in deletedCartItems)
             {
-                await _productHub
-                    .Clients
-                    .Group(item.ProductID.ToString())
-                    .SendAsync("updateQuantity", item);
-                
-                await _productHub
-                    .Clients
-                    .Group(item.UserID.ToString())
-                    .SendAsync("updateCart");
+                await _signalRService.UpdateReservedQuantity(item.ProductID, item.ReservedQuantity);
+                await _signalRService.UpdateInStockQuantity(item.ProductID, item.InStockQuantity);
+                await _signalRService.UpdateCart(item.UserID);
             }
         }
 
@@ -137,7 +134,17 @@ public class OrderController : Controller
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteOrder([FromRoute] int id)
     {
-        await _orderService.Delete(id);
+        var products = await _orderService.Delete(id);
+        
+        if (!products.IsNullOrEmpty())
+        {
+            foreach (var product in products)
+            {
+                await _signalRService.UpdateReservedQuantity(product.ID, product.ReservedQuantity);
+                await _signalRService.UpdateInStockQuantity(product.ID, product.InStockQuantity);
+                //await _signalRService.UpdateCart(item.UserID);
+            }
+        }
 
         return Ok();
     }

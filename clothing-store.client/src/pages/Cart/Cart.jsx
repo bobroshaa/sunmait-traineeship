@@ -87,25 +87,56 @@ const Cart = () => {
         .configureLogging(LogLevel.Information)
         .build();
 
-      hubConnection.on("updatequantity", (cartItem) => {
-        console.log("BEFORE UPDATE QUANTITY", cartItemsRef.current);
-        const updatedCartItems = cartItemsRef.current.map((item) => {
-          if (item.id == cartItem.id) {
-            return cartItem;
-          }
-          return item;
+      hubConnection.on(
+        "updateReservedQuantity",
+        (reservedQuantity, productId) => {
+          console.log("RESERVED");
+          setCartItems((prevCartItems) => {
+            const updatedCartItems = prevCartItems.map((item) => {
+              if (item.productID === productId) {
+                return { ...item, reservedQuantity };
+              }
+              return item;
+            });
+            return updatedCartItems;
+          });
+        }
+      );
+
+      hubConnection.on(
+        "updateInStockQuantity",
+        (inStockQuantity, productId) => {
+          setCartItems((prevCartItems) => {
+            const updatedCartItems = prevCartItems.map((item) => {
+              if (item.productID === productId) {
+                return { ...item, inStockQuantity };
+              }
+              return item;
+            });
+            return updatedCartItems;
+          });
+        }
+      );
+
+      hubConnection.on("updateCartItemQuantity", (cartItemId, quantity) => {
+        setCartItems((prevCartItems) => {
+          const updatedCartItems = prevCartItems.map((item) => {
+            if (item.id === cartItemId) {
+              return { ...item, quantity };
+            }
+            return item;
+          });
+          return updatedCartItems;
         });
-        setCartItems(updatedCartItems);
       });
 
-      hubConnection.on("updatecart", async () => {
-        console.log("UPDATE CART");
+      hubConnection.on("updateCart", async () => {
+        console.log("Update");
         await getCartItems();
       });
 
       await hubConnection.start();
       cartItemsRef.current.forEach(async (item) => {
-        console.log(parseInt(item.productID), userId);
         await hubConnection.invoke(
           "JoinRoomFromCart",
           parseInt(item.productID),
@@ -129,7 +160,9 @@ const Cart = () => {
           },
         }
       );
-      setCartItems(response.data);
+      setCartItems((prevCartItems) => {
+        return response.data;
+      });
       console.log("GET CART ITEMS", response.data);
     } catch (error) {
       console.error(`Error: ${error}`);

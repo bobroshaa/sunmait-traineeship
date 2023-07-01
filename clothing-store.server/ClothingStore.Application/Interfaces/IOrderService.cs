@@ -12,6 +12,6 @@ public interface IOrderService
     Task<OrderViewModel?> GetById(int id);
     Task<List<CartItemViewModel>> Add(OrderInputModel order);
     Task Update(int id, Status orderStatus);
-    Task Delete(int id);
+    Task<List<ProductViewModel>> Delete(int id);
     Task<List<OrderHistoryViewModel>> GetOrderHistoryByOrderId(int orderId);
 }

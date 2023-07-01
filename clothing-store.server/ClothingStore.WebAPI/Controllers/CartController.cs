@@ -2,6 +2,7 @@
 using ClothingStore.Application.Models.InputModels;
 using ClothingStore.Application.Models.ViewModels;
 using ClothingStore.WebAPI.Hubs;
+using ClothingStore.WebAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -13,12 +14,12 @@ namespace ClothingStore.WebAPI.Controllers;
 public class CartController : Controller
 {
     private readonly ICartService _cartService;
-    private readonly IHubContext<ProductHub> _productHub;
+    private readonly ISignalRService _signalRService;
 
-    public CartController(ICartService cartService, IHubContext<ProductHub> productHub)
+    public CartController(ICartService cartService, ISignalRService signalRService)
     {
         _cartService = cartService;
-        _productHub = productHub;
+        _signalRService = signalRService;
     }
 
     /// <summary>
@@ -68,15 +69,8 @@ public class CartController : Controller
 
         var newCartItem = await _cartService.Add(cartItemInputModel);
 
-        await _productHub
-            .Clients
-            .Group(newCartItem.ProductID.ToString())
-            .SendAsync("updateQuantity", newCartItem);
-        
-        await _productHub
-            .Clients
-            .Group(newCartItem.UserID.ToString())
-            .SendAsync("updateCart");
+        await _signalRService.UpdateReservedQuantity(newCartItem.ProductID, newCartItem.ReservedQuantity);
+        await _signalRService.UpdateCart(newCartItem.UserID);
 
         return Ok(newCartItem);
     }
@@ -99,11 +93,9 @@ public class CartController : Controller
         }
 
         var cartItem = await _cartService.Update(id, count);
-
-        await _productHub
-            .Clients
-            .Group(cartItem.ProductID.ToString())
-            .SendAsync("updateQuantity", cartItem);
+        
+        await _signalRService.UpdateReservedQuantity(cartItem.ProductID, cartItem.ReservedQuantity);
+        await _signalRService.UpdateCartItemQuantity(cartItem.UserID, cartItem.ID, cartItem.Quantity);
 
         return Ok(cartItem);
     }
@@ -120,15 +112,9 @@ public class CartController : Controller
     {
         var cartItem = await _cartService.Delete(id);
 
-        await _productHub
-            .Clients
-            .Group(cartItem.ProductID.ToString())
-            .SendAsync("updateQuantity", cartItem);
+        await _signalRService.UpdateReservedQuantity(cartItem.ProductID, cartItem.ReservedQuantity);
+        await _signalRService.UpdateCart(cartItem.UserID);
         
-        await _productHub
-            .Clients
-            .Group(cartItem.UserID.ToString())
-            .SendAsync("updateCart");
 
         return Ok();
     }
