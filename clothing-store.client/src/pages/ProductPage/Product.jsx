@@ -13,6 +13,7 @@ import {
   VisibilityOutlined,
 } from "@mui/icons-material";
 import { useToast } from "rc-toastr";
+import Navbar from "../../components/Navbar/Navbar";
 
 const Product = () => {
   const [product, setProduct] = useState();
@@ -69,7 +70,11 @@ const Product = () => {
       });
 
       await hubConnection.start();
-      await hubConnection.invoke("JoinRoomFromProduct", parseInt(productId), parseInt(userId));
+      await hubConnection.invoke(
+        "JoinRoomFromProduct",
+        parseInt(productId),
+        parseInt(userId)
+      );
 
       setConnection(hubConnection);
     } catch (error) {
@@ -80,7 +85,11 @@ const Product = () => {
   const leaveRoom = async () => {
     try {
       if (connection) {
-        await connection.invoke("LeaveRoomFromProduct", parseInt(productId), parseInt(userId));
+        await connection.invoke(
+          "LeaveRoomFromProduct",
+          parseInt(productId),
+          parseInt(userId)
+        );
         connection.stop();
       }
     } catch (error) {
@@ -154,70 +163,73 @@ const Product = () => {
   };
 
   return (
-    <div className="product-page-container">
-      {product && (
-        <div className="product-container">
-          <img
-            src={product.imageURL}
-            alt={product.name}
-            className="product-image"
-          />
+    <div>
+      <Navbar />
+      <div className="product-page-container">
+        {product && (
+          <div className="product-container">
+            <img
+              src={product.imageURL}
+              alt={product.name}
+              className="product-image"
+            />
 
-          <div className="product-details">
-            <h3 className="product-name">{product.name}</h3>
-            {product.brand && (
-              <div className="product-price">{product.brand}</div>
-            )}
-            <div className="product-price">${product.price}</div>
-            <div className="product-size">Size: One Size (M - L)</div>
+            <div className="product-details">
+              <h3 className="product-name">{product.name}</h3>
+              {product.brand && (
+                <div className="product-price">{product.brand}</div>
+              )}
+              <div className="product-price">${product.price}</div>
+              <div className="product-size">Size: One Size (M - L)</div>
 
-            <div className="extra-info-container">
-              <LocalShippingOutlined />
-              <div className="extra-info-text-container">
-                <span className="extra-info-header">Fast Delivery</span>
-                <span className="extra-info-description">
-                  Processing and delivery of the order is carried out within 2-3
-                  working days.
-                </span>
+              <div className="extra-info-container">
+                <LocalShippingOutlined />
+                <div className="extra-info-text-container">
+                  <span className="extra-info-header">Fast Delivery</span>
+                  <span className="extra-info-description">
+                    Processing and delivery of the order is carried out within
+                    2-3 working days.
+                  </span>
+                </div>
               </div>
-            </div>
 
-            <div className="extra-info-container">
-              <Repeat />
-              <div className="extra-info-text-container">
-                <span className="extra-info-header">Easy Returns</span>
-                <span className="extra-info-description">
-                  Exchange or return your product(s) within 14 days.
-                </span>
+              <div className="extra-info-container">
+                <Repeat />
+                <div className="extra-info-text-container">
+                  <span className="extra-info-header">Easy Returns</span>
+                  <span className="extra-info-description">
+                    Exchange or return your product(s) within 14 days.
+                  </span>
+                </div>
               </div>
-            </div>
 
-            <Accordion title="Description" content={product.description} />
-            <div className="product-viewers">
-              <VisibilityOutlined /> {viewersCount} Viewers
-            </div>
-            <div className="product-viewers">
-              <AccessTimeOutlined /> {product.reservedQuantity} Items were
-              already Reserved
-            </div>
-            <div className="product-viewers">
-              <CheckCircleOutline />{" "}
-              {product.inStockQuantity - product.reservedQuantity} Items are
-              Available
-            </div>
+              <Accordion title="Description" content={product.description} />
+              <div className="product-viewers">
+                <VisibilityOutlined /> {viewersCount} Viewers
+              </div>
+              <div className="product-viewers">
+                <AccessTimeOutlined /> {product.reservedQuantity} Items were
+                already Reserved
+              </div>
+              <div className="product-viewers">
+                <CheckCircleOutline />{" "}
+                {product.inStockQuantity - product.reservedQuantity} Items are
+                Available
+              </div>
 
-            {product.inStockQuantity - product.reservedQuantity > 0 ? (
-              <button onClick={addToCart} className="add-to-cart">
-                Add to Cart
-              </button>
-            ) : (
-              <button disabled className="out-of-stock">
-                Out Of Stock
-              </button>
-            )}
+              {product.inStockQuantity - product.reservedQuantity > 0 ? (
+                <button onClick={addToCart} className="add-to-cart">
+                  Add to Cart
+                </button>
+              ) : (
+                <button disabled className="out-of-stock">
+                  Out Of Stock
+                </button>
+              )}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

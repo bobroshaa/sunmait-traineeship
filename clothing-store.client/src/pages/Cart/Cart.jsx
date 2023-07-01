@@ -6,6 +6,7 @@ import "./cart.css";
 import { useToast } from "rc-toastr";
 import { Add, CheckCircleOutline, Close, Remove } from "@mui/icons-material";
 import { HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
+import Navbar from "../../components/Navbar/Navbar";
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState();
@@ -207,100 +208,103 @@ const Cart = () => {
   };
 
   return (
-    <div className="cart-page-container">
-      {cartItems && cartItems.length > 0 ? (
-        <div className="cart-oder-container">
-          <div className="cart-container">
-            <div className="cart-header">
-              <span className="cart-name">My bag</span>
-              <span className="reservation-info">
-                Items are reserved for 20 minutes
-              </span>
-            </div>
-            {cartItems.map((cartItem) => {
-              return (
-                <div className="cart-item-card" key={cartItem.id}>
-                  <img
-                    className="cart-item-image"
-                    src={cartItem.imageURL}
-                    alt={cartItem.name}
-                  />
-                  <div className="cart-item-card-info">
-                    <span className="cart-item-price">
-                      ${cartItem.price}{" "}
-                      <Close
-                        className="close-btn"
-                        onClick={() => deleteCartItem(cartItem.id)}
-                      />
-                    </span>
-                    <span className="cart-item-name">{cartItem.name}</span>
-                    <span className="cart-item-size">
-                      Size: One Size (M - L)
-                    </span>
-                    <div className="cart-available-quantity">
-                      <CheckCircleOutline />{" "}
-                      {cartItem.inStockQuantity - cartItem.reservedQuantity}{" "}
-                      Items are Available
-                    </div>
-                    <div className="cart-item-quantity">
-                      <button
-                        className="cart-item-change-one"
-                        onClick={() =>
-                          handleQuantityChange(
-                            cartItem.id,
-                            cartItem.quantity - 1
-                          )
-                        }
-                        disabled={cartItem.quantity <= 1}
-                      >
-                        <Remove fontSize={"small"} />
-                      </button>
-                      {cartItem.quantity}
-                      <button
-                        className="cart-item-change-one"
-                        onClick={() =>
-                          handleQuantityChange(
-                            cartItem.id,
-                            cartItem.quantity + 1
-                          )
-                        }
-                        disabled={
-                          cartItem.quantity >= 10 ||
-                          cartItem.quantity ==
-                            cartItem.inStockQuantity -
-                              cartItem.reservedQuantity +
-                              cartItem.quantity
-                        }
-                      >
-                        <Add fontSize={"small"} />
-                      </button>
+    <div>
+      <Navbar />
+      <div className="cart-page-container">
+        {cartItems && cartItems.length > 0 ? (
+          <div className="cart-oder-container">
+            <div className="cart-container">
+              <div className="cart-header">
+                <span className="cart-name">My bag</span>
+                <span className="reservation-info">
+                  Items are reserved for 20 minutes
+                </span>
+              </div>
+              {cartItems.map((cartItem) => {
+                return (
+                  <div className="cart-item-card" key={cartItem.id}>
+                    <img
+                      className="cart-item-image"
+                      src={cartItem.imageURL}
+                      alt={cartItem.name}
+                    />
+                    <div className="cart-item-card-info">
+                      <span className="cart-item-price">
+                        ${cartItem.price}{" "}
+                        <Close
+                          className="close-btn"
+                          onClick={() => deleteCartItem(cartItem.id)}
+                        />
+                      </span>
+                      <span className="cart-item-name">{cartItem.name}</span>
+                      <span className="cart-item-size">
+                        Size: One Size (M - L)
+                      </span>
+                      <div className="cart-available-quantity">
+                        <CheckCircleOutline />{" "}
+                        {cartItem.inStockQuantity - cartItem.reservedQuantity}{" "}
+                        Items are Available
+                      </div>
+                      <div className="cart-item-quantity">
+                        <button
+                          className="cart-item-change-one"
+                          onClick={() =>
+                            handleQuantityChange(
+                              cartItem.id,
+                              cartItem.quantity - 1
+                            )
+                          }
+                          disabled={cartItem.quantity <= 1}
+                        >
+                          <Remove fontSize={"small"} />
+                        </button>
+                        {cartItem.quantity}
+                        <button
+                          className="cart-item-change-one"
+                          onClick={() =>
+                            handleQuantityChange(
+                              cartItem.id,
+                              cartItem.quantity + 1
+                            )
+                          }
+                          disabled={
+                            cartItem.quantity >= 10 ||
+                            cartItem.quantity ==
+                              cartItem.inStockQuantity -
+                                cartItem.reservedQuantity +
+                                cartItem.quantity
+                          }
+                        >
+                          <Add fontSize={"small"} />
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
 
-          <div className="total-order-container">
-            <div className="total-order-price">
-              <div className="total-order-header">Total</div>
-              <div className="order-subtotal-price">
-                Sub-total: $
-                {cartItems.reduce(
-                  (total, item) => total + item.price * item.quantity,
-                  0
-                )}
+            <div className="total-order-container">
+              <div className="total-order-price">
+                <div className="total-order-header">Total</div>
+                <div className="order-subtotal-price">
+                  Sub-total: $
+                  {cartItems.reduce(
+                    (total, item) => total + item.price * item.quantity,
+                    0
+                  )}
+                </div>
+                <div className="order-delivery">Delivery: Free</div>
+                <button onClick={order} className="add-to-cart">
+                  Order
+                </button>
               </div>
-              <div className="order-delivery">Delivery: Free</div>
-              <button onClick={order} className="add-to-cart">
-                Order
-              </button>
             </div>
           </div>
-        </div>
-      ) : (
-        <div className="empty-cart-message">Your bag is empty.</div>
-      )}
+        ) : (
+          <div className="empty-cart-message">Your bag is empty.</div>
+        )}
+      </div>
     </div>
   );
 };

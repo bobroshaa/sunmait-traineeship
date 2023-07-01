@@ -5,14 +5,12 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Cart from "./pages/Cart/Cart";
 import Login from "./pages/Login/Login";
 import Home from "./pages/Home/Home";
-import Navbar from "./components/Navbar/Navbar";
 
 const App = () => {
   const user = JSON.parse(localStorage.getItem("user"));
 
   return (
     <BrowserRouter>
-      {user && <Navbar />}
       <Routes>
         <Route path="/" element={!user ? <Navigate to="/login" /> : <Home />} />
         <Route

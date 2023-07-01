@@ -1,10 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100;200;300;500&display=swap");
 
 .product-page-container {
-  min-height: 100vh;
   display: flex;
+  padding: 30px 0;
   justify-content: center;
-  align-items: center;
   font-family: "Roboto Mono", monospace;
 }
 
@@ -23,7 +22,6 @@
   display: flex;
   gap: 30px;
   flex-direction: column;
-  justify-content: center;
 }
 
 .product-name {

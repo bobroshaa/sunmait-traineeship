@@ -4,6 +4,7 @@ import "./home.css";
 import React, { useEffect, useState } from "react";
 import axios from "../../axiosConfig";
 import Footer from "../../components/Footer/Footer";
+import Navbar from "../../components/Navbar/Navbar";
 
 const Home = () => {
   const [products, setProducts] = useState();
@@ -34,6 +35,7 @@ const Home = () => {
 
   return (
     <div>
+      <Navbar />
       <New />
       {products && <ProductSection products={products} />}
       <Footer />
