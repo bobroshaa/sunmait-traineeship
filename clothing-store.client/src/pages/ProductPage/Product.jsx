@@ -35,7 +35,7 @@ const Product = () => {
   const userId = JSON.parse(localStorage.getItem("user")).id;
   const token = JSON.parse(localStorage.getItem("user")).accessToken;
 
-  const joinRoom = async (productId) => {
+  const joinRoom = async () => {
     if (connection) return;
     console.log(product);
     try {
@@ -69,7 +69,7 @@ const Product = () => {
       });
 
       await hubConnection.start();
-      await hubConnection.invoke("JoinRoomFromProduct", parseInt(productId));
+      await hubConnection.invoke("JoinRoomFromProduct", parseInt(productId), parseInt(userId));
 
       setConnection(hubConnection);
     } catch (error) {
@@ -77,10 +77,10 @@ const Product = () => {
     }
   };
 
-  const leaveRoom = async (productId) => {
+  const leaveRoom = async () => {
     try {
       if (connection) {
-        await connection.invoke("LeaveRoomFromProduct", parseInt(productId));
+        await connection.invoke("LeaveRoomFromProduct", parseInt(productId), parseInt(userId));
         connection.stop();
       }
     } catch (error) {
@@ -110,14 +110,14 @@ const Product = () => {
 
   useEffect(() => {
     if (product !== undefined) {
-      joinRoom(productId);
+      joinRoom();
     }
   }, [product]);
 
   useEffect(() => {
     const handleBeforeUnload = async (e) => {
       e.preventDefault();
-      await leaveRoom(productId);
+      await leaveRoom();
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);
@@ -125,12 +125,11 @@ const Product = () => {
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
       if (connection) {
-        leaveRoom(productId);
+        leaveRoom();
       }
     };
   }, [connection]);
 
-  // TODO: get user id from local storage
   const addToCart = async () => {
     try {
       const response = await axios.post(
