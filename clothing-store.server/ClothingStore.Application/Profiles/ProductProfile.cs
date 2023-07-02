@@ -10,6 +10,8 @@ public class ProductProfile : Profile
     public ProductProfile()
     {
         CreateMap<Product, ProductInputModel>().ReverseMap();
-        CreateMap<Product, ProductViewModel>().ReverseMap();
+        CreateMap<Product, ProductViewModel>()
+            .ForMember(p => p.BrandName, opt => opt.MapFrom(p => p.Brand.Name))
+            .ReverseMap();
     }
 }

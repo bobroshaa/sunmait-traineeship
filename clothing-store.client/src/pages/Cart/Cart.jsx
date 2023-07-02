@@ -39,6 +39,7 @@ const Cart = () => {
             userId
           );
         });
+
         connection.stop();
       }
     } catch (error) {
@@ -47,7 +48,6 @@ const Cart = () => {
   };
 
   const order = async () => {
-    console.log(cartItems.map((item) => item.id));
     try {
       await axios.post(
         `http://localhost:5051/api/orders`,
@@ -91,7 +91,6 @@ const Cart = () => {
       hubConnection.on(
         "updateReservedQuantity",
         (reservedQuantity, productId) => {
-          console.log("RESERVED");
           setCartItems((prevCartItems) => {
             const updatedCartItems = prevCartItems.map((item) => {
               if (item.productID === productId) {
@@ -132,7 +131,6 @@ const Cart = () => {
       });
 
       hubConnection.on("updateCart", async () => {
-        console.log("Update");
         await getCartItems();
       });
 
@@ -161,10 +159,10 @@ const Cart = () => {
           },
         }
       );
-      setCartItems((prevCartItems) => {
+
+      setCartItems(() => {
         return response.data;
       });
-      console.log("GET CART ITEMS", response.data);
     } catch (error) {
       console.error(`Error: ${error}`);
     }

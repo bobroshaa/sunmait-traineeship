@@ -12,4 +12,5 @@ public class ProductViewModel
     public string ImageURL { get; set; }
     public int SectionCategoryId { get; set; }
     public int? BrandId { get; set; }
+    public string BrandName { get; set; }
 }

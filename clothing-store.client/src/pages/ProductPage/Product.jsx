@@ -38,7 +38,6 @@ const Product = () => {
 
   const joinRoom = async () => {
     if (connection) return;
-    console.log(product);
     try {
       const hubConnection = new HubConnectionBuilder()
         .withUrl("http://localhost:5051/producthub")
@@ -50,7 +49,6 @@ const Product = () => {
       });
 
       hubConnection.on("updateReservedQuantity", (reservedQuantity) => {
-        console.log("GROUP?: ", hubConnection.connection.features.groups);
         setProduct((prev) => ({
           ...prev,
           reservedQuantity,
@@ -58,7 +56,6 @@ const Product = () => {
       });
 
       hubConnection.on("updateInStockQuantity", (inStockQuantity) => {
-        console.log("GROUP?: ", hubConnection.connectionId);
         setProduct((prev) => ({
           ...prev,
           inStockQuantity,
@@ -70,6 +67,7 @@ const Product = () => {
       });
 
       await hubConnection.start();
+
       await hubConnection.invoke(
         "JoinRoomFromProduct",
         parseInt(productId),
@@ -90,6 +88,7 @@ const Product = () => {
           parseInt(productId),
           parseInt(userId)
         );
+
         connection.stop();
       }
     } catch (error) {
@@ -107,7 +106,22 @@ const Product = () => {
           },
         }
       );
-      setProduct(response.data);
+
+      let receivedProduct = response.data;
+      console.log(receivedProduct);
+      const brandResponse = await axios.get(
+        `http://localhost:5051/api/brands/${receivedProduct.brandId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log(brandResponse.data.name);
+      receivedProduct.brandName = brandResponse.data.name;
+
+      setProduct(receivedProduct);
     } catch (error) {
       console.error(`Error: ${error}`);
     }
@@ -175,10 +189,12 @@ const Product = () => {
             />
 
             <div className="product-details">
-              <h3 className="product-name">{product.name}</h3>
-              {product.brand && (
-                <div className="product-price">{product.brand}</div>
-              )}
+              <h3 className="product-name">
+                {product.name}
+                {product.brandName && (
+                  <span className="product-price">, {product.brandName}</span>
+                )}
+              </h3>
               <div className="product-price">${product.price / 100}</div>
               <div className="product-size">Size: One Size (M - L)</div>
 
