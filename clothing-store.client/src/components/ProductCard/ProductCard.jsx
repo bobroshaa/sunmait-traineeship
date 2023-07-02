@@ -10,7 +10,7 @@ const ProductCard = ({ product }) => {
       <img src={product.imageURL} alt={product.name} className="product-card-image" />
       <div className="product-card-info">
         <div className="product-card-name">{product.name}</div>
-        <span className="product-card-price">${product.price}</span>
+        <span className="product-card-price">${product.price / 100}</span>
       </div>
       <div className='product-card-brand'>stone island</div>
     </div>

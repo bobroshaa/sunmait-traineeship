@@ -5,19 +5,19 @@ namespace ClothingStore.WebAPI.Hubs;
 
 public class ProductHub : Hub
 {
-    private static readonly ConcurrentDictionary<int, ConcurrentDictionary<int, int>> _viewingUsers = new();
+    private static readonly ConcurrentDictionary<int, ConcurrentDictionary<int, int>> ViewingUsers = new();
 
     public async Task JoinRoomFromProduct(int productId, int userId)
     {
         await Groups.AddToGroupAsync(Context.ConnectionId, productId.ToString());
 
-        if (_viewingUsers.TryGetValue(productId, out var userDictionary))
+        if (ViewingUsers.TryGetValue(productId, out var userDictionary))
         {
             userDictionary[userId] = !userDictionary.TryGetValue(userId, out var count) ? 1 : ++count;
         }
         else
         {
-            _viewingUsers[productId] = new ConcurrentDictionary<int, int> { [userId] = 1 };
+            ViewingUsers[productId] = new ConcurrentDictionary<int, int> { [userId] = 1 };
         }
 
         await BroadcastToGroup(productId);
@@ -26,9 +26,9 @@ public class ProductHub : Hub
     public async Task LeaveRoomFromProduct(int productId, int userId)
     {
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, productId.ToString());
-        _viewingUsers[productId][userId] -= 1;
+        ViewingUsers[productId][userId] -= 1;
 
-        if (_viewingUsers.TryGetValue(productId, out var productDictionary) && productDictionary.TryGetValue(userId, out var viewerCount))
+        if (ViewingUsers.TryGetValue(productId, out var productDictionary) && productDictionary.TryGetValue(userId, out var viewerCount))
         {
             if (viewerCount == 0)
             {
@@ -54,6 +54,6 @@ public class ProductHub : Hub
     private async Task BroadcastToGroup(int productId)
     {
         await Clients.Group(productId.ToString())
-            .SendAsync("updateViewers", _viewingUsers[productId].Count);
+            .SendAsync("updateViewers", ViewingUsers[productId].Count);
     }
 }

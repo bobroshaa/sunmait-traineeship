@@ -179,7 +179,7 @@ const Product = () => {
               {product.brand && (
                 <div className="product-price">{product.brand}</div>
               )}
-              <div className="product-price">${product.price}</div>
+              <div className="product-price">${product.price / 100}</div>
               <div className="product-size">Size: One Size (M - L)</div>
 
               <div className="extra-info-container">

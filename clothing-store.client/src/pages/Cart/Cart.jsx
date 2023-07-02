@@ -230,7 +230,7 @@ const Cart = () => {
                     />
                     <div className="cart-item-card-info">
                       <span className="cart-item-price">
-                        ${cartItem.price}{" "}
+                        ${cartItem.price / 100}{" "}
                         <Close
                           className="close-btn"
                           onClick={() => deleteCartItem(cartItem.id)}
@@ -292,7 +292,7 @@ const Cart = () => {
                   {cartItems.reduce(
                     (total, item) => total + item.price * item.quantity,
                     0
-                  )}
+                  ) / 100}
                 </div>
                 <div className="order-delivery">Delivery: Free</div>
                 <button onClick={order} className="add-to-cart">
