@@ -49,23 +49,25 @@ public class CartService : ICartService
 
         return cartItemVm;
     }
-    
+
 
     public async Task<CartItemViewModel> Add(CartItemInputModel cartItemInputModel)
     {
         var product = await GetProductById(cartItemInputModel.ProductID);
         await ValidateUser(cartItemInputModel.UserID);
-        
+        ValidateQuantity(cartItemInputModel, product);
+
         var cartItem = _mapper.Map<CartItem>(cartItemInputModel);
 
-        var existingCartItem = await GetCartItemByUserAndProduct(cartItemInputModel.UserID, cartItemInputModel.ProductID);
+        var existingCartItem =
+            await GetCartItemByUserAndProduct(cartItemInputModel.UserID, cartItemInputModel.ProductID);
         if (existingCartItem is null)
         {
             cartItem.ReservationEndDate =
                 DateTime.UtcNow + TimeSpan.FromSeconds(_reservationConfiguration.reservationTime);
 
             _cartRepository.Add(cartItem);
-            
+
             cartItem.Product = product;
         }
         else
@@ -74,7 +76,7 @@ public class CartService : ICartService
         }
 
         product.ReservedQuantity += cartItem.Quantity;
-        
+
         var cartItemVm = existingCartItem is null
             ? _mapper.Map<CartItemViewModel>(cartItem)
             : _mapper.Map<CartItemViewModel>(existingCartItem);
@@ -90,9 +92,9 @@ public class CartService : ICartService
 
         cartItem.Product.ReservedQuantity += count - cartItem.Quantity;
         cartItem.Quantity = count;
-        
+
         await _cartRepository.SaveChanges();
-        
+
         var cartItemVm = _mapper.Map<CartItemViewModel>(cartItem);
 
         return cartItemVm;
@@ -102,7 +104,7 @@ public class CartService : ICartService
     {
         var cartItem = await GetCartItemById(id);
         var product = await GetProductById(cartItem.ProductID);
-        
+
         _cartRepository.Delete(cartItem);
 
         product.ReservedQuantity -= cartItem.Quantity;
@@ -119,6 +121,17 @@ public class CartService : ICartService
         if (!await _userRepository.DoesUserExist(id))
         {
             throw new EntityNotFoundException(string.Format(ExceptionMessages.UserNotFound, id));
+        }
+    }
+
+    private void ValidateQuantity(CartItemInputModel cartItemInputModel, Product product)
+    {
+        if (cartItemInputModel.Quantity > product.InStockQuantity - product.ReservedQuantity)
+        {
+            throw new IncorrectParamsException(string.Format(
+                ExceptionMessages.ProductQuantityIsNotAvailable,
+                cartItemInputModel.Quantity, product.ID,
+                product.InStockQuantity - product.ReservedQuantity));
         }
     }
 
@@ -143,7 +156,7 @@ public class CartService : ICartService
 
         return cartItem;
     }
-    
+
     private async Task<CartItem?> GetCartItemByUserAndProduct(int userId, int productId)
     {
         var cartItem = await _cartRepository.GetByUserAndProduct(userId, productId);
@@ -154,13 +167,13 @@ public class CartService : ICartService
     public async Task<List<CartItemViewModel>> DeleteExpiredCartItems()
     {
         var deletedCartItems = await _cartRepository.DeleteExpired();
-        
+
         await _cartRepository.SaveChanges();
 
         Console.WriteLine("DeleteExpiredCartItems:" + DateTime.Now);
 
         var deletedCartItemVms = _mapper.Map<List<CartItemViewModel>>(deletedCartItems);
-        
+
         return deletedCartItemVms;
     }
 }
