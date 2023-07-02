@@ -18,8 +18,8 @@ public class OrderService : IOrderService
     private readonly IMapper _mapper;
 
     public OrderService(
-        IMapper mapper, 
-        IOrderRepository orderRepository, 
+        IMapper mapper,
+        IOrderRepository orderRepository,
         IProductRepository productRepository,
         IUserRepository userRepository,
         ICartRepository cartRepository)
@@ -45,7 +45,7 @@ public class OrderService : IOrderService
 
         var orderItems = await _orderRepository.GetAllByOrderId(orderId);
         var orderItemVms = _mapper.Map<List<OrderItemViewModel>>(orderItems);
-        
+
         return orderItemVms;
     }
 
@@ -53,27 +53,30 @@ public class OrderService : IOrderService
     {
         var order = await GetOrderById(id);
         var orderVm = _mapper.Map<OrderViewModel>(order);
-        
+
         return orderVm;
     }
 
     public async Task<List<CartItemViewModel>> Add(OrderInputModel orderInputModel)
     {
-        var order = new CustomerOrder { UserID = orderInputModel.CartItems[0].UserID };
+        var userId = orderInputModel.CartItems[0].UserID;
+        await ValidateUser(userId);
         
+        var order = new CustomerOrder { UserID = userId };
+
         var cartItemIds = orderInputModel.CartItems.Select(ci => ci.ID).ToList();
         var cartItemsDictionary = await _cartRepository.GetCartItemsByIds(cartItemIds);
-        
+
         ValidateCartItems(cartItemIds, cartItemsDictionary.Keys.ToList());
-        
+
         order.OrderProducts = new List<OrderProduct>();
         var deletedCartItems = new List<CartItem>();
-        
+
         foreach (var cartItemId in cartItemIds)
         {
             if (cartItemsDictionary.TryGetValue(cartItemId, out var cartItem))
             {
-                //ValidateProductQuantity(itemInputModel.ProductID, itemInputModel.Quantity, productToUpdate.InStockQuantity);
+                ValidateProductQuantity(cartItem, cartItem.Product);
 
                 var item = new OrderProduct
                 {
@@ -82,9 +85,9 @@ public class OrderService : IOrderService
                     Quantity = cartItem.Quantity,
                     Price = cartItem.Product.Price
                 };
-                
+
                 order.OrderProducts.Add(item);
-                
+
                 cartItem.Product.ReservedQuantity -= cartItem.Quantity;
                 cartItem.Product.InStockQuantity -= cartItem.Quantity;
                 cartItem.IsActive = false;
@@ -102,21 +105,21 @@ public class OrderService : IOrderService
         _orderRepository.Add(order);
 
         await _orderRepository.SaveChanges();
-        
+
         var deletedCarItemVms = _mapper.Map<List<CartItemViewModel>>(deletedCartItems);
-        
+
         return deletedCarItemVms;
     }
 
     public async Task Update(int id, Status orderStatus)
     {
         var order = await GetOrderById(id);
-        
+
         ValidateOrderStatus(orderStatus);
         ValidateOrderStatusChanging(order.CurrentStatus, orderStatus);
-        
+
         _orderRepository.Update(order, orderStatus);
-        
+
         await _orderRepository.SaveChanges();
     }
 
@@ -126,8 +129,8 @@ public class OrderService : IOrderService
         var orderProducts = await GetOrderItemsByOrderId(id);
         var orderProductsDictionary = orderProducts.ToDictionary(item => item.ProductID, item => item);
 
-        var products = await _productRepository.GetProductsByIds(orderProducts.Select(op => op.ProductID).ToList());
-        
+        var products = await _productRepository.GetProductsByIds(orderProductsDictionary.Keys.ToList());
+
         _orderRepository.Delete(order);
 
         foreach (var product in products)
@@ -136,7 +139,7 @@ public class OrderService : IOrderService
         }
 
         var productVms = _mapper.Map<List<ProductViewModel>>(products.Values);
-        
+
         await _orderRepository.SaveChanges();
         return productVms;
     }
@@ -144,7 +147,7 @@ public class OrderService : IOrderService
     public async Task<List<OrderHistoryViewModel>> GetOrderHistoryByOrderId(int orderId)
     {
         await ValidateOrder(orderId);
-        
+
         var orderHistory = await _orderRepository.GetOrderHistoryByOrderId(orderId);
         var orderHistoryVms = _mapper.Map<List<OrderHistoryViewModel>>(orderHistory);
 
@@ -178,12 +181,15 @@ public class OrderService : IOrderService
         }
     }
 
-    private void ValidateProductQuantity(int productId, int requiredQuantity, int availableQuantity)
+    private void ValidateProductQuantity(CartItem cartItem,Product product)
     {
-        if (requiredQuantity > availableQuantity)
+        if (cartItem.Quantity > product.InStockQuantity)
         {
-            throw new IncorrectParamsException(
-                string.Format(ExceptionMessages.ProductQuantityIsNotAvailable, requiredQuantity, productId, availableQuantity));
+            throw new IncorrectParamsException(string.Format(
+                    ExceptionMessages.ProductQuantityIsNotAvailable,
+                    cartItem.Quantity,
+                    product.ID,
+                    product.InStockQuantity));
         }
     }
 
@@ -208,18 +214,10 @@ public class OrderService : IOrderService
         }
 
         throw new IncorrectParamsException(
-            string.Format(ExceptionMessages.IncorrectStatusChanging, Enum.GetName(currentStatus), Enum.GetName(newStatus)));
+            string.Format(ExceptionMessages.IncorrectStatusChanging, Enum.GetName(currentStatus),
+                Enum.GetName(newStatus)));
     }
 
-    /*private void ValidateProducts(List<int> productsIds, List<int> existingProductsIds)
-    {
-        var missingProductIds = productsIds.Except(existingProductsIds).ToList();
-        if (missingProductIds.Count > 0)
-        {
-            throw new EntityNotFoundException(string.Format(ExceptionMessages.ProductNotFound, missingProductIds[0]));
-        }
-    }*/
-    
     private void ValidateCartItems(List<int> cartItemIds, List<int> existingCartItems)
     {
         var missingCartItemIds = cartItemIds.Except(existingCartItems).ToList();
