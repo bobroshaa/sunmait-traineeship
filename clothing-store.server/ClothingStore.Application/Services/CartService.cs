@@ -86,7 +86,7 @@ public class CartService : ICartService
         return cartItemVm;
     }
 
-    public async Task<CartItemViewModel> Update(int id, int count)
+    public async Task<CartItemViewModel> UpdateQuantity(int id, int count)
     {
         var cartItem = await GetCartItemById(id);
 

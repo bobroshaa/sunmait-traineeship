@@ -20,7 +20,8 @@ public class OrderController : Controller
     private readonly IHubContext<ProductHub> _productHub;
     private readonly ISignalRService _signalRService;
 
-    public OrderController(IOrderService orderService, IHubContext<ProductHub> productHub, ISignalRService signalRService)
+    public OrderController(IOrderService orderService, IHubContext<ProductHub> productHub,
+        ISignalRService signalRService)
     {
         _orderService = orderService;
         _productHub = productHub;
@@ -87,19 +88,24 @@ public class OrderController : Controller
             return BadRequest(ModelState);
         }
 
-        var deletedCartItems = await _orderService.Add(orderInputModel);
+        var orderId = await _orderService.Add(orderInputModel);
 
-        if (!deletedCartItems.IsNullOrEmpty())
+        var cartItems = orderInputModel.CartItems.ToDictionary(item => item.ProductID, item => item);
+
+        if (!cartItems.IsNullOrEmpty())
         {
-            foreach (var item in deletedCartItems)
+            foreach (var item in cartItems)
             {
-                await _signalRService.UpdateReservedQuantity(item.ProductID, item.ReservedQuantity);
-                await _signalRService.UpdateInStockQuantity(item.ProductID, item.InStockQuantity);
-                await _signalRService.UpdateCart(item.UserID);
+                await _signalRService.UpdateReservedQuantity(
+                    item.Key,
+                    item.Value.ReservedQuantity - item.Value.Quantity);
+                await _signalRService.UpdateInStockQuantity(item.Key, item.Value.InStockQuantity - item.Value.Quantity);
             }
+
+            await _signalRService.UpdateCart(orderInputModel.CartItems[0].UserID);
         }
 
-        return Ok(deletedCartItems);
+        return Ok(orderId);
     }
 
     /// <summary>
@@ -135,14 +141,13 @@ public class OrderController : Controller
     public async Task<ActionResult> DeleteOrder([FromRoute] int id)
     {
         var products = await _orderService.Delete(id);
-        
+
         if (!products.IsNullOrEmpty())
         {
             foreach (var product in products)
             {
                 await _signalRService.UpdateReservedQuantity(product.ID, product.ReservedQuantity);
                 await _signalRService.UpdateInStockQuantity(product.ID, product.InStockQuantity);
-                //await _signalRService.UpdateCart(item.UserID);
             }
         }
 

@@ -85,14 +85,14 @@ public class CartController : Controller
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Authorize(Policy = PolicyNames.CustomerAccess)]
     [HttpPut("{id}")]
-    public async Task<ActionResult> UpdateCartItem([FromRoute] int id, [FromBody] int count)
+    public async Task<ActionResult> UpdateCartItemQuantity([FromRoute] int id, [FromBody] int count)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
 
-        var cartItem = await _cartService.Update(id, count);
+        var cartItem = await _cartService.UpdateQuantity(id, count);
         
         await _signalRService.UpdateReservedQuantity(cartItem.ProductID, cartItem.ReservedQuantity);
         await _signalRService.UpdateCartItemQuantity(cartItem.UserID, cartItem.ID, cartItem.Quantity);

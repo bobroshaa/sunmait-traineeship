@@ -266,7 +266,6 @@ const Cart = () => {
                             )
                           }
                           disabled={
-                            cartItem.quantity >= 10 ||
                             cartItem.quantity ==
                               cartItem.inStockQuantity -
                                 cartItem.reservedQuantity +

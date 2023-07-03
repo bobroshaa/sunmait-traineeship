@@ -57,7 +57,7 @@ public class OrderService : IOrderService
         return orderVm;
     }
 
-    public async Task<List<CartItemViewModel>> Add(OrderInputModel orderInputModel)
+    public async Task<int> Add(OrderInputModel orderInputModel)
     {
         var userId = orderInputModel.CartItems[0].UserID;
         await ValidateUser(userId);
@@ -70,7 +70,6 @@ public class OrderService : IOrderService
         ValidateCartItems(cartItemIds, cartItemsDictionary.Keys.ToList());
 
         order.OrderProducts = new List<OrderProduct>();
-        var deletedCartItems = new List<CartItem>();
 
         foreach (var cartItemId in cartItemIds)
         {
@@ -91,7 +90,6 @@ public class OrderService : IOrderService
                 cartItem.Product.ReservedQuantity -= cartItem.Quantity;
                 cartItem.Product.InStockQuantity -= cartItem.Quantity;
                 cartItem.IsActive = false;
-                deletedCartItems.Add(cartItem);
             }
             else
             {
@@ -106,9 +104,7 @@ public class OrderService : IOrderService
 
         await _orderRepository.SaveChanges();
 
-        var deletedCarItemVms = _mapper.Map<List<CartItemViewModel>>(deletedCartItems);
-
-        return deletedCarItemVms;
+        return order.ID;
     }
 
     public async Task Update(int id, Status orderStatus)

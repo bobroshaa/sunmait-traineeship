@@ -8,7 +8,7 @@ public interface ICartService
     Task<List<CartItemViewModel>> GetUserCart(int userId);
     Task<CartItemViewModel?> GetById(int id);
     Task<CartItemViewModel> Add(CartItemInputModel cartItemInputModel);
-    Task<CartItemViewModel>  Update(int id, int count);
+    Task<CartItemViewModel>  UpdateQuantity(int id, int count);
     Task<CartItemViewModel> Delete(int id);
     Task<List<CartItemViewModel>> DeleteExpiredCartItems();
 }
