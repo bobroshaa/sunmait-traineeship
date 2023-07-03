@@ -107,21 +107,7 @@ const Product = () => {
         }
       );
 
-      let receivedProduct = response.data;
-      console.log(receivedProduct);
-      const brandResponse = await axios.get(
-        `http://localhost:5051/api/brands/${receivedProduct.brandId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      console.log(brandResponse.data.name);
-      receivedProduct.brandName = brandResponse.data.name;
-
-      setProduct(receivedProduct);
+      setProduct(response.data);
     } catch (error) {
       console.error(`Error: ${error}`);
     }

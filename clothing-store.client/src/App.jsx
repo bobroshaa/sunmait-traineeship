@@ -7,21 +7,19 @@ import Login from "./pages/Login/Login";
 import Home from "./pages/Home/Home";
 
 const App = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
-
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={!user ? <Navigate to="/login" /> : <Home />} />
+        <Route exact path="/" element={!JSON.parse(localStorage.getItem("user")) ? <Navigate to="/login" /> : <Home />} />
         <Route
           path="/products/:productId"
-          element={!user ? <Navigate to="/login" /> : <Product />}
+          element={!JSON.parse(localStorage.getItem("user")) ? <Navigate to="/login" /> : <Product />}
         />
         <Route
           path="/cart/:userId"
-          element={!user ? <Navigate to="/login" /> : <Cart />}
+          element={!JSON.parse(localStorage.getItem("user")) ? <Navigate to="/login" /> : <Cart />}
         />
-        <Route path="/login" element={<Login />} />
+        <Route exact path="/login" element={!JSON.parse(localStorage.getItem("user")) ? <Login /> : <Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
   );

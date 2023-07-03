@@ -2,7 +2,6 @@ import React from "react";
 import "./productCard.css";
 import { Link } from "react-router-dom";
 
-//TODO: get brand from product
 const ProductCard = ({ product }) => {
   return (
     <Link to={`products/${product.id}`}>

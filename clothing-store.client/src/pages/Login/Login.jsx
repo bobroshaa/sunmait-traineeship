@@ -19,7 +19,6 @@ const Login = () => {
   const login = async (e) => {
     e.preventDefault();
     try {
-      console.log("LOGIN DATA", loginData);
       const response = await axios.post(
         "http://localhost:5051/api/authentication",
         {
@@ -27,7 +26,6 @@ const Login = () => {
           password: loginData.password,
         }
       );
-      console.log(response.data);
       localStorage.setItem("user", JSON.stringify(response.data));
       navigate("/");
     } catch (error) {

@@ -54,7 +54,11 @@ public class ProductRepository : IProductRepository
 
     public async Task<List<Product>> GetProductsByBrand(int brandId)
     {
-        return await _dbContext.Products.Where(p => p.IsActive && p.BrandID == brandId).ToListAsync();
+        return await _dbContext
+            .Products
+            .Include(p => p.Brand)
+            .Where(p => p.IsActive && p.BrandID == brandId)
+            .ToListAsync();
     }
 
     public async Task<Dictionary<int, Product>> GetProductsByIds(List<int> productIds)
