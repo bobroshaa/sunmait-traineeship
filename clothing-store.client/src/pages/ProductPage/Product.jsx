@@ -18,6 +18,7 @@ import Navbar from "../../components/Navbar/Navbar";
 const Product = () => {
   const [product, setProduct] = useState();
   const [connection, setConnection] = useState();
+  const [user, setUser] = useState();
   const [viewersCount, setViewersCount] = useState();
 
   const { toast } = useToast();
@@ -113,8 +114,26 @@ const Product = () => {
     }
   };
 
+  const getUser = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5051/api/users/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setUser(response.data);
+    } catch (error) {
+      console.error(`Error: ${error}`);
+    }
+  };
+
   useEffect(() => {
     getProduct();
+    getUser();
   }, []);
 
   useEffect(() => {
@@ -154,7 +173,7 @@ const Product = () => {
           },
         }
       );
-      console.log(response);
+
       showSuccessfulNotification();
     } catch (error) {
       showErrorNotification();
@@ -164,7 +183,7 @@ const Product = () => {
 
   return (
     <div>
-      <Navbar />
+      {user && <Navbar firstName={user.firstName} />}
       <div className="product-page-container">
         {product && (
           <div className="product-container">

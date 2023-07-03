@@ -11,6 +11,8 @@ import Navbar from "../../components/Navbar/Navbar";
 const Cart = () => {
   const [cartItems, setCartItems] = useState();
   const [connection, setConnection] = useState();
+  const [user, setUser] = useState();
+
   const cartItemsRef = useRef(cartItems);
 
   const { toast } = useToast();
@@ -171,8 +173,26 @@ const Cart = () => {
     }
   };
 
+  const getUser = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5051/api/users/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setUser(response.data);
+    } catch (error) {
+      console.error(`Error: ${error}`);
+    }
+  };
+
   useEffect(() => {
     getCartItems();
+    getUser();
   }, []);
 
   useEffect(() => {
@@ -210,7 +230,7 @@ const Cart = () => {
 
   return (
     <div>
-      <Navbar />
+      {user && <Navbar firstName={user.firstName} />}
       <div className="cart-page-container">
         {cartItems && cartItems.length > 0 ? (
           <div className="cart-oder-container">

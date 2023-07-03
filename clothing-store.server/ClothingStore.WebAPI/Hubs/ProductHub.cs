@@ -62,7 +62,7 @@ public class ProductHub : Hub
 
     private async Task BroadcastToGroup(int productId)
     {
-        await Clients.Group(productId.ToString())
+        await Clients.Group("product" + productId)
             .SendAsync("updateViewers", ViewingUsers[productId].Count);
     }
 }

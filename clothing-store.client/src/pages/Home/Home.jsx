@@ -8,9 +8,11 @@ import Navbar from "../../components/Navbar/Navbar";
 
 const Home = () => {
   const [products, setProducts] = useState();
+  const [user, setUser] = useState();
   const brandId = 2;
 
   const token = JSON.parse(localStorage.getItem("user")).accessToken;
+  const userId = JSON.parse(localStorage.getItem("user")).id;
 
   useEffect(() => {
     const getProductsByBrand = async (brandId) => {
@@ -30,12 +32,30 @@ const Home = () => {
       }
     };
 
+    const getUser = async (userId) => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5051/api/users/${userId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        setUser(response.data);
+      } catch (error) {
+        console.error(`Error: ${error}`);
+      }
+    };
+
     getProductsByBrand(brandId);
+    getUser(userId);
   }, []);
 
   return (
     <div>
-      <Navbar />
+      {user && <Navbar firstName={user.firstName} />}
       <New />
       {products && <ProductSection products={products} />}
       <Footer />
