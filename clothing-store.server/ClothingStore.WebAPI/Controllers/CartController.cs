@@ -1,11 +1,11 @@
 ﻿using ClothingStore.Application.Interfaces;
 using ClothingStore.Application.Models.InputModels;
 using ClothingStore.Application.Models.ViewModels;
-using ClothingStore.WebAPI.Hubs;
+using ClothingStore.Application.Options;
 using ClothingStore.WebAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Options;
 
 namespace ClothingStore.WebAPI.Controllers;
 
@@ -15,11 +15,19 @@ public class CartController : Controller
 {
     private readonly ICartService _cartService;
     private readonly ISignalRService _signalRService;
+    private readonly IScheduleService _scheduleService;
+    private readonly ReservationConfiguration _reservationConfiguration;
 
-    public CartController(ICartService cartService, ISignalRService signalRService)
+    public CartController(
+        ICartService cartService,
+        ISignalRService signalRService,
+        IScheduleService scheduleService,
+        IOptions<ReservationConfiguration> options)
     {
         _cartService = cartService;
         _signalRService = signalRService;
+        _scheduleService = scheduleService;
+        _reservationConfiguration = options.Value;
     }
 
     /// <summary>
@@ -69,6 +77,8 @@ public class CartController : Controller
 
         var newCartItem = await _cartService.Add(cartItemInputModel);
 
+        _scheduleService.Schedule(newCartItem.ID, TimeSpan.FromSeconds(_reservationConfiguration.reservationTime));
+
         await _signalRService.UpdateReservedQuantity(newCartItem.ProductID, newCartItem.ReservedQuantity);
         await _signalRService.UpdateCart(newCartItem.UserID);
 
@@ -93,7 +103,7 @@ public class CartController : Controller
         }
 
         var cartItem = await _cartService.UpdateQuantity(id, count);
-        
+
         await _signalRService.UpdateReservedQuantity(cartItem.ProductID, cartItem.ReservedQuantity);
         await _signalRService.UpdateCartItemQuantity(cartItem.UserID, cartItem.ID, cartItem.Quantity);
 
@@ -114,7 +124,6 @@ public class CartController : Controller
 
         await _signalRService.UpdateReservedQuantity(cartItem.ProductID, cartItem.ReservedQuantity);
         await _signalRService.UpdateCart(cartItem.UserID);
-        
 
         return Ok();
     }

@@ -63,8 +63,8 @@ public class CartService : ICartService
             await GetCartItemByUserAndProduct(cartItemInputModel.UserID, cartItemInputModel.ProductID);
         if (existingCartItem is null)
         {
-            cartItem.ReservationEndDate =
-                DateTime.UtcNow + TimeSpan.FromSeconds(_reservationConfiguration.reservationTime);
+            /*cartItem.ReservationEndDate =
+                DateTime.UtcNow + TimeSpan.FromSeconds(_reservationConfiguration.reservationTime);*/
 
             _cartRepository.Add(cartItem);
 
@@ -77,11 +77,11 @@ public class CartService : ICartService
 
         product.ReservedQuantity += cartItem.Quantity;
 
+        await _cartRepository.SaveChanges();
+        
         var cartItemVm = existingCartItem is null
             ? _mapper.Map<CartItemViewModel>(cartItem)
             : _mapper.Map<CartItemViewModel>(existingCartItem);
-
-        await _cartRepository.SaveChanges();
 
         return cartItemVm;
     }
@@ -164,16 +164,17 @@ public class CartService : ICartService
         return cartItem;
     }
 
-    public async Task<List<CartItemViewModel>> DeleteExpiredCartItems()
+    public async Task<CartItemViewModel?> DeleteExpiredCartItem(int id)
     {
-        var deletedCartItems = await _cartRepository.DeleteExpired();
+        var cartItem = await _cartRepository.GetById(id);
+        
+        if (cartItem is not null)
+        {
+            cartItem.IsActive = false;
+            cartItem.Product.ReservedQuantity -= cartItem.Quantity;
+            await _cartRepository.SaveChanges();
+        }
 
-        await _cartRepository.SaveChanges();
-
-        Console.WriteLine("DeleteExpiredCartItems:" + DateTime.Now);
-
-        var deletedCartItemVms = _mapper.Map<List<CartItemViewModel>>(deletedCartItems);
-
-        return deletedCartItemVms;
+        return _mapper.Map<CartItemViewModel>(cartItem);
     }
 }

@@ -4,7 +4,6 @@ public class CartItem
 {
     public int ID { get; set; }
     public int Quantity { get; set; }
-    public DateTime ReservationEndDate { get; set; }
     public bool IsActive { get; set; }
     
     public int ProductID { get; set; }

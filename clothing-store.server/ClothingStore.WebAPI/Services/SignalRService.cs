@@ -16,15 +16,13 @@ public class SignalRService : ISignalRService
         _productHub = productHub;
     }
 
-    public async Task DeleteExpiredCartItems()
+    public async Task DeleteExpiredCartItem(int id)
     {
-        var productIdsOfDeletedItems = await _cartService.DeleteExpiredCartItems();
-        if (!productIdsOfDeletedItems.IsNullOrEmpty())
+        var cartItem = await _cartService.DeleteExpiredCartItem(id);
+        if (cartItem is not null)
         {
-            foreach (var cartItem in productIdsOfDeletedItems)
-            {
-                await UpdateReservedQuantity(cartItem.ProductID, cartItem.ReservedQuantity);
-            }
+            await UpdateReservedQuantity(cartItem.ProductID, cartItem.ReservedQuantity);
+            await UpdateCart(cartItem.UserID);
         }
     }
 
