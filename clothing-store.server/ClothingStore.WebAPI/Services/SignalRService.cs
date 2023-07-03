@@ -1,7 +1,6 @@
 ﻿using ClothingStore.Application.Interfaces;
 using ClothingStore.WebAPI.Hubs;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.IdentityModel.Tokens;
 
 namespace ClothingStore.WebAPI.Services;
 
@@ -30,7 +29,7 @@ public class SignalRService : ISignalRService
     {
         await _productHub
             .Clients
-            .Group(productId.ToString())
+            .Group("product" + productId)
             .SendAsync("updateReservedQuantity", reservedQuantity, productId);
     }
     
@@ -38,7 +37,7 @@ public class SignalRService : ISignalRService
     {
         await _productHub
             .Clients
-            .Group(productId.ToString())
+            .Group("product" + productId)
             .SendAsync("updateInStockQuantity", inStockQuantity, productId);
     }
 
@@ -47,7 +46,7 @@ public class SignalRService : ISignalRService
     {
         await _productHub
             .Clients
-            .Group(userId.ToString())
+            .Group("cart" + userId)
             .SendAsync("updateCart");
     }
     
@@ -55,7 +54,7 @@ public class SignalRService : ISignalRService
     {
         await _productHub
             .Clients
-            .Group(userId.ToString())
+            .Group("cart" + userId)
             .SendAsync("updateCartItemQuantity", cartItemId, quantity);
     }
     

@@ -9,7 +9,7 @@ public class ProductHub : Hub
 
     public async Task JoinRoomFromProduct(int productId, int userId)
     {
-        await Groups.AddToGroupAsync(Context.ConnectionId, productId.ToString());
+        await Groups.AddToGroupAsync(Context.ConnectionId, "product" + productId);
 
         if (ViewingUsers.TryGetValue(productId, out var userDictionary))
         {
@@ -25,30 +25,39 @@ public class ProductHub : Hub
 
     public async Task LeaveRoomFromProduct(int productId, int userId)
     {
-        await Groups.RemoveFromGroupAsync(Context.ConnectionId, productId.ToString());
+        await Groups.RemoveFromGroupAsync(Context.ConnectionId, "product" + productId);
         ViewingUsers[productId][userId] -= 1;
 
-        if (ViewingUsers.TryGetValue(productId, out var productDictionary) && productDictionary.TryGetValue(userId, out var viewerCount))
+        if (ViewingUsers.TryGetValue(productId, out var productDictionary) &&
+            productDictionary.TryGetValue(userId, out var viewerCount))
         {
             if (viewerCount == 0)
             {
                 productDictionary.TryRemove(userId, out _);
             }
         }
-        
+
         await BroadcastToGroup(productId);
     }
 
-    public async Task JoinRoomFromCart(int productId, int userId)
+    public async Task JoinRoomFromCart(int[] productIds, int userId)
     {
-        await Groups.AddToGroupAsync(Context.ConnectionId, productId.ToString());
-        await Groups.AddToGroupAsync(Context.ConnectionId, userId.ToString());
+        foreach (var id in productIds)
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, "product" + id);
+        }
+
+        await Groups.AddToGroupAsync(Context.ConnectionId, "cart" + userId);
     }
 
-    public async Task LeaveRoomFromCart(int productId, int userId)
+    public async Task LeaveRoomFromCart(int[] productIds, int userId)
     {
-        await Groups.RemoveFromGroupAsync(Context.ConnectionId, productId.ToString());
-        await Groups.RemoveFromGroupAsync(Context.ConnectionId, userId.ToString());
+        foreach (var id in productIds)
+        {
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, "product" + id);
+        }
+
+        await Groups.RemoveFromGroupAsync(Context.ConnectionId, "cart" + userId);
     }
 
     private async Task BroadcastToGroup(int productId)

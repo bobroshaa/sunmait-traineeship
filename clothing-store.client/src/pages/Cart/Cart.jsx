@@ -29,16 +29,88 @@ const Cart = () => {
   const userId = params.userId;
   const token = JSON.parse(localStorage.getItem("user")).accessToken;
 
+  const joinRoom = async () => {
+    if (connection) return;
+    try {
+      const hubConnection = new HubConnectionBuilder()
+        .withUrl("http://localhost:5051/producthub")
+        .configureLogging(LogLevel.Information)
+        .build();
+
+      hubConnection.on(
+        "updateReservedQuantity",
+        (reservedQuantity, productId) => {
+          setCartItems((prevCartItems) => {
+            const updatedCartItems = prevCartItems.map((item) => {
+              if (item.productID === productId) {
+                return {
+                  ...item,
+                  product: { ...item.product, reservedQuantity },
+                };
+              }
+              return item;
+            });
+            return updatedCartItems;
+          });
+        }
+      );
+
+      hubConnection.on(
+        "updateInStockQuantity",
+        (inStockQuantity, productId) => {
+          setCartItems((prevCartItems) => {
+            const updatedCartItems = prevCartItems.map((item) => {
+              if (item.productID === productId) {
+                return {
+                  ...item,
+                  product: { ...item.product, inStockQuantity },
+                };
+              }
+              return item;
+            });
+            return updatedCartItems;
+          });
+        }
+      );
+
+      hubConnection.on("updateCartItemQuantity", (cartItemId, quantity) => {
+        setCartItems((prevCartItems) => {
+          const updatedCartItems = prevCartItems.map((item) => {
+            if (item.id === cartItemId) {
+              return { ...item, quantity };
+            }
+            return item;
+          });
+          return updatedCartItems;
+        });
+      });
+
+      hubConnection.on("updateCart", async () => {
+        await getCartItems();
+      });
+
+      await hubConnection.start();
+
+      await hubConnection.invoke(
+        "JoinRoomFromCart",
+        cartItemsRef.current.map((item) => parseInt(item.productID)),
+        parseInt(userId)
+      );
+
+      setConnection(hubConnection);
+    } catch (error) {
+      console.error(`Error: ${error}`);
+    }
+  };
+
   const leaveRoom = async () => {
     try {
       if (connection) {
-        cartItemsRef.current.forEach(async (item) => {
-          await connection.invoke(
-            "LeaveRoomFromCart",
-            parseInt(item.productID),
-            userId
-          );
-        });
+        await connection.invoke(
+          "LeaveRoomFromCart",
+          cartItemsRef.current.map((item) => parseInt(item.productID)),
+          parseInt(userId)
+        );
 
         connection.stop();
       }
@@ -75,75 +147,6 @@ const Cart = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-    } catch (error) {
-      console.error(`Error: ${error}`);
-    }
-  };
-
-  const joinRoom = async () => {
-    if (connection) return;
-    try {
-      const hubConnection = new HubConnectionBuilder()
-        .withUrl("http://localhost:5051/producthub")
-        .configureLogging(LogLevel.Information)
-        .build();
-
-      hubConnection.on(
-        "updateReservedQuantity",
-        (reservedQuantity, productId) => {
-          setCartItems((prevCartItems) => {
-            const updatedCartItems = prevCartItems.map((item) => {
-              if (item.productID === productId) {
-                return { ...item, product: { ...item.product, reservedQuantity } };
-              }
-              return item;
-            });
-            return updatedCartItems;
-          });
-        }
-      );
-
-      hubConnection.on(
-        "updateInStockQuantity",
-        (inStockQuantity, productId) => {
-          setCartItems((prevCartItems) => {
-            const updatedCartItems = prevCartItems.map((item) => {
-              if (item.productID === productId) {
-                return { ...item, product: { ...item.product, inStockQuantity } };
-              }
-              return item;
-            });
-            return updatedCartItems;
-          });
-        }
-      );
-
-      hubConnection.on("updateCartItemQuantity", (cartItemId, quantity) => {
-        setCartItems((prevCartItems) => {
-          const updatedCartItems = prevCartItems.map((item) => {
-            if (item.id === cartItemId) {
-              return { ...item, quantity };
-            }
-            return item;
-          });
-          return updatedCartItems;
-        });
-      });
-
-      hubConnection.on("updateCart", async () => {
-        await getCartItems();
-      });
-
-      await hubConnection.start();
-      cartItemsRef.current.forEach(async (item) => {
-        await hubConnection.invoke(
-          "JoinRoomFromCart",
-          parseInt(item.productID),
-          parseInt(userId)
-        );
-      });
-
-      setConnection(hubConnection);
     } catch (error) {
       console.error(`Error: ${error}`);
     }
@@ -234,13 +237,16 @@ const Cart = () => {
                           onClick={() => deleteCartItem(cartItem.id)}
                         />
                       </span>
-                      <span className="cart-item-name">{cartItem.product.name}</span>
+                      <span className="cart-item-name">
+                        {cartItem.product.name}
+                      </span>
                       <span className="cart-item-size">
                         Size: One Size (M - L)
                       </span>
                       <div className="cart-available-quantity">
                         <CheckCircleOutline />{" "}
-                        {cartItem.product.inStockQuantity - cartItem.product.reservedQuantity}{" "}
+                        {cartItem.product.inStockQuantity -
+                          cartItem.product.reservedQuantity}{" "}
                         Items are Available
                       </div>
                       <div className="cart-item-quantity">
@@ -267,9 +273,9 @@ const Cart = () => {
                           }
                           disabled={
                             cartItem.quantity ==
-                              cartItem.product.inStockQuantity -
-                                cartItem.product.reservedQuantity +
-                                cartItem.quantity
+                            cartItem.product.inStockQuantity -
+                              cartItem.product.reservedQuantity +
+                              cartItem.quantity
                           }
                         >
                           <Add fontSize={"small"} />
