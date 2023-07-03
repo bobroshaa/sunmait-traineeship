@@ -79,7 +79,7 @@ public class CartController : Controller
 
         _scheduleService.Schedule(newCartItem.ID, TimeSpan.FromSeconds(_reservationConfiguration.reservationTime));
 
-        await _signalRService.UpdateReservedQuantity(newCartItem.ProductID, newCartItem.ReservedQuantity);
+        await _signalRService.UpdateReservedQuantity(newCartItem.ProductID, newCartItem.Product.ReservedQuantity);
         await _signalRService.UpdateCart(newCartItem.UserID);
 
         return Ok(newCartItem);
@@ -104,7 +104,7 @@ public class CartController : Controller
 
         var cartItem = await _cartService.UpdateQuantity(id, count);
 
-        await _signalRService.UpdateReservedQuantity(cartItem.ProductID, cartItem.ReservedQuantity);
+        await _signalRService.UpdateReservedQuantity(cartItem.ProductID, cartItem.Product.ReservedQuantity);
         await _signalRService.UpdateCartItemQuantity(cartItem.UserID, cartItem.ID, cartItem.Quantity);
 
         return Ok(cartItem);
@@ -122,7 +122,7 @@ public class CartController : Controller
     {
         var cartItem = await _cartService.Delete(id);
 
-        await _signalRService.UpdateReservedQuantity(cartItem.ProductID, cartItem.ReservedQuantity);
+        await _signalRService.UpdateReservedQuantity(cartItem.ProductID, cartItem.Product.ReservedQuantity);
         await _signalRService.UpdateCart(cartItem.UserID);
 
         return Ok();

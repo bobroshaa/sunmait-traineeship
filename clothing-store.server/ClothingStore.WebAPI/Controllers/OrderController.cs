@@ -98,8 +98,10 @@ public class OrderController : Controller
             {
                 await _signalRService.UpdateReservedQuantity(
                     item.Key,
-                    item.Value.ReservedQuantity - item.Value.Quantity);
-                await _signalRService.UpdateInStockQuantity(item.Key, item.Value.InStockQuantity - item.Value.Quantity);
+                    item.Value.Product.ReservedQuantity - item.Value.Quantity);
+                await _signalRService.UpdateInStockQuantity(
+                    item.Key,
+                    item.Value.Product.InStockQuantity - item.Value.Quantity);
             }
 
             await _signalRService.UpdateCart(orderInputModel.CartItems[0].UserID);

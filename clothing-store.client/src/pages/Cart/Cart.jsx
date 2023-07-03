@@ -94,7 +94,7 @@ const Cart = () => {
           setCartItems((prevCartItems) => {
             const updatedCartItems = prevCartItems.map((item) => {
               if (item.productID === productId) {
-                return { ...item, reservedQuantity };
+                return { ...item, product: { ...item.product, reservedQuantity } };
               }
               return item;
             });
@@ -109,7 +109,7 @@ const Cart = () => {
           setCartItems((prevCartItems) => {
             const updatedCartItems = prevCartItems.map((item) => {
               if (item.productID === productId) {
-                return { ...item, inStockQuantity };
+                return { ...item, product: { ...item.product, inStockQuantity } };
               }
               return item;
             });
@@ -223,24 +223,24 @@ const Cart = () => {
                   <div className="cart-item-card" key={cartItem.id}>
                     <img
                       className="cart-item-image"
-                      src={cartItem.imageURL}
-                      alt={cartItem.name}
+                      src={cartItem.product.imageURL}
+                      alt={cartItem.product.name}
                     />
                     <div className="cart-item-card-info">
                       <span className="cart-item-price">
-                        ${cartItem.price / 100}{" "}
+                        ${cartItem.product.price / 100}{" "}
                         <Close
                           className="close-btn"
                           onClick={() => deleteCartItem(cartItem.id)}
                         />
                       </span>
-                      <span className="cart-item-name">{cartItem.name}</span>
+                      <span className="cart-item-name">{cartItem.product.name}</span>
                       <span className="cart-item-size">
                         Size: One Size (M - L)
                       </span>
                       <div className="cart-available-quantity">
                         <CheckCircleOutline />{" "}
-                        {cartItem.inStockQuantity - cartItem.reservedQuantity}{" "}
+                        {cartItem.product.inStockQuantity - cartItem.product.reservedQuantity}{" "}
                         Items are Available
                       </div>
                       <div className="cart-item-quantity">
@@ -267,8 +267,8 @@ const Cart = () => {
                           }
                           disabled={
                             cartItem.quantity ==
-                              cartItem.inStockQuantity -
-                                cartItem.reservedQuantity +
+                              cartItem.product.inStockQuantity -
+                                cartItem.product.reservedQuantity +
                                 cartItem.quantity
                           }
                         >
@@ -287,7 +287,7 @@ const Cart = () => {
                 <div className="order-subtotal-price">
                   Sub-total: $
                   {cartItems.reduce(
-                    (total, item) => total + item.price * item.quantity,
+                    (total, item) => total + item.product.price * item.quantity,
                     0
                   ) / 100}
                 </div>

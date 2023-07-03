@@ -10,11 +10,7 @@ public class CartItemProfile : Profile
     public CartItemProfile()
     {
         CreateMap<CartItem, CartItemViewModel>()
-            .ForMember(ci => ci.Price, opt => opt.MapFrom(ci => ci.Product.Price))
-            .ForMember(ci => ci.ImageURL, opt => opt.MapFrom(ci => ci.Product.ImageURL))
-            .ForMember(ci => ci.Name, opt => opt.MapFrom(ci => ci.Product.Name))
-            .ForMember(ci => ci.InStockQuantity, opt => opt.MapFrom(ci => ci.Product.InStockQuantity))
-            .ForMember(ci => ci.ReservedQuantity, opt => opt.MapFrom(ci => ci.Product.ReservedQuantity))
+            .ForMember(ci => ci.Product, opt => opt.MapFrom(ci => ci.Product))
             .ReverseMap();
         CreateMap<CartItem, CartItemInputModel>().ReverseMap();
     }

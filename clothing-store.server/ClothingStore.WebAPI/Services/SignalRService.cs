@@ -21,7 +21,7 @@ public class SignalRService : ISignalRService
         var cartItem = await _cartService.DeleteExpiredCartItem(id);
         if (cartItem is not null)
         {
-            await UpdateReservedQuantity(cartItem.ProductID, cartItem.ReservedQuantity);
+            await UpdateReservedQuantity(cartItem.ProductID, cartItem.Product.ReservedQuantity);
             await UpdateCart(cartItem.UserID);
         }
     }
