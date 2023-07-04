@@ -34,7 +34,7 @@ public class ProductService : IProductService
     {
         var products = await _productRepository.GetAll();
         var productVms = _mapper.Map<List<ProductViewModel>>(products);
-        
+
         return productVms;
     }
 
@@ -42,7 +42,7 @@ public class ProductService : IProductService
     {
         var product = await GetProductById(id);
         var productVm = _mapper.Map<ProductViewModel>(product);
-        
+
         return productVm;
     }
 
@@ -61,7 +61,7 @@ public class ProductService : IProductService
         await _productRepository.SaveChanges();
 
         var response = new PostResponseViewModel { Id = product.ID };
-        
+
         return response;
     }
 
@@ -73,6 +73,11 @@ public class ProductService : IProductService
         if (productInputModel.BrandID is not null)
         {
             await ValidateBrand((int)productInputModel.BrandID);
+        }
+
+        if (productInputModel.InStockQuantity != product.InStockQuantity)
+        {
+            ValidateQuantity(product.ID, productInputModel.InStockQuantity, product.ReservedQuantity);
         }
 
         product.Name = productInputModel.Name;
@@ -102,7 +107,7 @@ public class ProductService : IProductService
 
         var products = await _productRepository.GetProductsBySectionAndCategory(sectionId, categoryId);
         var productVms = _mapper.Map<List<ProductViewModel>>(products);
-        
+
         return productVms;
     }
 
@@ -177,6 +182,15 @@ public class ProductService : IProductService
         if (!await _sectionRepository.DoesSectionExist(id))
         {
             throw new EntityNotFoundException(string.Format(ExceptionMessages.SectionNotFound, id));
+        }
+    }
+
+    private void ValidateQuantity(int productId, int newQuantity, int reservedQuantity)
+    {
+        if (newQuantity < reservedQuantity)
+        {
+            throw new IncorrectParamsException(
+                string.Format(ExceptionMessages.IncorrectInStockQuantity, productId, newQuantity, reservedQuantity));
         }
     }
 }

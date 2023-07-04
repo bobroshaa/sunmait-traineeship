@@ -8,6 +8,5 @@ public class CartItemViewModel
     public int ProductID { get; set; }
     public int UserID { get; set; }
     public int Quantity { get; set; }
-    public int Price { get; set; }
     public ProductViewModel Product { get; set; }
 }

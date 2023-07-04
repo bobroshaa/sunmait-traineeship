@@ -32,7 +32,9 @@ const Cart = () => {
   const token = JSON.parse(localStorage.getItem("user")).accessToken;
 
   const joinRoom = async () => {
+    console.log("CON", connection)
     if (connection) return;
+    console.log("Join", cartItems);
     try {
       const hubConnection = new HubConnectionBuilder()
         .withUrl("http://localhost:5051/producthub")
@@ -88,6 +90,7 @@ const Cart = () => {
       });
 
       hubConnection.on("updateCart", async () => {
+        await leaveRoom();
         await getCartItems();
       });
 
@@ -115,6 +118,7 @@ const Cart = () => {
         );
 
         connection.stop();
+        setConnection(() => null);
       }
     } catch (error) {
       console.error(`Error: ${error}`);
@@ -123,10 +127,18 @@ const Cart = () => {
 
   const order = async () => {
     try {
+      const orderData = cartItems.map((item) => ({
+        ...item,
+        product: {
+          ...item.product,
+          brandName:
+            item.product.brandName == null ? "" : item.product.brandName,
+        },
+      }));
       await axios.post(
         `http://localhost:5051/api/orders`,
         {
-          cartItems,
+          cartItems: orderData,
         },
         {
           headers: {
@@ -200,7 +212,7 @@ const Cart = () => {
     if (cartItems) {
       joinRoom();
     }
-  }, [cartItems]);
+  }, [cartItems, connection]);
 
   useEffect(() => {
     const handleBeforeUnload = async (e) => {
