@@ -27,7 +27,7 @@ const Login = () => {
         }
       );
       localStorage.setItem("user", JSON.stringify(response.data));
-      navigate("/");
+      window.location.reload(false);
     } catch (error) {
       console.log(error);
     }
@@ -44,7 +44,7 @@ const Login = () => {
         <div className="login-side">
           <h3 className="login-side-header">Sign In to continue.</h3>
           <div className="input-container">
-            <label className="label" for="email">
+            <label className="label" htmlFor="email">
               Email:
             </label>
             <input
@@ -58,7 +58,7 @@ const Login = () => {
             />
           </div>
           <div className="input-container">
-            <label className="label" for="password">
+            <label className="label" htmlFor="password">
               Password:
             </label>
             <input

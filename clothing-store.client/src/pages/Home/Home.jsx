@@ -25,7 +25,6 @@ const Home = () => {
             },
           }
         );
-        console.log("PRODUCTS", response.data);
         setProducts(response.data);
       } catch (error) {
         console.error(`Error: ${error}`);

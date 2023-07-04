@@ -20,6 +20,10 @@ const App = () => {
           element={!JSON.parse(localStorage.getItem("user")) ? <Navigate to="/login" /> : <Cart />}
         />
         <Route exact path="/login" element={!JSON.parse(localStorage.getItem("user")) ? <Login /> : <Navigate to="/" />} />
+        <Route
+        path="*"
+        element={<Navigate to="/" replace />}
+    />
       </Routes>
     </BrowserRouter>
   );
