@@ -1,0 +1,12 @@
+.featured-product-section {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.featured-product-container {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
