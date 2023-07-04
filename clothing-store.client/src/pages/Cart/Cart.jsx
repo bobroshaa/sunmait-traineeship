@@ -32,9 +32,7 @@ const Cart = () => {
   const token = JSON.parse(localStorage.getItem("user")).accessToken;
 
   const joinRoom = async () => {
-    console.log("CON", connection)
     if (connection) return;
-    console.log("Join", cartItems);
     try {
       const hubConnection = new HubConnectionBuilder()
         .withUrl("http://localhost:5051/producthub")
@@ -90,7 +88,6 @@ const Cart = () => {
       });
 
       hubConnection.on("updateCart", async () => {
-        await leaveRoom();
         await getCartItems();
       });
 
@@ -118,7 +115,6 @@ const Cart = () => {
         );
 
         connection.stop();
-        setConnection(() => null);
       }
     } catch (error) {
       console.error(`Error: ${error}`);
@@ -212,7 +208,7 @@ const Cart = () => {
     if (cartItems) {
       joinRoom();
     }
-  }, [cartItems, connection]);
+  }, [cartItems]);
 
   useEffect(() => {
     const handleBeforeUnload = async (e) => {
